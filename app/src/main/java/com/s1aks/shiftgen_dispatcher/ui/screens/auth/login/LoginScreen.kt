@@ -17,14 +17,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.s1aks.shiftgen_dispatcher.ui.screens.LoadingScreen
 
-@Preview(showBackground = true)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     var login by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var passwordEnable by rememberSaveable { mutableStateOf(false) }
+    var buttonLoginEnable by rememberSaveable { mutableStateOf(false) }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -36,7 +38,11 @@ fun LoginScreen() {
         OutlinedTextField(
             value = login,
             singleLine = true,
-            onValueChange = { login = it },
+            onValueChange = {
+                passwordEnable = it != ""
+                login = it
+                buttonLoginEnable = login != "" && password != "" && password.length > 5
+            },
             label = { Text(text = "Логин") },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
@@ -46,12 +52,16 @@ fun LoginScreen() {
         OutlinedTextField(
             value = password,
             singleLine = true,
-            onValueChange = { password = it },
+            onValueChange = {
+                password = it
+                buttonLoginEnable = login != "" && password != "" && password.length > 5
+            },
             label = { Text(text = "Пароль") },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Send,
                 keyboardType = KeyboardType.Password
             ),
+            enabled = passwordEnable,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val image = if (passwordVisible)
@@ -69,7 +79,10 @@ fun LoginScreen() {
                 modifier = Modifier
                     .padding(4.dp)
                     .width(120.dp),
-                onClick = { }
+                onClick = {
+                    // viewmodel.sendLoginData(login, password)
+                },
+                enabled = buttonLoginEnable
             ) {
                 Text(text = "Вход")
             }
@@ -77,7 +90,7 @@ fun LoginScreen() {
                 modifier = Modifier
                     .padding(4.dp)
                     .width(120.dp),
-                onClick = { }
+                onClick = { navController.navigate("register") }
             ) {
                 Text(text = "Регистрация")
             }
