@@ -12,10 +12,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.s1aks.shiftgen_dispatcher.ui.screens.LoadingScreen
-import com.s1aks.shiftgen_dispatcher.ui.screens.LoginScreen
-import com.s1aks.shiftgen_dispatcher.ui.screens.MainScreen
-import com.s1aks.shiftgen_dispatcher.ui.screens.RegisterScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreen
 import com.s1aks.shiftgen_dispatcher.ui.theme.ShiftgenDispatcherTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "main") {
+                    NavHost(navController = navController, startDestination = "login") {
                         composable("main") { MainScreen() }
                         composable("login") { LoginScreen() }
                         composable("register") { RegisterScreen() }
@@ -44,6 +43,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ShiftgenDispatcherTheme {
-        LoadingScreen()
+        MainScreen()
     }
 }

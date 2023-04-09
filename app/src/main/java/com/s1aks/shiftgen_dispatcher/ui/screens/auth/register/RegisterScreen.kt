@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.ui.screens
+package com.s1aks.shiftgen_dispatcher.ui.screens.auth.register
 
 import androidx.compose.runtime.Composable
 
