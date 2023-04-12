@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.remote_api.models
+package com.s1aks.shiftgen_dispatcher.data.api.models.content.time_blocks
 
 import com.s1aks.shiftgen_dispatcher.data.entities.Action
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlockDTO
@@ -15,7 +15,7 @@ data class TimeBlockRequest(
 
 @Serializable
 data class TimeBlockResponse(
-    val event: TimeBlockDTO
+    val timeBlock: TimeBlockDTO
 )
 
 @Serializable

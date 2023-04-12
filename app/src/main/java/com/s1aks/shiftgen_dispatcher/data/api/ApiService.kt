@@ -1,8 +1,12 @@
-package com.s1aks.shiftgen_dispatcher.data.remote_api
+package com.s1aks.shiftgen_dispatcher.data.api
 
-import com.s1aks.shiftgen_dispatcher.data.remote_api.models.LoginRequest
-import com.s1aks.shiftgen_dispatcher.data.remote_api.models.LoginResponse
-import com.s1aks.shiftgen_dispatcher.data.remote_api.models.RefreshRequest
+import com.s1aks.shiftgen_dispatcher.data.api.models.auth.AuthCase
+import com.s1aks.shiftgen_dispatcher.data.api.models.content.directions.DirectionsCase
+import com.s1aks.shiftgen_dispatcher.data.api.models.content.shifts.ShiftsCase
+import com.s1aks.shiftgen_dispatcher.data.api.models.content.structures.StructuresCase
+import com.s1aks.shiftgen_dispatcher.data.api.models.content.time_blocks.TimeBlocksCase
+import com.s1aks.shiftgen_dispatcher.data.api.models.content.timesheets.TimeSheetsCase
+import com.s1aks.shiftgen_dispatcher.data.api.models.content.workers.WorkersCase
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
@@ -14,12 +18,12 @@ import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
-interface ApiService {
-
-    suspend fun login(loginRequest: LoginRequest): LoginResponse?
-    suspend fun refresh(refreshRequest: RefreshRequest): LoginResponse?
+interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, TimeBlocksCase,
+    TimeSheetsCase, WorkersCase {
 
     companion object {
+        internal const val BASE_URL = "http://shiftgen.ru"
+
         fun create(): ApiService {
             return ApiServiceImpl(
                 client = HttpClient(Android) {

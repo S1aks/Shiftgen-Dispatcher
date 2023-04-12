@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.remote_api.models
+package com.s1aks.shiftgen_dispatcher.data.api.models.content.shifts
 
 import com.s1aks.shiftgen_dispatcher.data.entities.Periodicity
 import com.s1aks.shiftgen_dispatcher.data.entities.ShiftDTO

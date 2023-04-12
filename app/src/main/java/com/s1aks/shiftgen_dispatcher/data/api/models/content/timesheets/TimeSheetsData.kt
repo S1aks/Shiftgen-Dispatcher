@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.remote_api.models
+package com.s1aks.shiftgen_dispatcher.data.api.models.content.timesheets
 
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheetDTO
 import com.s1aks.shiftgen_dispatcher.utils.YearMonthSerializer
@@ -32,7 +32,7 @@ data class TimeSheetsYearMonthRequest(
 
 @Serializable
 data class TimeSheetResponse(
-    val event: TimeSheetDTO
+    val timesheet: TimeSheetDTO
 )
 
 @Serializable

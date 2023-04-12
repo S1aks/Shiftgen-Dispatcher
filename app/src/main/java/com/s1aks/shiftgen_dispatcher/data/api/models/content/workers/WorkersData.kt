@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.remote_api.models
+package com.s1aks.shiftgen_dispatcher.data.api.models.content.workers
 
 import com.s1aks.shiftgen_dispatcher.data.entities.WorkerDTO
 import kotlinx.serialization.Serializable
@@ -17,7 +17,7 @@ data class WorkerRequest(
 
 @Serializable
 data class WorkerResponse(
-    val event: WorkerDTO
+    val worker: WorkerDTO
 )
 
 @Serializable
