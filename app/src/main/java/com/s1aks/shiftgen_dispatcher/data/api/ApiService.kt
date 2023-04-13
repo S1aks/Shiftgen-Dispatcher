@@ -52,10 +52,6 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                             append(HttpHeaders.UserAgent, "ktor client")
                         }
                         contentType(ContentType.Application.Json)
-                        // Parameter("api_key", "some_api_key")
-                        // Content Type
-                        if (method != HttpMethod.Get) contentType(ContentType.Application.Json)
-                        accept(ContentType.Application.Json)
                     }
                 }
             )
