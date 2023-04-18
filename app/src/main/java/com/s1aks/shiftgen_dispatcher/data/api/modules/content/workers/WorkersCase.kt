@@ -1,14 +1,15 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.workers
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers
 
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService.Companion.BASE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.IdRequest
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
+import io.ktor.http.HttpStatusCode
 
 interface WorkersCase {
     suspend fun workers(): WorkersResponse
     suspend fun workerGet(idRequest: IdRequest): WorkerResponse
-    suspend fun workerInsert(workerRequest: WorkerRequest)
-    suspend fun workerUpdate(workerRequest: WorkerRequest)
-    suspend fun workerDelete(idRequest: IdRequest)
+    suspend fun workerInsert(workerRequest: WorkerRequest): HttpStatusCode
+    suspend fun workerUpdate(workerRequest: WorkerRequest): HttpStatusCode
+    suspend fun workerDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
         const val WORKERS = "$BASE_URL/workers"

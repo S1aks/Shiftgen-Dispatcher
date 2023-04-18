@@ -13,9 +13,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreen
 import com.s1aks.shiftgen_dispatcher.ui.theme.ShiftgenDispatcherTheme
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +30,16 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "login") {
-                        composable("main") { MainScreen() }
-                        composable("login") { LoginScreen(navController) }
+                    NavHost(
+                        navController = navController,
+                        startDestination = "login"
+                    ) {
+                        composable("login") {
+                            val viewModel = koinViewModel<LoginViewModel>()
+                            LoginScreen(navController, viewModel)
+                        }
                         composable("register") { RegisterScreen() }
+                        composable("main") { MainScreen() }
                     }
                 }
             }

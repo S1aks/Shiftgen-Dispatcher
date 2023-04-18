@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content
 
 import kotlinx.serialization.Serializable
 

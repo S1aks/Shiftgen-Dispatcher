@@ -1,14 +1,15 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.time_blocks
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks
 
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService.Companion.BASE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.IdRequest
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
+import io.ktor.http.HttpStatusCode
 
 interface TimeBlocksCase {
     suspend fun timeBlocks(): TimeBlocksResponse
     suspend fun timeBlockGet(idRequest: IdRequest): TimeBlockResponse
-    suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest)
-    suspend fun timeBlockUpdate(timeBlockRequest: TimeBlockRequest)
-    suspend fun timeBlockDelete(idRequest: IdRequest)
+    suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest): HttpStatusCode
+    suspend fun timeBlockUpdate(timeBlockRequest: TimeBlockRequest): HttpStatusCode
+    suspend fun timeBlockDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
         const val TIME_BLOCKS = "$BASE_URL/time_blocks"

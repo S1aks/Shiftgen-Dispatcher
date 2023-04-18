@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.directions
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions
 
 import com.s1aks.shiftgen_dispatcher.data.entities.DirectionDTO
 import kotlinx.serialization.Serializable

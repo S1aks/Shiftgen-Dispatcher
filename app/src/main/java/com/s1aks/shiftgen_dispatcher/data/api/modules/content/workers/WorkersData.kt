@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.workers
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers
 
 import com.s1aks.shiftgen_dispatcher.data.entities.WorkerDTO
 import kotlinx.serialization.Serializable

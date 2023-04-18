@@ -1,16 +1,17 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.timesheets
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets
 
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService.Companion.BASE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.IdRequest
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
+import io.ktor.http.HttpStatusCode
 
 interface TimeSheetsCase {
     suspend fun timeSheets(): TimeSheetsResponse
     suspend fun timeSheetsYearMonth(): TimeSheetsYearMonthRequest
     suspend fun timeSheetsByWorkerIdYearMonth(): TimeSheetsWorkerIdYearMonthRequest
     suspend fun timeSheetGet(idRequest: IdRequest): TimeSheetResponse
-    suspend fun timeSheetInsert(timeSheetRequest: TimeSheetRequest)
-    suspend fun timeSheetUpdate(timeSheetRequest: TimeSheetRequest)
-    suspend fun timeSheetDelete(idRequest: IdRequest)
+    suspend fun timeSheetInsert(timeSheetRequest: TimeSheetRequest): HttpStatusCode
+    suspend fun timeSheetUpdate(timeSheetRequest: TimeSheetRequest): HttpStatusCode
+    suspend fun timeSheetDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
         const val TIMESHEETS = "$BASE_URL/timesheets"

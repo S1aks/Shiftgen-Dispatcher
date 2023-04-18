@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.auth
+package com.s1aks.shiftgen_dispatcher.data.api.modules.auth
 
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService.Companion.BASE_URL
 

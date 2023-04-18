@@ -1,14 +1,15 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.shifts
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts
 
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService.Companion.BASE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.IdRequest
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
+import io.ktor.http.HttpStatusCode
 
 interface ShiftsCase {
     suspend fun shifts(shiftsRequest: ShiftsRequest): ShiftsResponse
     suspend fun shiftGet(idRequest: IdRequest): ShiftResponse
-    suspend fun shiftInsert(shiftRequest: ShiftRequest)
-    suspend fun shiftUpdate(shiftRequest: ShiftRequest)
-    suspend fun shiftDelete(idRequest: IdRequest)
+    suspend fun shiftInsert(shiftRequest: ShiftRequest): HttpStatusCode
+    suspend fun shiftUpdate(shiftRequest: ShiftRequest): HttpStatusCode
+    suspend fun shiftDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
         const val SHIFTS = "$BASE_URL/shifts"

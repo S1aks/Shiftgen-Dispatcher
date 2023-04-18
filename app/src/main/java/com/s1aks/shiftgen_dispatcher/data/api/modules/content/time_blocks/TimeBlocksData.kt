@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.time_blocks
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks
 
 import com.s1aks.shiftgen_dispatcher.data.entities.Action
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlockDTO

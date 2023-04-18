@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.timesheets
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets
 
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheetDTO
 import com.s1aks.shiftgen_dispatcher.utils.YearMonthSerializer

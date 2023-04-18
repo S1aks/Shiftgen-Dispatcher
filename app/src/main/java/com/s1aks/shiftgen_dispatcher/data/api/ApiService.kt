@@ -1,22 +1,28 @@
 package com.s1aks.shiftgen_dispatcher.data.api
 
-import com.s1aks.shiftgen_dispatcher.data.api.models.auth.AuthCase
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.directions.DirectionsCase
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.shifts.ShiftsCase
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.structures.StructuresCase
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.time_blocks.TimeBlocksCase
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.timesheets.TimeSheetsCase
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.workers.WorkersCase
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.features.*
-import io.ktor.client.features.auth.*
-import io.ktor.client.features.auth.providers.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
-import io.ktor.client.request.*
-import io.ktor.http.*
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions.DirectionsCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersCase
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.headers
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
+import io.ktor.http.encodedPath
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, TimeBlocksCase,
     TimeSheetsCase, WorkersCase {
@@ -30,9 +36,12 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                     install(Logging) {
                         level = LogLevel.ALL
                     }
-                    install(JsonFeature) {
-                        serializer = KotlinxSerializer(json)
-                        //or serializer = KotlinxSerializer()
+                    install(ContentNegotiation) {
+                        json(Json {
+                            ignoreUnknownKeys = true
+                            isLenient = true
+                            encodeDefaults = false
+                        })
                     }
                     install(HttpTimeout) {
                         requestTimeoutMillis = 6000L
@@ -55,12 +64,6 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                     }
                 }
             )
-        }
-
-        private val json = kotlinx.serialization.json.Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-            encodeDefaults = false
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.structures
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures
 
 import com.s1aks.shiftgen_dispatcher.data.entities.StructureDTO
 import kotlinx.serialization.Serializable

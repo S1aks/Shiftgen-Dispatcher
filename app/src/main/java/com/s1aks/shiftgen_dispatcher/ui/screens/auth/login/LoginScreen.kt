@@ -1,12 +1,23 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.auth.login
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,15 +30,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.s1aks.shiftgen_dispatcher.ui.screens.LoadingScreen
+import com.s1aks.shiftgen_dispatcher.data.ResponseState
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
     var login by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordEnable by rememberSaveable { mutableStateOf(false) }
     var buttonLoginEnable by rememberSaveable { mutableStateOf(false) }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    val responseState by viewModel.loginState.collectAsState()
+    if (responseState == ResponseState.Success(true)) {
+        navController.navigate("main")
+    }
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -80,7 +95,7 @@ fun LoginScreen(navController: NavController) {
                     .padding(4.dp)
                     .width(120.dp),
                 onClick = {
-                    // viewmodel.sendLoginData(login, password)
+                    viewModel.sendData(login = login, password = password)
                 },
                 enabled = buttonLoginEnable
             ) {

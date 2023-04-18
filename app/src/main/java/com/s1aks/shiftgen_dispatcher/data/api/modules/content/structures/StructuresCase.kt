@@ -1,14 +1,15 @@
-package com.s1aks.shiftgen_dispatcher.data.api.models.content.structures
+package com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures
 
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService.Companion.BASE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.models.content.IdRequest
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
+import io.ktor.http.HttpStatusCode
 
 interface StructuresCase {
     suspend fun structures(): StructuresResponse
     suspend fun structureGet(idRequest: IdRequest): StructureResponse
-    suspend fun structureInsert(structureRequest: StructureRequest)
-    suspend fun structureUpdate(structureRequest: StructureRequest)
-    suspend fun structureDelete(idRequest: IdRequest)
+    suspend fun structureInsert(structureRequest: StructureRequest): HttpStatusCode
+    suspend fun structureUpdate(structureRequest: StructureRequest): HttpStatusCode
+    suspend fun structureDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
         const val STRUCTURES = "$BASE_URL/structures"
