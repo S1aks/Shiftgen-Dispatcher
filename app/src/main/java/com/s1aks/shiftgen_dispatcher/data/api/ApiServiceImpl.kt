@@ -39,60 +39,50 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
-import io.ktor.client.request.url
+import io.ktor.client.request.setBody
 import io.ktor.http.HttpStatusCode
-import io.ktor.util.InternalAPI
 
-@OptIn(InternalAPI::class)
 class ApiServiceImpl(
     private val client: HttpClient
 ) : ApiService {
 
     override suspend fun login(loginRequest: LoginRequest): LoginResponse =
-        client.post {
-            url(LOGIN)
-            body = loginRequest
+        client.post(LOGIN) {
+            setBody(loginRequest)
         }.body()
 
 
     override suspend fun refresh(refreshRequest: RefreshRequest): LoginResponse =
-        client.post {
-            url(REFRESH)
-            body = refreshRequest
+        client.post(REFRESH) {
+            setBody(refreshRequest)
         }.body()
 
     override suspend fun register(registerRequest: RegisterRequest): RegisterResponse =
-        client.post {
-            url(REGISTER)
-            body = registerRequest
+        client.post(REGISTER) {
+            setBody(registerRequest)
         }.body()
 
     override suspend fun directions(): DirectionsResponse =
-        client.get {
-            url(DIRECTIONS)
+        client.get(DIRECTIONS) {
         }.body()
 
     override suspend fun directionGet(idRequest: IdRequest): DirectionResponse =
-        client.get {
-            url(DIRECTION_GET)
+        client.get(DIRECTION_GET) {
         }.body()
 
     override suspend fun directionInsert(directionRequest: DirectionRequest): HttpStatusCode =
-        client.post {
-            url(DIRECTION_INSERT)
-            body = directionRequest
+        client.post(DIRECTION_INSERT) {
+            setBody(directionRequest)
         }.status
 
     override suspend fun directionUpdate(directionRequest: DirectionRequest): HttpStatusCode =
-        client.post {
-            url(DIRECTION_UPDATE)
-            body = directionRequest
+        client.post(DIRECTION_UPDATE) {
+            setBody(directionRequest)
         }.status
 
     override suspend fun directionDelete(idRequest: IdRequest): HttpStatusCode =
-        client.post {
-            url(DIRECTION_DELETE)
-            body = idRequest
+        client.post(DIRECTION_DELETE) {
+            setBody(idRequest)
         }.status
 
     override suspend fun shifts(shiftsRequest: ShiftsRequest): ShiftsResponse {
@@ -103,15 +93,15 @@ class ApiServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun shiftInsert(shiftRequest: ShiftRequest) {
+    override suspend fun shiftInsert(shiftRequest: ShiftRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun shiftUpdate(shiftRequest: ShiftRequest) {
+    override suspend fun shiftUpdate(shiftRequest: ShiftRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun shiftDelete(idRequest: IdRequest) {
+    override suspend fun shiftDelete(idRequest: IdRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
@@ -123,15 +113,15 @@ class ApiServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun structureInsert(structureRequest: StructureRequest) {
+    override suspend fun structureInsert(structureRequest: StructureRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun structureUpdate(structureRequest: StructureRequest) {
+    override suspend fun structureUpdate(structureRequest: StructureRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun structureDelete(idRequest: IdRequest) {
+    override suspend fun structureDelete(idRequest: IdRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
@@ -143,15 +133,15 @@ class ApiServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest) {
+    override suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun timeBlockUpdate(timeBlockRequest: TimeBlockRequest) {
+    override suspend fun timeBlockUpdate(timeBlockRequest: TimeBlockRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun timeBlockDelete(idRequest: IdRequest) {
+    override suspend fun timeBlockDelete(idRequest: IdRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
@@ -171,15 +161,15 @@ class ApiServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun timeSheetInsert(timeSheetRequest: TimeSheetRequest) {
+    override suspend fun timeSheetInsert(timeSheetRequest: TimeSheetRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun timeSheetUpdate(timeSheetRequest: TimeSheetRequest) {
+    override suspend fun timeSheetUpdate(timeSheetRequest: TimeSheetRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun timeSheetDelete(idRequest: IdRequest) {
+    override suspend fun timeSheetDelete(idRequest: IdRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
@@ -191,15 +181,15 @@ class ApiServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun workerInsert(workerRequest: WorkerRequest) {
+    override suspend fun workerInsert(workerRequest: WorkerRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun workerUpdate(workerRequest: WorkerRequest) {
+    override suspend fun workerUpdate(workerRequest: WorkerRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 
-    override suspend fun workerDelete(idRequest: IdRequest) {
+    override suspend fun workerDelete(idRequest: IdRequest): HttpStatusCode {
         TODO("Not yet implemented")
     }
 }
@@ -207,7 +197,7 @@ class ApiServiceImpl(
 //return try {
 //    client.post<LoginResponse> {
 //        url(LOGIN)
-//        body = loginRequest
+//        setBody(loginRequest
 //    }
 //} catch (ex: RedirectResponseException) {
 //    // 3xx - responses

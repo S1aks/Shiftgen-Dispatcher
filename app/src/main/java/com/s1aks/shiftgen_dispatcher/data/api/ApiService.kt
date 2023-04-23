@@ -10,25 +10,19 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersCas
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.auth.Auth
-import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.headers
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 
 interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, TimeBlocksCase,
     TimeSheetsCase, WorkersCase {
 
     companion object {
-        internal const val BASE_URL = "http://shiftgen.ru"
+        internal const val BASE_URL = "http://shiftgen.ru:8080"
 
         fun create(): ApiService {
             return ApiServiceImpl(
@@ -37,29 +31,26 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                         level = LogLevel.ALL
                     }
                     install(ContentNegotiation) {
-                        json(Json {
-                            ignoreUnknownKeys = true
-                            isLenient = true
-                            encodeDefaults = false
-                        })
+                        json()
                     }
                     install(HttpTimeout) {
                         requestTimeoutMillis = 6000L
                         connectTimeoutMillis = 6000L
                         socketTimeoutMillis = 6000L
                     }
-                    install(Auth) {
-                        bearer {
-                            sendWithoutRequest { request -> request.url.encodedPath.startsWith("/login") }
-                            // ...
-                        }
-                    }
+//                    install(Auth) {
+//                        bearer {
+//                            sendWithoutRequest { request -> request.url.encodedPath.startsWith("/login") }
+//                            // ...
+//                        }
+//                    }
                     defaultRequest {
-                        headers {
-                            append(HttpHeaders.Accept, "application/json")
-                            append(HttpHeaders.Authorization, "Bearer *token*")
-                            append(HttpHeaders.UserAgent, "ktor client")
-                        }
+//                        headers {
+//                            append(HttpHeaders.ContentType, "application/vnd.any.response+json")
+//                            append(HttpHeaders.ContentType, "application/json")
+//                            append(HttpHeaders.Authorization, "Bearer *token*")
+//                            append(HttpHeaders.UserAgent, "ktor client")
+//                        }
                         contentType(ContentType.Application.Json)
                     }
                 }

@@ -9,8 +9,8 @@ interface AuthCase {
     suspend fun register(registerRequest: RegisterRequest): RegisterResponse
 
     companion object {
-        const val LOGIN = "${BASE_URL}/login"
-        const val REFRESH = "${BASE_URL}/refresh"
-        const val REGISTER = "${BASE_URL}/register"
+        const val LOGIN = "${BASE_URL}/auth/login"
+        const val REFRESH = "${BASE_URL}/auth/refresh"
+        const val REGISTER = "${BASE_URL}/auth/register"
     }
 }

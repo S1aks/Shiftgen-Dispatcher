@@ -1,5 +1,6 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.auth.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,20 +30,45 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
-    var login by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordEnable by rememberSaveable { mutableStateOf(false) }
-    var buttonLoginEnable by rememberSaveable { mutableStateOf(false) }
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginViewModel
+) {
+    LoginScreenUI(
+        responseStateFlow = viewModel.loginState,
+        onLoginClick = { login, password ->
+            viewModel.sendData(login = login, password = password)
+        },
+        onRegisterClick = { navController.navigate("register") },
+        onSuccessResponse = { navController.navigate("main") } // todo Нет возврата по кл назад!
+    )
+}
+
+@Composable
+fun LoginScreenUI(
+    responseStateFlow: StateFlow<ResponseState<Boolean>>,
+    onLoginClick: (String, String) -> Unit,
+    onRegisterClick: () -> Unit,
+    onSuccessResponse: () -> Unit
+) {
+    var login by rememberSaveable { mutableStateOf("User5") }
+    var password by rememberSaveable { mutableStateOf("user5") }
+    var passwordEnable by rememberSaveable { mutableStateOf(true) }   // todo false  !!!!!!!
+    var buttonLoginEnable by rememberSaveable { mutableStateOf(true) } // todo false  !!!!!
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    val responseState by viewModel.loginState.collectAsState()
+    val responseState by responseStateFlow.collectAsState()
     if (responseState == ResponseState.Success(true)) {
-        navController.navigate("main")
+        LaunchedEffect(Unit) {
+            onSuccessResponse()
+        }
     }
     Column(
         modifier = Modifier
@@ -56,7 +83,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             onValueChange = {
                 passwordEnable = it != ""
                 login = it
-                buttonLoginEnable = login != "" && password != "" && password.length > 5
+                buttonLoginEnable = login != "" && password != "" && password.length > 3
             },
             label = { Text(text = "Логин") },
             keyboardOptions = KeyboardOptions(
@@ -69,7 +96,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             singleLine = true,
             onValueChange = {
                 password = it
-                buttonLoginEnable = login != "" && password != "" && password.length > 5
+                buttonLoginEnable = login != "" && password != "" && password.length > 3
             },
             label = { Text(text = "Пароль") },
             keyboardOptions = KeyboardOptions(
@@ -89,14 +116,12 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                 }
             }
         )
-        Row() {
+        Row {
             Button(
                 modifier = Modifier
                     .padding(4.dp)
                     .width(120.dp),
-                onClick = {
-                    viewModel.sendData(login = login, password = password)
-                },
+                onClick = { onLoginClick(login, password) },
                 enabled = buttonLoginEnable
             ) {
                 Text(text = "Вход")
@@ -105,10 +130,17 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                 modifier = Modifier
                     .padding(4.dp)
                     .width(120.dp),
-                onClick = { navController.navigate("register") }
+                onClick = onRegisterClick
             ) {
                 Text(text = "Регистрация")
             }
         }
     }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Preview(showBackground = true)
+@Composable
+fun PreviewLoginScreen() {
+    LoginScreenUI(MutableStateFlow(ResponseState.Loading), { _, _ -> }, {}, {})
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendLoginDataUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -14,7 +13,7 @@ class LoginViewModel(
 ) : ViewModel() {
     private val _loginState: MutableStateFlow<ResponseState<Boolean>> =
         MutableStateFlow(ResponseState.Loading)
-    val loginState: StateFlow<ResponseState<Boolean>> = _loginState.asStateFlow()
+    val loginState = _loginState.asStateFlow()
 
     fun sendData(login: String, password: String) {
         viewModelScope.launch {

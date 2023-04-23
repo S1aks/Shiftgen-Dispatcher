@@ -7,9 +7,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.s1aks.shiftgen_dispatcher.ui.screens.LoadingScreen
 
+@Preview
 @Composable
 fun MainScreen() {
     val scaffoldState = rememberScaffoldState()
@@ -24,6 +25,6 @@ fun MainScreen() {
         }
     ) {
         Text(modifier = Modifier.padding(it), text = "Like")
-        LoadingScreen()
+//        LoadingScreen()
     }
 }
