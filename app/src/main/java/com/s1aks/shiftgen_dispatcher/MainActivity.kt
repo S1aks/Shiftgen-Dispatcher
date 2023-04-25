@@ -20,6 +20,7 @@ import org.koin.androidx.compose.koinViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        org.apache.log4j.BasicConfigurator.configure()  // Logger HTTP requests
         setContent {
             ShiftgenDispatcherTheme {
                 // A surface container using the 'background' color from the theme

@@ -1,21 +1,29 @@
 package com.s1aks.shiftgen_dispatcher.data.api
 
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REGISTER
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions.DirectionsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURES
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_INSERT
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersCase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 
 interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, TimeBlocksCase,
@@ -38,12 +46,22 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                         connectTimeoutMillis = 6000L
                         socketTimeoutMillis = 6000L
                     }
-//                    install(Auth) {
-//                        bearer {
-//                            sendWithoutRequest { request -> request.url.encodedPath.startsWith("/login") }
-//                            // ...
-//                        }
-//                    }
+                    install(Auth) {
+                        bearer {
+                            loadTokens {
+                                // Load tokens from a local storage and return them as the 'BearerTokens' instance
+                                BearerTokens("abc123", "xyz111")
+                            }
+                            refreshTokens {
+                                // Refresh tokens and return them as the 'BearerTokens' instance
+                                BearerTokens("def456", "xyz111")
+                            }
+                            sendWithoutRequest { request -> request.url.encodedPath == LOGIN }
+                            sendWithoutRequest { request -> request.url.encodedPath == REGISTER }
+                            sendWithoutRequest { request -> request.url.encodedPath == STRUCTURES }
+                            sendWithoutRequest { request -> request.url.encodedPath == STRUCTURE_INSERT }
+                        }
+                    }
                     defaultRequest {
 //                        headers {
 //                            append(HttpHeaders.ContentType, "application/vnd.any.response+json")
