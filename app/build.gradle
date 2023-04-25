@@ -47,10 +47,10 @@ android {
 }
 
 dependencies {
-
+    // Core
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.security:security-crypto-ktx:1.1.0-alpha05'
+    implementation 'androidx.security:security-crypto-ktx:1.1.0-alpha06'
     implementation 'org.slf4j:slf4j-log4j12:1.7.29'
 
     // Koin
@@ -76,8 +76,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version"
 
     // Compose
-    def compose_ui_version = '1.4.1'
-    implementation 'androidx.activity:activity-compose:1.7.0'
+    def compose_ui_version = '1.4.2'
+    implementation 'androidx.activity:activity-compose:1.7.1'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation "androidx.compose.material:material:$compose_ui_version"
@@ -87,12 +87,13 @@ dependencies {
     def nav_version = '2.5.3'
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
+    // Compose tooling preview
+    def compose_tooling_version = '1.4.2'
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_tooling_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_tooling_version"
+
     // Coil
     implementation 'io.coil-kt:coil-compose:2.3.0'
-
-    // Compose tooling preview
-    debugImplementation "androidx.compose.ui:ui-tooling:1.4.1"
-    implementation "androidx.compose.ui:ui-tooling-preview:1.4.1"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
