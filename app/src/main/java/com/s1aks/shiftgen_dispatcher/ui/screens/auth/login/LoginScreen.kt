@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +47,10 @@ fun LoginScreen(
             viewModel.sendData(login = login, password = password)
         },
         onRegisterClick = { navController.navigate("register") },
-        onSuccessResponse = { navController.navigate("main") } // todo Нет возврата по кл назад!
+        onSuccessResponse = {
+            navController.backQueue.clear()
+            navController.navigate("main")
+        }
     )
 }
 
@@ -65,10 +67,9 @@ fun LoginScreenUI(
     var buttonLoginEnable by rememberSaveable { mutableStateOf(true) } // todo false  !!!!!
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val responseState by responseStateFlow.collectAsState()
-    if (responseState == ResponseState.Success(true)) {
-        LaunchedEffect(Unit) {
-            onSuccessResponse()
-        }
+    if (responseState == ResponseState.Success(true) && password.isNotBlank()) {
+        password = "" // Флаг перехода для препятствия зацикливания при рекомпозиции
+        onSuccessResponse()
     }
     Column(
         modifier = Modifier
