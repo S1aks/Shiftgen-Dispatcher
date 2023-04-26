@@ -8,7 +8,9 @@ import com.s1aks.shiftgen_dispatcher.data.RepositoryImpl
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService
 import com.s1aks.shiftgen_dispatcher.domain.Repository
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendLoginDataUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendRegisterDataUseCase
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -32,10 +34,14 @@ val dataAccessModule = module {
         RepositoryImpl(apiService)
     }
     viewModel { LoginViewModel(sendLoginDataUseCase = get()) }
+    viewModel { RegisterViewModel(sendRegisterDataUseCase = get()) }
 }
 
 val useCasesModule = module {
     single<SendLoginDataUseCase> {
         SendLoginDataUseCase(repository = get(), localSecureStore = get())
+    }
+    single<SendRegisterDataUseCase> {
+        SendRegisterDataUseCase(repository = get(), localSecureStore = get())
     }
 }

@@ -61,10 +61,10 @@ fun LoginScreenUI(
     onRegisterClick: () -> Unit,
     onSuccessResponse: () -> Unit
 ) {
-    var login by rememberSaveable { mutableStateOf("User5") }
-    var password by rememberSaveable { mutableStateOf("user5") }
-    var passwordEnable by rememberSaveable { mutableStateOf(true) }   // todo false  !!!!!!!
-    var buttonLoginEnable by rememberSaveable { mutableStateOf(true) } // todo false  !!!!!
+    var login by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordEnable by rememberSaveable { mutableStateOf(false) }
+    var buttonLoginEnable by rememberSaveable { mutableStateOf(false) }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val responseState by responseStateFlow.collectAsState()
     if (responseState == ResponseState.Success(true) && password.isNotBlank()) {
@@ -84,7 +84,7 @@ fun LoginScreenUI(
             onValueChange = {
                 passwordEnable = it != ""
                 login = it
-                buttonLoginEnable = login != "" && password != "" && password.length > 3
+                buttonLoginEnable = login != "" && password != "" && password.length > 4
             },
             label = { Text(text = "Логин") },
             keyboardOptions = KeyboardOptions(
@@ -97,7 +97,7 @@ fun LoginScreenUI(
             singleLine = true,
             onValueChange = {
                 password = it
-                buttonLoginEnable = login != "" && password != "" && password.length > 3
+                buttonLoginEnable = login != "" && password != "" && password.length > 4
             },
             label = { Text(text = "Пароль") },
             keyboardOptions = KeyboardOptions(
