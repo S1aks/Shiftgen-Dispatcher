@@ -12,10 +12,10 @@ interface StructuresCase {
     suspend fun structureDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
-        const val STRUCTURES = "$BASE_URL/structures"
-        const val STRUCTURE_GET = "$BASE_URL/structure/get"
-        const val STRUCTURE_INSERT = "$BASE_URL/structure/insert"
-        const val STRUCTURE_UPDATE = "$BASE_URL/structure/update"
-        const val STRUCTURE_DELETE = "$BASE_URL/structure/delete"
+        const val STRUCTURES_URL = "$BASE_URL/structures"
+        const val STRUCTURE_GET_URL = "$BASE_URL/structure/get"
+        const val STRUCTURE_INSERT_URL = "$BASE_URL/structure/insert"
+        const val STRUCTURE_UPDATE_URL = "$BASE_URL/structure/update"
+        const val STRUCTURE_DELETE_URL = "$BASE_URL/structure/delete"
     }
 }

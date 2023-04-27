@@ -1,13 +1,13 @@
 package com.s1aks.shiftgen_dispatcher.data.api
 
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REGISTER
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN_URL
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REGISTER_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions.DirectionsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURES
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_INSERT
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURES_URL
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_INSERT_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersCase
@@ -32,47 +32,45 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
     companion object {
         internal const val BASE_URL = "http://shiftgen.ru:8080"
 
-        fun create(): ApiService {
-            return ApiServiceImpl(
-                client = HttpClient(Android) {
-                    install(Logging) {
-                        level = LogLevel.ALL
-                    }
-                    install(ContentNegotiation) {
-                        json()
-                    }
-                    install(HttpTimeout) {
-                        requestTimeoutMillis = 6000L
-                        connectTimeoutMillis = 6000L
-                        socketTimeoutMillis = 6000L
-                    }
-                    install(Auth) {
-                        bearer {
-                            loadTokens {
-                                // Load tokens from a local storage and return them as the 'BearerTokens' instance
-                                BearerTokens("abc123", "xyz111")
-                            }
-                            refreshTokens {
-                                // Refresh tokens and return them as the 'BearerTokens' instance
-                                BearerTokens("def456", "xyz111")
-                            }
-                            sendWithoutRequest { request -> request.url.encodedPath == LOGIN }
-                            sendWithoutRequest { request -> request.url.encodedPath == REGISTER }
-                            sendWithoutRequest { request -> request.url.encodedPath == STRUCTURES }
-                            sendWithoutRequest { request -> request.url.encodedPath == STRUCTURE_INSERT }
+        fun create(): ApiService = ApiServiceImpl(
+            client = HttpClient(Android) {
+                install(Logging) {
+                    level = LogLevel.ALL
+                }
+                install(ContentNegotiation) {
+                    json()
+                }
+                install(HttpTimeout) {
+                    requestTimeoutMillis = 6000L
+                    connectTimeoutMillis = 6000L
+                    socketTimeoutMillis = 6000L
+                }
+                install(Auth) {
+                    bearer {
+                        loadTokens {
+                            // Load tokens from a local storage and return them as the 'BearerTokens' instance
+                            BearerTokens("abc123", "xyz111")
                         }
+                        refreshTokens {
+                            // Refresh tokens and return them as the 'BearerTokens' instance
+                            BearerTokens("def456", "xyz111")
+                        }
+                        sendWithoutRequest { request -> request.url.encodedPath == LOGIN_URL }
+                        sendWithoutRequest { request -> request.url.encodedPath == REGISTER_URL }
+                        sendWithoutRequest { request -> request.url.encodedPath == STRUCTURES_URL }
+                        sendWithoutRequest { request -> request.url.encodedPath == STRUCTURE_INSERT_URL }
                     }
-                    defaultRequest {
+                }
+                defaultRequest {
 //                        headers {
 //                            append(HttpHeaders.ContentType, "application/vnd.any.response+json")
 //                            append(HttpHeaders.ContentType, "application/json")
 //                            append(HttpHeaders.Authorization, "Bearer *token*")
 //                            append(HttpHeaders.UserAgent, "ktor client")
 //                        }
-                        contentType(ContentType.Application.Json)
-                    }
+                    contentType(ContentType.Application.Json)
                 }
-            )
-        }
+            }
+        )
     }
 }

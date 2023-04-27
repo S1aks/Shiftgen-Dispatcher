@@ -12,10 +12,10 @@ interface WorkersCase {
     suspend fun workerDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
-        const val WORKERS = "$BASE_URL/workers"
-        const val WORKER_GET = "$BASE_URL/worker/get"
-        const val WORKER_INSERT = "$BASE_URL/worker/insert"
-        const val WORKER_UPDATE = "$BASE_URL/worker/update"
-        const val WORKER_DELETE = "$BASE_URL/worker/delete"
+        const val WORKERS_URL = "$BASE_URL/workers"
+        const val WORKER_GET_URL = "$BASE_URL/worker/get"
+        const val WORKER_INSERT_URL = "$BASE_URL/worker/insert"
+        const val WORKER_UPDATE_URL = "$BASE_URL/worker/update"
+        const val WORKER_DELETE_URL = "$BASE_URL/worker/delete"
     }
 }

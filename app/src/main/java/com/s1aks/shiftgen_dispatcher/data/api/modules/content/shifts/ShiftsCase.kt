@@ -12,10 +12,10 @@ interface ShiftsCase {
     suspend fun shiftDelete(idRequest: IdRequest): HttpStatusCode
 
     companion object {
-        const val SHIFTS = "$BASE_URL/shifts"
-        const val SHIFT_GET = "$BASE_URL/shift/get"
-        const val SHIFT_INSERT = "$BASE_URL/shift/insert"
-        const val SHIFT_UPDATE = "$BASE_URL/shift/update"
-        const val SHIFT_DELETE = "$BASE_URL/shift/delete"
+        const val SHIFTS_URL = "$BASE_URL/shifts"
+        const val SHIFT_GET_URL = "$BASE_URL/shift/get"
+        const val SHIFT_INSERT_URL = "$BASE_URL/shift/insert"
+        const val SHIFT_UPDATE_URL = "$BASE_URL/shift/update"
+        const val SHIFT_DELETE_URL = "$BASE_URL/shift/delete"
     }
 }
