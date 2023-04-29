@@ -144,20 +144,20 @@ class ApiServiceImpl(
     override suspend fun timeSheets(): TimeSheetsResponse =
         client.get(TIMESHEETS_URL).body()
 
-    override suspend fun timeSheetsYearMonth(
+    override suspend fun timeSheetGet(idRequest: IdRequest): TimeSheetResponse =
+        client.get(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.body()
+
+    override suspend fun timeSheetsGetByYearMonth(
         timeSheetsYearMonthRequest: TimeSheetsYearMonthRequest
     ): TimeSheetsYearMonthRequest =
         client.get(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }.body()
 
-    override suspend fun timeSheetsByWorkerIdYearMonth(
+    override suspend fun timeSheetsGetByWorkerIdYearMonth(
         timeSheetsWorkerIdYearMonthRequest: TimeSheetsWorkerIdYearMonthRequest
     ): TimeSheetsWorkerIdYearMonthRequest =
         client.get(TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL) {
             setBody(timeSheetsWorkerIdYearMonthRequest)
         }.body()
-
-    override suspend fun timeSheetGet(idRequest: IdRequest): TimeSheetResponse =
-        client.get(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.body()
 
     override suspend fun timeSheetInsert(timeSheetRequest: TimeSheetRequest): HttpStatusCode =
         client.post(TIMESHEET_INSERT_URL) { setBody(timeSheetRequest) }.status

@@ -21,13 +21,13 @@ data class TimeSheetRequest(
 data class TimeSheetsWorkerIdYearMonthRequest(
     val workerId: Int,
     @Serializable(with = YearMonthSerializer::class)
-    val periodYearMonth: YearMonth
+    val yearMonth: YearMonth
 )
 
 @Serializable
 data class TimeSheetsYearMonthRequest(
     @Serializable(with = YearMonthSerializer::class)
-    val periodYearMonth: YearMonth
+    val yearMonth: YearMonth
 )
 
 @Serializable

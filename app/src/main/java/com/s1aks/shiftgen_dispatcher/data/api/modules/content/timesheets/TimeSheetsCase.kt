@@ -6,9 +6,9 @@ import io.ktor.http.HttpStatusCode
 
 interface TimeSheetsCase {
     suspend fun timeSheets(): TimeSheetsResponse
-    suspend fun timeSheetsYearMonth(timeSheetsYearMonthRequest: TimeSheetsYearMonthRequest): TimeSheetsYearMonthRequest
-    suspend fun timeSheetsByWorkerIdYearMonth(timeSheetsWorkerIdYearMonthRequest: TimeSheetsWorkerIdYearMonthRequest): TimeSheetsWorkerIdYearMonthRequest
     suspend fun timeSheetGet(idRequest: IdRequest): TimeSheetResponse
+    suspend fun timeSheetsGetByYearMonth(timeSheetsYearMonthRequest: TimeSheetsYearMonthRequest): TimeSheetsResponse
+    suspend fun timeSheetsGetByWorkerIdYearMonth(timeSheetsWorkerIdYearMonthRequest: TimeSheetsWorkerIdYearMonthRequest): TimeSheetsResponse
     suspend fun timeSheetInsert(timeSheetRequest: TimeSheetRequest): HttpStatusCode
     suspend fun timeSheetUpdate(timeSheetRequest: TimeSheetRequest): HttpStatusCode
     suspend fun timeSheetDelete(idRequest: IdRequest): HttpStatusCode
