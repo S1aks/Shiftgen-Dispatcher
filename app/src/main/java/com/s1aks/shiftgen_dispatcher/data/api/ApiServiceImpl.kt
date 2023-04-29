@@ -149,12 +149,12 @@ class ApiServiceImpl(
 
     override suspend fun timeSheetsGetByYearMonth(
         timeSheetsYearMonthRequest: TimeSheetsYearMonthRequest
-    ): TimeSheetsYearMonthRequest =
+    ): TimeSheetsResponse =
         client.get(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }.body()
 
     override suspend fun timeSheetsGetByWorkerIdYearMonth(
         timeSheetsWorkerIdYearMonthRequest: TimeSheetsWorkerIdYearMonthRequest
-    ): TimeSheetsWorkerIdYearMonthRequest =
+    ): TimeSheetsResponse =
         client.get(TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL) {
             setBody(timeSheetsWorkerIdYearMonthRequest)
         }.body()
