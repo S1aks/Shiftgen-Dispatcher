@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
+import com.s1aks.shiftgen_dispatcher.domain.models.RegisterData
 import com.s1aks.shiftgen_dispatcher.utils.isValidEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,9 +46,7 @@ fun RegisterScreen(
 ) {
     RegisterScreenUI(
         responseStateFlow = MutableStateFlow(ResponseState.Loading).asStateFlow(),//viewModel.loginState,
-        onRegisterClick = { login, email, password, group, structure ->
-            viewModel.sendData(login, email, password, group, structure)
-        },
+        onRegisterClick = { registerData -> viewModel.sendData(registerData) },
         onCancelClick = { navController.popBackStack() },
         onSuccessResponse = {
             navController.backQueue.clear()
@@ -59,7 +58,7 @@ fun RegisterScreen(
 @Composable
 fun RegisterScreenUI(
     responseStateFlow: StateFlow<ResponseState<Boolean>>,
-    onRegisterClick: (String, String, String, String, String) -> Unit,
+    onRegisterClick: (RegisterData) -> Unit,
     onCancelClick: () -> Unit,
     onSuccessResponse: () -> Unit
 ) {
@@ -112,6 +111,7 @@ fun RegisterScreenUI(
                 email = it
                 checkTextFields()
             },
+            isError = !emailValid && email.isNotEmpty(),
             label = { Text(text = "E-mail") },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
@@ -173,7 +173,9 @@ fun RegisterScreenUI(
                 modifier = Modifier
                     .padding(4.dp)
                     .width(130.dp),
-                onClick = { onRegisterClick(login, email, password, group, structure) },
+                onClick = {
+                    onRegisterClick(RegisterData(login, email, password, group, structure))
+                },
                 enabled = buttonRegisterEnable
             ) {
                 Text(text = "Регистрация")
@@ -194,5 +196,5 @@ fun RegisterScreenUI(
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegisterScreen() {
-    RegisterScreenUI(MutableStateFlow(ResponseState.Loading), { _, _, _, _, _ -> }, {}, {})
+    RegisterScreenUI(MutableStateFlow(ResponseState.Loading), {}, {}, {})
 }

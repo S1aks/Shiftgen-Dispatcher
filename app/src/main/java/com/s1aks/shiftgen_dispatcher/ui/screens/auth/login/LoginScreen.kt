@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
+import com.s1aks.shiftgen_dispatcher.domain.models.LoginData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -43,8 +44,8 @@ fun LoginScreen(
 ) {
     LoginScreenUI(
         responseStateFlow = viewModel.loginState,
-        onLoginClick = { login, password ->
-            viewModel.sendData(login = login, password = password)
+        onLoginClick = { loginData ->
+            viewModel.sendData(loginData)
         },
         onRegisterClick = { navController.navigate("register") },
         onSuccessResponse = {
@@ -57,7 +58,7 @@ fun LoginScreen(
 @Composable
 fun LoginScreenUI(
     responseStateFlow: StateFlow<ResponseState<Boolean>>,
-    onLoginClick: (String, String) -> Unit,
+    onLoginClick: (LoginData) -> Unit,
     onRegisterClick: () -> Unit,
     onSuccessResponse: () -> Unit
 ) {
@@ -122,7 +123,7 @@ fun LoginScreenUI(
                 modifier = Modifier
                     .padding(4.dp)
                     .width(120.dp),
-                onClick = { onLoginClick(login, password) },
+                onClick = { onLoginClick(LoginData(login, password)) },
                 enabled = buttonLoginEnable
             ) {
                 Text(text = "Вход")
@@ -143,5 +144,5 @@ fun LoginScreenUI(
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreenUI(MutableStateFlow(ResponseState.Loading), { _, _ -> }, {}, {})
+    LoginScreenUI(MutableStateFlow(ResponseState.Loading), {}, {}, {})
 }
