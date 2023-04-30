@@ -1,6 +1,6 @@
 package com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions
 
-import com.s1aks.shiftgen_dispatcher.data.entities.DirectionDTO
+import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,10 +11,10 @@ data class DirectionRequest(
 
 @Serializable
 data class DirectionResponse(
-    val direction: DirectionDTO
+    val direction: Direction
 )
 
 @Serializable
 data class DirectionsResponse(
-    val list: List<DirectionDTO>
+    val list: List<Direction>
 )

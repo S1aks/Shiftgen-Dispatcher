@@ -25,22 +25,16 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeShe
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkerRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkerResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersResponse
-import com.s1aks.shiftgen_dispatcher.data.entities.DirectionDTO
-import com.s1aks.shiftgen_dispatcher.data.entities.ShiftDTO
-import com.s1aks.shiftgen_dispatcher.data.entities.StructureDTO
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlockDTO
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheetDTO
-import com.s1aks.shiftgen_dispatcher.data.entities.WorkerDTO
-import com.s1aks.shiftgen_dispatcher.domain.models.Direction
-import com.s1aks.shiftgen_dispatcher.domain.models.LoginData
-import com.s1aks.shiftgen_dispatcher.domain.models.RegisterData
-import com.s1aks.shiftgen_dispatcher.domain.models.Shift
-import com.s1aks.shiftgen_dispatcher.domain.models.Structure
-import com.s1aks.shiftgen_dispatcher.domain.models.StructureMap
-import com.s1aks.shiftgen_dispatcher.domain.models.TimeBlock
-import com.s1aks.shiftgen_dispatcher.domain.models.TimeSheet
-import com.s1aks.shiftgen_dispatcher.domain.models.TokensData
-import com.s1aks.shiftgen_dispatcher.domain.models.Worker
+import com.s1aks.shiftgen_dispatcher.data.entities.Direction
+import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
+import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
+import com.s1aks.shiftgen_dispatcher.data.entities.Shift
+import com.s1aks.shiftgen_dispatcher.data.entities.Structure
+import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
+import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
+import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import java.time.YearMonth
 
 internal fun LoginData.toLoginRequest(): LoginRequest = LoginRequest(login, password)
@@ -48,16 +42,14 @@ internal fun LoginData.toLoginRequest(): LoginRequest = LoginRequest(login, pass
 internal fun LoginResponse.toTokensData(): TokensData = TokensData(accessToken, refreshToken)
 
 internal fun RegisterData.toRegisterRequest(
-    groupInsertBlock: (String) -> Int, structureInsertBlock: (String) -> Int
-): RegisterRequest = RegisterRequest(
-    login, email, password, groupInsertBlock(group), structureInsertBlock(structure)
-)
+    groupNumber: Int, structureNumber: Int
+): RegisterRequest = RegisterRequest(login, email, password, groupNumber, structureNumber)
 
 internal fun RegisterResponse.toTokensData(): TokensData = TokensData(accessToken, refreshToken)
 
 internal fun Direction.toDirectionRequest(): DirectionRequest = DirectionRequest(id, name)
 
-internal fun DirectionDTO.toDirection(): Direction = Direction(id, name, structureId)
+internal fun Direction.toDirection(): Direction = Direction(id, name, structureId)
 
 internal fun DirectionResponse.toDirection(): Direction = direction.toDirection()
 
@@ -70,7 +62,7 @@ internal fun Shift.toShiftRequest(): ShiftRequest = ShiftRequest(
     structureId, directionId, startTime, timeBlocksIds
 )
 
-internal fun ShiftDTO.toShift(): Shift = Shift(
+internal fun Shift.toShift(): Shift = Shift(
     id, name, periodYearMonth, periodicity, workerId,
     structureId, directionId, startTime, timeBlocksIds
 )
@@ -83,15 +75,15 @@ internal fun Structure.toStructureRequest(): StructureRequest = StructureRequest
     id, name, description, restHours, allowedConsecutiveNights, nightStartHour, nightEndHour
 )
 
-internal fun StructureDTO.toStructure(): Structure = Structure(
+internal fun Structure.toStructure(): Structure = Structure(
     id, name, description, restHours, allowedConsecutiveNights, nightStartHour, nightEndHour
 )
 
 internal fun StructureResponse.toStructure(): Structure = structure.toStructure()
 
-internal fun StructuresResponse.toStructureMap(): StructureMap = list
+internal fun StructuresResponse.toStructureMap(): StructuresMap = list
 
-internal fun TimeBlockDTO.toTimeBlock(): TimeBlock =
+internal fun TimeBlock.toTimeBlock(): TimeBlock =
     TimeBlock(id, structureId, name, duration, action)
 
 internal fun TimeBlockResponse.toTimeBlock(): TimeBlock = timeBlock.toTimeBlock()
@@ -101,7 +93,7 @@ internal fun TimeBlocksResponse.toTimeBlocksList(): List<TimeBlock> = list.map {
 internal fun TimeBlock.toTimeBlockRequest(): TimeBlockRequest =
     TimeBlockRequest(id, structureId, name, duration, action)
 
-internal fun TimeSheetDTO.toTimeSheet(): TimeSheet = TimeSheet(
+internal fun TimeSheet.toTimeSheet(): TimeSheet = TimeSheet(
     id, workerId, structureId, periodYearMonth, workedTime, calculatedTime, correctionTime
 )
 
@@ -119,7 +111,7 @@ internal fun TimeSheet.toTimeSheetRequest(): TimeSheetRequest = TimeSheetRequest
     id, workerId, structureId, periodYearMonth, workedTime, calculatedTime, correctionTime
 )
 
-internal fun WorkerDTO.toWorker(): Worker = Worker(
+internal fun Worker.toWorker(): Worker = Worker(
     id, personnelNumber, userId, structureId, firstName, lastName, patronymic, accessToDirections
 )
 

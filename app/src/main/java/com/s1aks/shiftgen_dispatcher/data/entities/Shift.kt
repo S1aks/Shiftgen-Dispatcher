@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 
 @Serializable
-data class ShiftDTO(
+data class Shift(
     val id: Int = 0,
     val name: String,
     @Serializable(with = YearMonthSerializer::class)

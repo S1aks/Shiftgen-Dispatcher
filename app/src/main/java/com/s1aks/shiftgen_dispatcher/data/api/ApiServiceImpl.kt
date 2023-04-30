@@ -66,26 +66,37 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.isSuccess
 
 class ApiServiceImpl(
     private val client: HttpClient
 ) : ApiService {
 
+    private suspend inline fun <reified T> HttpResponse.getData(): T {
+        return if (status.isSuccess()) {
+            body()
+        } else {
+            throw RuntimeException(bodyAsText())
+        }
+    }
+
     override suspend fun login(loginRequest: LoginRequest): LoginResponse =
-        client.post(LOGIN_URL) { setBody(loginRequest) }.body()
+        client.post(LOGIN_URL) { setBody(loginRequest) }.getData()
 
     override suspend fun refresh(refreshRequest: RefreshRequest): LoginResponse =
-        client.post(REFRESH_URL) { setBody(refreshRequest) }.body()
+        client.post(REFRESH_URL) { setBody(refreshRequest) }.getData()
 
     override suspend fun register(registerRequest: RegisterRequest): RegisterResponse =
-        client.post(REGISTER_URL) { setBody(registerRequest) }.body()
+        client.post(REGISTER_URL) { setBody(registerRequest) }.getData()
 
     override suspend fun directions(): DirectionsResponse =
-        client.get(DIRECTIONS_URL).body()
+        client.get(DIRECTIONS_URL).getData()
 
     override suspend fun directionGet(idRequest: IdRequest): DirectionResponse =
-        client.get(DIRECTION_GET_URL) { setBody(idRequest) }.body()
+        client.get(DIRECTION_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun directionInsert(directionRequest: DirectionRequest): HttpStatusCode =
         client.post(DIRECTION_INSERT_URL) { setBody(directionRequest) }.status
@@ -97,10 +108,10 @@ class ApiServiceImpl(
         client.post(DIRECTION_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun shifts(shiftsRequest: ShiftsRequest): ShiftsResponse =
-        client.get(SHIFTS_URL).body()
+        client.get(SHIFTS_URL).getData()
 
     override suspend fun shiftGet(idRequest: IdRequest): ShiftResponse =
-        client.get(SHIFT_GET_URL) { setBody(idRequest) }.body()
+        client.get(SHIFT_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun shiftInsert(shiftRequest: ShiftRequest): HttpStatusCode =
         client.post(SHIFT_INSERT_URL) { setBody(shiftRequest) }.status
@@ -112,10 +123,10 @@ class ApiServiceImpl(
         client.post(SHIFT_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun structures(): StructuresResponse =
-        client.get(STRUCTURES_URL).body()
+        client.get(STRUCTURES_URL).getData()
 
     override suspend fun structureGet(idRequest: IdRequest): StructureResponse =
-        client.get(STRUCTURE_GET_URL) { setBody(idRequest) }.body()
+        client.get(STRUCTURE_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun structureInsert(structureRequest: StructureRequest): HttpStatusCode =
         client.post(STRUCTURE_INSERT_URL) { setBody(structureRequest) }.status
@@ -127,10 +138,10 @@ class ApiServiceImpl(
         client.post(STRUCTURE_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun timeBlocks(): TimeBlocksResponse =
-        client.get(TIME_BLOCKS_URL).body()
+        client.get(TIME_BLOCKS_URL).getData()
 
     override suspend fun timeBlockGet(idRequest: IdRequest): TimeBlockResponse =
-        client.get(TIME_BLOCK_GET_URL) { setBody(idRequest) }.body()
+        client.get(TIME_BLOCK_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest): HttpStatusCode =
         client.post(TIME_BLOCK_INSERT_URL) { setBody(timeBlockRequest) }.status
@@ -142,22 +153,23 @@ class ApiServiceImpl(
         client.post(TIME_BLOCK_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun timeSheets(): TimeSheetsResponse =
-        client.get(TIMESHEETS_URL).body()
+        client.get(TIMESHEETS_URL).getData()
 
     override suspend fun timeSheetGet(idRequest: IdRequest): TimeSheetResponse =
-        client.get(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.body()
+        client.get(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.getData()
 
     override suspend fun timeSheetsGetByYearMonth(
         timeSheetsYearMonthRequest: TimeSheetsYearMonthRequest
     ): TimeSheetsResponse =
-        client.get(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }.body()
+        client.get(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }
+            .getData()
 
     override suspend fun timeSheetsGetByWorkerIdYearMonth(
         timeSheetsWorkerIdYearMonthRequest: TimeSheetsWorkerIdYearMonthRequest
     ): TimeSheetsResponse =
         client.get(TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL) {
             setBody(timeSheetsWorkerIdYearMonthRequest)
-        }.body()
+        }.getData()
 
     override suspend fun timeSheetInsert(timeSheetRequest: TimeSheetRequest): HttpStatusCode =
         client.post(TIMESHEET_INSERT_URL) { setBody(timeSheetRequest) }.status
@@ -169,10 +181,10 @@ class ApiServiceImpl(
         client.post(TIMESHEET_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun workers(): WorkersResponse =
-        client.get(WORKERS_URL).body()
+        client.get(WORKERS_URL).getData()
 
     override suspend fun workerGet(idRequest: IdRequest): WorkerResponse =
-        client.get(WORKER_GET_URL) { setBody(idRequest) }.body()
+        client.get(WORKER_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun workerInsert(workerRequest: WorkerRequest): HttpStatusCode =
         client.post(WORKER_INSERT_URL) { setBody(workerRequest) }.status
@@ -183,22 +195,3 @@ class ApiServiceImpl(
     override suspend fun workerDelete(idRequest: IdRequest): HttpStatusCode =
         client.post(WORKER_INSERT_URL) { setBody(idRequest) }.status
 }
-
-//return try {
-//    client.post<LoginResponse> {
-//        url(LOGIN)
-//        setBody(loginRequest
-//    }
-//} catch (ex: RedirectResponseException) {
-//    // 3xx - responses
-//    println("Error: ${ex.response.status.description}")
-//    null
-//} catch (ex: ClientRequestException) {
-//    // 4xx - responses
-//    println("Error: ${ex.response.status.description}")
-//    null
-//} catch (ex: ServerResponseException) {
-//    // 5xx - response
-//    println("Error: ${ex.response.status.description}")
-//    null
-//}

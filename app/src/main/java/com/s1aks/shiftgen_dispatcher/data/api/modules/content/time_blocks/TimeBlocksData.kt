@@ -1,7 +1,7 @@
 package com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks
 
 import com.s1aks.shiftgen_dispatcher.data.entities.Action
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlockDTO
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,10 +15,10 @@ data class TimeBlockRequest(
 
 @Serializable
 data class TimeBlockResponse(
-    val timeBlock: TimeBlockDTO
+    val timeBlock: TimeBlock
 )
 
 @Serializable
 data class TimeBlocksResponse(
-    val list: List<TimeBlockDTO>
+    val list: List<TimeBlock>
 )

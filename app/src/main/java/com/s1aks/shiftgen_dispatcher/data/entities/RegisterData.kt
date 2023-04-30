@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.domain.models
+package com.s1aks.shiftgen_dispatcher.data.entities
 
 data class RegisterData(
     val login: String,

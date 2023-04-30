@@ -2,18 +2,18 @@ package com.s1aks.shiftgen_dispatcher.data
 
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
+import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.data.entities.Groups
+import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
+import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
+import com.s1aks.shiftgen_dispatcher.data.entities.Shift
+import com.s1aks.shiftgen_dispatcher.data.entities.Structure
+import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
+import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
+import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import com.s1aks.shiftgen_dispatcher.domain.Repository
-import com.s1aks.shiftgen_dispatcher.domain.models.Direction
-import com.s1aks.shiftgen_dispatcher.domain.models.LoginData
-import com.s1aks.shiftgen_dispatcher.domain.models.RegisterData
-import com.s1aks.shiftgen_dispatcher.domain.models.Shift
-import com.s1aks.shiftgen_dispatcher.domain.models.Structure
-import com.s1aks.shiftgen_dispatcher.domain.models.StructureMap
-import com.s1aks.shiftgen_dispatcher.domain.models.TimeBlock
-import com.s1aks.shiftgen_dispatcher.domain.models.TimeSheet
-import com.s1aks.shiftgen_dispatcher.domain.models.TokensData
-import com.s1aks.shiftgen_dispatcher.domain.models.Worker
 import io.ktor.http.isSuccess
 import java.time.YearMonth
 
@@ -24,18 +24,12 @@ class RepositoryImpl(
         apiService.login(loginData.toLoginRequest()).toTokensData()
 
     override suspend fun register(registerData: RegisterData): TokensData {
-        val structures = getStructures()  // todo На сервере создать метод взятия структуры по имени
-        return apiService.register(
-            registerData.toRegisterRequest(
-                { groupName ->
-                    Groups.values().find { it.groupName == groupName }?.ordinal
-                        ?: throw NoSuchElementException("Error! Group not found.")
-                },
-                { structureName ->
-                    structures.filterValues { it == structureName }.keys.first()
-                }
-            )
-        ).toTokensData()
+        val groupNumber = Groups.values().find { it.groupName == registerData.group }?.ordinal
+            ?: throw RuntimeException("Error find group.")
+        val structureNumber = apiService.structures().toStructureMap()
+            .filterValues { it == registerData.structure }.entries.first().key
+        return apiService.register(registerData.toRegisterRequest(groupNumber, structureNumber))
+            .toTokensData()
     }
 
     override suspend fun getDirections(): List<Direction> =
@@ -68,7 +62,7 @@ class RepositoryImpl(
     override suspend fun deleteShift(id: Int): Boolean =
         apiService.shiftDelete(IdRequest(id)).isSuccess()
 
-    override suspend fun getStructures(): StructureMap =
+    override suspend fun getStructures(): StructuresMap =
         apiService.structures().toStructureMap()
 
     override suspend fun getStructure(id: Int): Structure =
