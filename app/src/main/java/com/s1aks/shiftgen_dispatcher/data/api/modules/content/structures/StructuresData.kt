@@ -1,6 +1,7 @@
 package com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures
 
-import com.s1aks.shiftgen_dispatcher.data.entities.StructureDTO
+import com.s1aks.shiftgen_dispatcher.data.entities.Structure
+import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,10 +17,10 @@ data class StructureRequest(
 
 @Serializable
 data class StructureResponse(
-    val structure: StructureDTO
+    val structure: Structure
 )
 
 @Serializable
 data class StructuresResponse(
-    val list: Map<Int, String>
+    val list: StructuresMap
 )

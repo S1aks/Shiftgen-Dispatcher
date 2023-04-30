@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import java.time.YearMonth
 
 @Serializable
-data class TimeSheetDTO(
+data class TimeSheet(
     val id: Int = 0,
     val workerId: Int,
     val structureId: Int,

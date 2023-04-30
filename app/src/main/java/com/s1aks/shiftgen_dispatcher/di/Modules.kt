@@ -7,6 +7,7 @@ import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
 import com.s1aks.shiftgen_dispatcher.data.RepositoryImpl
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService
 import com.s1aks.shiftgen_dispatcher.domain.Repository
+import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.GetStructuresUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendLoginDataUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendRegisterDataUseCase
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
@@ -34,7 +35,7 @@ val dataAccessModule = module {
         RepositoryImpl(apiService)
     }
     viewModel { LoginViewModel(sendLoginDataUseCase = get()) }
-    viewModel { RegisterViewModel(sendRegisterDataUseCase = get()) }
+    viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
 }
 
 val useCasesModule = module {
@@ -44,4 +45,5 @@ val useCasesModule = module {
     single<SendRegisterDataUseCase> {
         SendRegisterDataUseCase(repository = get(), localSecureStore = get())
     }
+    single<GetStructuresUseCase> { GetStructuresUseCase(repository = get()) }
 }

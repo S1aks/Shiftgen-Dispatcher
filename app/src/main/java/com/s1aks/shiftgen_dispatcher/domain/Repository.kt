@@ -1,14 +1,15 @@
 package com.s1aks.shiftgen_dispatcher.domain
 
-import com.s1aks.shiftgen_dispatcher.domain.models.Direction
-import com.s1aks.shiftgen_dispatcher.domain.models.LoginData
-import com.s1aks.shiftgen_dispatcher.domain.models.RegisterData
-import com.s1aks.shiftgen_dispatcher.domain.models.Shift
-import com.s1aks.shiftgen_dispatcher.domain.models.Structure
-import com.s1aks.shiftgen_dispatcher.domain.models.TimeBlock
-import com.s1aks.shiftgen_dispatcher.domain.models.TimeSheet
-import com.s1aks.shiftgen_dispatcher.domain.models.TokensData
-import com.s1aks.shiftgen_dispatcher.domain.models.Worker
+import com.s1aks.shiftgen_dispatcher.data.entities.Direction
+import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
+import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
+import com.s1aks.shiftgen_dispatcher.data.entities.Shift
+import com.s1aks.shiftgen_dispatcher.data.entities.Structure
+import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
+import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
+import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import java.time.YearMonth
 
 interface Repository {
@@ -27,7 +28,7 @@ interface Repository {
     suspend fun updateShift(shift: Shift): Boolean
     suspend fun deleteShift(id: Int): Boolean
 
-    suspend fun getStructures(): Map<Int, String>
+    suspend fun getStructures(): StructuresMap
     suspend fun getStructure(id: Int): Structure
     suspend fun insertStructure(structure: Structure): Boolean
     suspend fun updateStructure(structure: Structure): Boolean

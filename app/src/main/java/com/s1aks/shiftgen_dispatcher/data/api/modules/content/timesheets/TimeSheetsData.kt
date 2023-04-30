@@ -1,6 +1,6 @@
 package com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets
 
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheetDTO
+import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.utils.YearMonthSerializer
 import kotlinx.serialization.Serializable
 import java.time.YearMonth
@@ -32,10 +32,10 @@ data class TimeSheetsYearMonthRequest(
 
 @Serializable
 data class TimeSheetResponse(
-    val timesheet: TimeSheetDTO
+    val timesheet: TimeSheet
 )
 
 @Serializable
 data class TimeSheetsResponse(
-    val list: List<TimeSheetDTO>
+    val list: List<TimeSheet>
 )

@@ -1,7 +1,7 @@
 package com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts
 
 import com.s1aks.shiftgen_dispatcher.data.entities.Periodicity
-import com.s1aks.shiftgen_dispatcher.data.entities.ShiftDTO
+import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.utils.LocalDateTimeSerializer
 import com.s1aks.shiftgen_dispatcher.utils.YearMonthSerializer
 import kotlinx.serialization.Serializable
@@ -31,10 +31,10 @@ data class ShiftsRequest(
 
 @Serializable
 data class ShiftResponse(
-    val shift: ShiftDTO
+    val shift: Shift
 )
 
 @Serializable
 data class ShiftsResponse(
-    val list: List<ShiftDTO>
+    val list: List<Shift>
 )
