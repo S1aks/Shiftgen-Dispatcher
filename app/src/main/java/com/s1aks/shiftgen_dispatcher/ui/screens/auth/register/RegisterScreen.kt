@@ -111,12 +111,12 @@ fun RegisterScreenUI(
             structureLoading = true
         }
 
-        is ResponseState.Error -> {
-            (structuresState as ResponseState.Error).toastError(context = LocalContext.current)
-        }
-
         is ResponseState.Success -> {
             structuresMap = (structuresState as ResponseState.Success).item
+        }
+        
+        is ResponseState.Error -> {
+            (structuresState as ResponseState.Error).toastError(context = LocalContext.current)
         }
     }
     var loadingState by rememberSaveable { mutableStateOf(false) }
