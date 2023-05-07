@@ -59,6 +59,7 @@ import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Groups
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
+import com.s1aks.shiftgen_dispatcher.ui.NAV_MAIN
 import com.s1aks.shiftgen_dispatcher.utils.isValidEmail
 import com.s1aks.shiftgen_dispatcher.utils.toastError
 import kotlinx.coroutines.delay
@@ -74,11 +75,12 @@ fun RegisterScreen(
         structuresStateFlow = viewModel.structuresState,
         responseStateFlow = viewModel.registerState,
         onRegisterClick = { registerData -> viewModel.sendData(registerData) },
-        onCancelClick = { navController.popBackStack() }
-    ) {
-        navController.backQueue.clear()
-        navController.navigate("main")
-    }
+        onCancelClick = { navController.popBackStack() },
+        onSuccessResponse = {
+            navController.backQueue.clear()
+            navController.navigate(NAV_MAIN)
+        }
+    )
 }
 
 @Composable
@@ -114,7 +116,7 @@ fun RegisterScreenUI(
         is ResponseState.Success -> {
             structuresMap = (structuresState as ResponseState.Success).item
         }
-        
+
         is ResponseState.Error -> {
             (structuresState as ResponseState.Error).toastError(context = LocalContext.current)
         }

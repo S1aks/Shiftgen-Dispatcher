@@ -12,6 +12,7 @@ import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendLoginDataUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendRegisterDataUseCase
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -36,6 +37,7 @@ val dataAccessModule = module {
     }
     viewModel { LoginViewModel(sendLoginDataUseCase = get()) }
     viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
+    viewModel { ShiftsViewModel() }
 }
 
 val useCasesModule = module {
