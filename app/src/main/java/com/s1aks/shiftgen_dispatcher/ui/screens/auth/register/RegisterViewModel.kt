@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
-import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.GetStructuresUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendRegisterDataUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.GetStructuresUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,7 +41,7 @@ class RegisterViewModel(
         registerData: RegisterData
     ) {
         _registerState.value = ResponseState.Loading
-        viewModelScope.launch() {
+        viewModelScope.launch {
             try {
                 _registerState.value = sendRegisterDataUseCase.execute(registerData)
             } catch (exception: RuntimeException) {

@@ -1,6 +1,5 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.auth.login
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
+import com.s1aks.shiftgen_dispatcher.ui.Screen
+import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
 import com.s1aks.shiftgen_dispatcher.utils.toastError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,20 +51,19 @@ fun LoginScreen(
         onLoginClick = { loginData ->
             viewModel.sendData(loginData)
         },
-        onRegisterClick = { navController.navigate("register") },
+        onRegisterClick = { navController.navigate(Screen.Register.route) },
         onSuccessResponse = {
-            navController.backQueue.clear()
-            navController.navigate("main")
+            navController.clearAndNavigate(Screen.Main.route)
         }
     )
 }
 
 @Composable
 fun LoginScreenUI(
-    responseStateFlow: StateFlow<ResponseState<Boolean>>,
-    onLoginClick: (LoginData) -> Unit,
-    onRegisterClick: () -> Unit,
-    onSuccessResponse: () -> Unit
+    responseStateFlow: StateFlow<ResponseState<Boolean>> = MutableStateFlow(ResponseState.Idle),
+    onLoginClick: (LoginData) -> Unit = {},
+    onRegisterClick: () -> Unit = {},
+    onSuccessResponse: () -> Unit = {}
 ) {
     var login by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -166,9 +166,8 @@ fun LoginScreenUI(
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreenUI(MutableStateFlow(ResponseState.Idle), {}, {}, {})
+    LoginScreenUI()
 }

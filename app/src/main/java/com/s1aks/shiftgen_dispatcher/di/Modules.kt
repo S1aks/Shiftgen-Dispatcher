@@ -7,12 +7,17 @@ import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
 import com.s1aks.shiftgen_dispatcher.data.RepositoryImpl
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService
 import com.s1aks.shiftgen_dispatcher.domain.Repository
-import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.GetStructuresUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendLoginDataUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.auth.SendRegisterDataUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.directions.GetDirectionsUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetShiftsUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.GetStructuresUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.workers.GetWorkersUseCase
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,7 +42,9 @@ val dataAccessModule = module {
     }
     viewModel { LoginViewModel(sendLoginDataUseCase = get()) }
     viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
-    viewModel { ShiftsViewModel() }
+    viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
+    viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }
+    viewModel { WorkersViewModel(getWorkersUseCase = get()) }
 }
 
 val useCasesModule = module {
@@ -47,5 +54,8 @@ val useCasesModule = module {
     single<SendRegisterDataUseCase> {
         SendRegisterDataUseCase(repository = get(), localSecureStore = get())
     }
+    single<GetDirectionsUseCase> { GetDirectionsUseCase(repository = get()) }
+    single<GetShiftsUseCase> { GetShiftsUseCase(repository = get()) }
     single<GetStructuresUseCase> { GetStructuresUseCase(repository = get()) }
+    single<GetWorkersUseCase> { GetWorkersUseCase(repository = get()) }
 }

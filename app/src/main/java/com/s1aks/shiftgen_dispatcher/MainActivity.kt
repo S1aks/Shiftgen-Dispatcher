@@ -8,19 +8,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.s1aks.shiftgen_dispatcher.ui.NAV_LOGIN
-import com.s1aks.shiftgen_dispatcher.ui.NAV_MAIN
-import com.s1aks.shiftgen_dispatcher.ui.NAV_REGISTER
-import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginScreen
-import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
-import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterScreen
-import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterViewModel
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreen
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsViewModel
+import com.s1aks.shiftgen_dispatcher.ui.NavRoutes
+import com.s1aks.shiftgen_dispatcher.ui.Screen
+import com.s1aks.shiftgen_dispatcher.ui.startGraph
 import com.s1aks.shiftgen_dispatcher.ui.theme.ShiftgenDispatcherTheme
-import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,26 +28,10 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = NAV_LOGIN
+                        startDestination = Screen.Login.route,
+                        route = NavRoutes.StartRoute.name
                     ) {
-                        composable(NAV_LOGIN) {
-                            LoginScreen(
-                                navController = navController,
-                                viewModel = koinViewModel<LoginViewModel>()
-                            )
-                        }
-                        composable(NAV_REGISTER) {
-                            RegisterScreen(
-                                navController = navController,
-                                viewModel = koinViewModel<RegisterViewModel>()
-                            )
-                        }
-                        composable(NAV_MAIN) {
-                            MainScreen(
-                                navController = navController,
-                                viewModel = koinViewModel<ShiftsViewModel>()
-                            )
-                        }
+                        startGraph(navController)
                     }
                 }
             }

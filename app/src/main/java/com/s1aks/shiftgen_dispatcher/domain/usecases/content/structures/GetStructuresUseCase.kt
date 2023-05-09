@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.domain.usecases.auth
+package com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures
 
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap

@@ -59,7 +59,8 @@ import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Groups
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
-import com.s1aks.shiftgen_dispatcher.ui.NAV_MAIN
+import com.s1aks.shiftgen_dispatcher.ui.Screen
+import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
 import com.s1aks.shiftgen_dispatcher.utils.isValidEmail
 import com.s1aks.shiftgen_dispatcher.utils.toastError
 import kotlinx.coroutines.delay
@@ -76,20 +77,17 @@ fun RegisterScreen(
         responseStateFlow = viewModel.registerState,
         onRegisterClick = { registerData -> viewModel.sendData(registerData) },
         onCancelClick = { navController.popBackStack() },
-        onSuccessResponse = {
-            navController.backQueue.clear()
-            navController.navigate(NAV_MAIN)
-        }
+        onSuccessResponse = { navController.clearAndNavigate(Screen.Main.route) }
     )
 }
 
 @Composable
 fun RegisterScreenUI(
-    structuresStateFlow: StateFlow<ResponseState<StructuresMap>>,
-    responseStateFlow: StateFlow<ResponseState<Boolean>>,
-    onRegisterClick: (RegisterData) -> Unit,
-    onCancelClick: () -> Unit,
-    onSuccessResponse: () -> Unit
+    structuresStateFlow: StateFlow<ResponseState<StructuresMap>> = MutableStateFlow(ResponseState.Idle),
+    responseStateFlow: StateFlow<ResponseState<Boolean>> = MutableStateFlow(ResponseState.Idle),
+    onRegisterClick: (RegisterData) -> Unit = {},
+    onCancelClick: () -> Unit = {},
+    onSuccessResponse: () -> Unit = {}
 ) {
     var login by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -272,14 +270,14 @@ fun RegisterScreenUI(
                         .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
                 ) {
                     groupsList.forEach { groupName ->
-                        DropdownMenuItem(onClick = {
-                            group = groupName
-                            expandedGroup = false
-                            focusManager.clearFocus()
-                            checkTextFields()
-                        }) {
-                            Text(text = groupName)
-                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                group = groupName
+                                expandedGroup = false
+                                focusManager.clearFocus()
+                                checkTextFields()
+                            }
+                        ) { Text(text = groupName) }
                     }
                 }
             }
@@ -322,15 +320,15 @@ fun RegisterScreenUI(
                         .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
                 ) {
                     structuresMap.forEach { structureItem ->
-                        DropdownMenuItem(onClick = {
-                            expandedStructure = false
-                            structureEnable = structureItem.key == 0
-                            structure = if (structureEnable) "" else structureItem.value
-                            focusManager.clearFocus()
-                            checkTextFields()
-                        }) {
-                            Text(text = structureItem.value)
-                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                expandedStructure = false
+                                structureEnable = structureItem.key == 0
+                                structure = if (structureEnable) "" else structureItem.value
+                                focusManager.clearFocus()
+                                checkTextFields()
+                            }
+                        ) { Text(text = structureItem.value) }
                     }
                 }
                 LaunchedEffect(structureEnable) {
@@ -344,7 +342,7 @@ fun RegisterScreenUI(
                 Button(
                     modifier = Modifier
                         .padding(4.dp)
-                        .width(130.dp),
+                        .width(140.dp),
                     onClick = {
                         onRegisterClick(RegisterData(login, email, password, group, structure))
                     },
@@ -369,10 +367,5 @@ fun RegisterScreenUI(
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegisterScreen() {
-    RegisterScreenUI(
-        MutableStateFlow(ResponseState.Idle),
-        MutableStateFlow(ResponseState.Idle),
-        {},
-        {},
-        {})
+    RegisterScreenUI()
 }

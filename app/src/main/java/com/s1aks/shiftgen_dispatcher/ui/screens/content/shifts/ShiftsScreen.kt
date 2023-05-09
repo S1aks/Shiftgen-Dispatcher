@@ -5,6 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-fun ShiftsScreen(navController: NavHostController) {
+fun ShiftsScreen(navController: NavHostController, viewModel: ShiftsViewModel) {
     Text(text = "Shifts")
 }
