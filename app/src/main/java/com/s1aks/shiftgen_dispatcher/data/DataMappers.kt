@@ -1,7 +1,9 @@
 package com.s1aks.shiftgen_dispatcher.data
 
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AccessRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginResponse
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RefreshRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RegisterRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RegisterResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions.DirectionRequest
@@ -36,6 +38,10 @@ import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import java.time.YearMonth
+
+internal fun String.toAccessRequest(): AccessRequest = AccessRequest(this)
+
+internal fun String.toRefreshRequest(): RefreshRequest = RefreshRequest(this)
 
 internal fun LoginData.toLoginRequest(): LoginRequest = LoginRequest(login, password)
 

@@ -23,6 +23,12 @@ class RepositoryImpl(
     override suspend fun login(loginData: LoginData): TokensData =
         apiService.login(loginData.toLoginRequest()).toTokensData()
 
+    override suspend fun access(accessToken: String): Boolean =
+        apiService.access(accessToken.toAccessRequest()).isSuccess()
+
+    override suspend fun refresh(refreshToken: String): TokensData =
+        apiService.refresh(refreshToken.toRefreshRequest()).toTokensData()
+
     override suspend fun register(registerData: RegisterData): TokensData {
         val groupNumber = Groups.values().find { it.groupName == registerData.group }?.ordinal
             ?: throw RuntimeException("Error find group.")

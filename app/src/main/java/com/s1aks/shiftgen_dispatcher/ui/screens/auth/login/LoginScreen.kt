@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +47,8 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
+    LaunchedEffect(Unit) { viewModel.checkAuthorization() }
+    viewModel.checkAuthorization()
     LoginScreenUI(
         responseStateFlow = viewModel.loginState,
         onLoginClick = { loginData ->
@@ -100,6 +103,7 @@ fun LoginScreenUI(
         verticalArrangement = Arrangement.Center
     ) {
         if (loadingState) {
+
             CircularProgressIndicator()
         } else {
             OutlinedTextField(

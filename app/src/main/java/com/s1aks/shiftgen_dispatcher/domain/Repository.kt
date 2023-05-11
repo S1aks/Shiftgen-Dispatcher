@@ -14,6 +14,8 @@ import java.time.YearMonth
 
 interface Repository {
     suspend fun login(loginData: LoginData): TokensData
+    suspend fun access(accessToken: String): Boolean
+    suspend fun refresh(refreshToken: String): TokensData
     suspend fun register(registerData: RegisterData): TokensData
 
     suspend fun getDirections(): List<Direction>
