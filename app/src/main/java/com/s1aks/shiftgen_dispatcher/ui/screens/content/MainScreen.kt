@@ -92,12 +92,6 @@ sealed class MainNavItem(
     val icon: ImageVector,
     val route: String
 ) {
-    companion object {
-        @JvmStatic
-        fun values() =
-            MainNavItem::class.sealedSubclasses.map { it.objectInstance as MainNavItem }
-    }
-
     object Shifts : MainNavItem("Смены", Icons.Default.ListAlt, Screen.Shifts.route)
     object Workers : MainNavItem("Рабочие", Icons.Default.Groups, Screen.Workers.route)
     object Directions : MainNavItem("Направления", Icons.Default.Route, Screen.Directions.route)
