@@ -93,7 +93,7 @@ fun LoginScreenUI(
         }
     }
     val checkTextFields = fun() {
-        buttonLoginEnable = login.length >= 4 && password.length > 4
+        buttonLoginEnable = login.length >= 4 && password.length >= 4
     }
     Column(
         modifier = Modifier
@@ -103,7 +103,6 @@ fun LoginScreenUI(
         verticalArrangement = Arrangement.Center
     ) {
         if (loadingState) {
-
             CircularProgressIndicator()
         } else {
             OutlinedTextField(

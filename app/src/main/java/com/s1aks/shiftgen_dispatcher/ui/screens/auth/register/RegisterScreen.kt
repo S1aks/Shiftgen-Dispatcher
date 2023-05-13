@@ -143,8 +143,8 @@ fun RegisterScreenUI(
     val passwordFieldOk = fun(): Boolean = password.length >= 4
     val groupFieldOk = fun(): Boolean = group in groupsList
     val structureFieldOk = fun(): Boolean =
-        if (structureEnable) structure.length >= 4 && structure !in structuresMap.values
-        else structure in structuresMap.values
+        if (structureEnable) structure.length >= 4 && structure !in structuresMap.keys
+        else structure in structuresMap.keys
     val checkTextFields = fun() {
         buttonRegisterEnable = loginFieldOk()
                 && emailFieldOk()
@@ -323,12 +323,12 @@ fun RegisterScreenUI(
                         DropdownMenuItem(
                             onClick = {
                                 expandedStructure = false
-                                structureEnable = structureItem.key == 0
-                                structure = if (structureEnable) "" else structureItem.value
+                                structureEnable = structureItem.value == 0
+                                structure = if (structureEnable) "" else structureItem.key
                                 focusManager.clearFocus()
                                 checkTextFields()
                             }
-                        ) { Text(text = structureItem.value) }
+                        ) { Text(text = structureItem.key) }
                     }
                 }
                 LaunchedEffect(structureEnable) {

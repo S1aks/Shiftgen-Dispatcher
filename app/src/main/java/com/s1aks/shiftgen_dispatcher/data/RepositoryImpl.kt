@@ -31,9 +31,9 @@ class RepositoryImpl(
 
     override suspend fun register(registerData: RegisterData): TokensData {
         val groupNumber = Groups.values().find { it.groupName == registerData.group }?.ordinal
-            ?: throw RuntimeException("Error find group.")
-        val structureNumber = apiService.structures().toStructureMap()
-            .filterValues { it == registerData.structure }.entries.first().key
+            ?: throw NullPointerException("Группа не существует.")
+        val structureNumber = apiService.structures().toStructureMap()[registerData.structure]
+            ?: throw NullPointerException("Структура не существует.")
         return apiService.register(registerData.toRegisterRequest(groupNumber, structureNumber))
             .toTokensData()
     }

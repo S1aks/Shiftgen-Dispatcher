@@ -11,6 +11,6 @@ class GetStructuresUseCase(
 ) {
     suspend fun execute(): ResponseState<StructuresMap> {
         val structures = withContext(Dispatchers.IO) { repository.getStructures() }
-        return ResponseState.Success(mapOf(0 to "Создать..").plus(structures))
+        return ResponseState.Success(mapOf("Создать.." to 0).plus(structures))
     }
 }

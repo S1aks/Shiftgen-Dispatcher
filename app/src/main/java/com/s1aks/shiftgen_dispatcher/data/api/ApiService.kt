@@ -1,5 +1,6 @@
 package com.s1aks.shiftgen_dispatcher.data.api
 
+import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REGISTER_URL
@@ -12,7 +13,6 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBl
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersCase
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
@@ -22,14 +22,12 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
-import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.java.KoinJavaComponent.inject
 
 interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, TimeBlocksCase,
     TimeSheetsCase, WorkersCase {
@@ -55,15 +53,16 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                     socketTimeoutMillis = 6000L
                 }
                 install(Auth) {
+                    val localSecureStore: LocalSecureStore by inject(LocalSecureStore::class.java)
                     bearer {
                         loadTokens {
                             // Load tokens from a local storage and return them as the 'BearerTokens' instance
-                            BearerTokens("abc123", "xyz111")
+                            BearerTokens(localSecureStore.accessToken.toString(), localSecureStore.refreshToken.toString())
                         }
-                        refreshTokens {
-                            // Refresh tokens and return them as the 'BearerTokens' instance
-                            BearerTokens("def456", "xyz111")
-                        }
+//                        refreshTokens {
+//                            // Refresh tokens and return them as the 'BearerTokens' instance
+//                            BearerTokens("def456", "xyz111")
+//                        }
                         sendWithoutRequest { request -> request.url.encodedPath == LOGIN_URL }
                         sendWithoutRequest { request -> request.url.encodedPath == REGISTER_URL }
                         sendWithoutRequest { request -> request.url.encodedPath == STRUCTURES_URL }

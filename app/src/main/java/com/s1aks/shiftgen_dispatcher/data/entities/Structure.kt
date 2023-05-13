@@ -2,7 +2,7 @@ package com.s1aks.shiftgen_dispatcher.data.entities
 
 import kotlinx.serialization.Serializable
 
-typealias StructuresMap = Map<Int, String>
+typealias StructuresMap = Map<String, Int>
 
 @Serializable
 data class Structure(
