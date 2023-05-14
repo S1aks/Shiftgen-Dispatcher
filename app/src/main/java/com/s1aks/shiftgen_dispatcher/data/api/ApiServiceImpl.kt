@@ -1,6 +1,5 @@
 package com.s1aks.shiftgen_dispatcher.data.api
 
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AccessRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.ACCESS_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REFRESH_URL
@@ -85,11 +84,11 @@ class ApiServiceImpl(
         }
     }
 
+    override suspend fun access(): HttpStatusCode =
+        client.get(ACCESS_URL).status
+
     override suspend fun login(loginRequest: LoginRequest): LoginResponse =
         client.post(LOGIN_URL) { setBody(loginRequest) }.getData()
-
-    override suspend fun access(accessRequest: AccessRequest): HttpStatusCode =
-        client.post(ACCESS_URL) { setBody(accessRequest) }.status
 
     override suspend fun refresh(refreshRequest: RefreshRequest): LoginResponse =
         client.post(REFRESH_URL) { setBody(refreshRequest) }.getData()
@@ -113,7 +112,7 @@ class ApiServiceImpl(
         client.post(DIRECTION_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun shifts(shiftsRequest: ShiftsRequest): ShiftsResponse =
-        client.get(SHIFTS_URL).getData()
+        client.get(SHIFTS_URL) { setBody(shiftsRequest) }.getData()
 
     override suspend fun shiftGet(idRequest: IdRequest): ShiftResponse =
         client.get(SHIFT_GET_URL) { setBody(idRequest) }.getData()

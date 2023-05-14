@@ -16,8 +16,11 @@ class SendLoginDataUseCase(
             repository.login(loginData)
         }
         return if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
-            localSecureStore.accessToken = tokensData.accessToken
-            localSecureStore.refreshToken = tokensData.refreshToken
+            localSecureStore.apply {
+                login = loginData.login
+                accessToken = tokensData.accessToken
+                refreshToken = tokensData.refreshToken
+            }
             ResponseState.Success(true)
         } else {
             ResponseState.Error(RuntimeException("Tokens mapping error"))

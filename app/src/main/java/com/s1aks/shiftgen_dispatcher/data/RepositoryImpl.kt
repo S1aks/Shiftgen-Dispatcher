@@ -5,6 +5,7 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.data.entities.Groups
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
+import com.s1aks.shiftgen_dispatcher.data.entities.RefreshData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
@@ -20,13 +21,13 @@ import java.time.YearMonth
 class RepositoryImpl(
     private val apiService: ApiService
 ) : Repository {
+    override suspend fun access(): Boolean =
+        apiService.access().isSuccess()
+
     override suspend fun login(loginData: LoginData): TokensData =
         apiService.login(loginData.toLoginRequest()).toTokensData()
 
-    override suspend fun access(accessToken: String): Boolean =
-        apiService.access(accessToken.toAccessRequest()).isSuccess()
-
-    override suspend fun refresh(refreshToken: String): TokensData =
+    override suspend fun refresh(refreshToken: RefreshData): TokensData =
         apiService.refresh(refreshToken.toRefreshRequest()).toTokensData()
 
     override suspend fun register(registerData: RegisterData): TokensData {

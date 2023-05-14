@@ -2,6 +2,7 @@ package com.s1aks.shiftgen_dispatcher.domain
 
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
+import com.s1aks.shiftgen_dispatcher.data.entities.RefreshData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
@@ -13,9 +14,9 @@ import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import java.time.YearMonth
 
 interface Repository {
+    suspend fun access(): Boolean
     suspend fun login(loginData: LoginData): TokensData
-    suspend fun access(accessToken: String): Boolean
-    suspend fun refresh(refreshToken: String): TokensData
+    suspend fun refresh(refreshToken: RefreshData): TokensData
     suspend fun register(registerData: RegisterData): TokensData
 
     suspend fun getDirections(): List<Direction>

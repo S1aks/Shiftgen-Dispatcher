@@ -44,19 +44,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.s1aks.shiftgen_dispatcher.R
+import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
 import com.s1aks.shiftgen_dispatcher.ui.NavRoutes
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
 import com.s1aks.shiftgen_dispatcher.ui.mainGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
 
 @Composable
 fun MainScreen(
     navController: NavController
 ) {
+    val localSecureStore: LocalSecureStore by inject(LocalSecureStore::class.java)
     MainScreenUI(
         onLogout = {
+            localSecureStore.clear()
             navController.clearAndNavigate(Screen.Login.route)
         }
     )

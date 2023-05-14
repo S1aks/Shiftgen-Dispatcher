@@ -47,8 +47,6 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
-    LaunchedEffect(Unit) { viewModel.checkAuthorization() }
-    viewModel.checkAuthorization()
     LoginScreenUI(
         responseStateFlow = viewModel.loginState,
         onLoginClick = { loginData ->
@@ -59,6 +57,7 @@ fun LoginScreen(
             navController.clearAndNavigate(Screen.Main.route)
         }
     )
+    LaunchedEffect(Unit) { viewModel.checkAuthorization() }
 }
 
 @Composable

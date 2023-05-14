@@ -18,8 +18,11 @@ class SendRegisterDataUseCase(
             repository.register(registerData)
         }
         return if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
-            localSecureStore.accessToken = tokensData.accessToken
-            localSecureStore.refreshToken = tokensData.refreshToken
+            localSecureStore.apply {
+                login = registerData.login
+                accessToken = tokensData.accessToken
+                refreshToken = tokensData.refreshToken
+            }
             ResponseState.Success(true)
         } else {
             ResponseState.Error(RuntimeException("Tokens mapping error"))

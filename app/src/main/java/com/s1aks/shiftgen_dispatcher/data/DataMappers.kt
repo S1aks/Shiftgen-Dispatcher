@@ -1,6 +1,5 @@
 package com.s1aks.shiftgen_dispatcher.data
 
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AccessRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RefreshRequest
@@ -29,6 +28,7 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkerResp
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersResponse
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
+import com.s1aks.shiftgen_dispatcher.data.entities.RefreshData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
@@ -39,9 +39,8 @@ import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import java.time.YearMonth
 
-internal fun String.toAccessRequest(): AccessRequest = AccessRequest(this)
-
-internal fun String.toRefreshRequest(): RefreshRequest = RefreshRequest(this)
+internal fun RefreshData.toRefreshRequest(): RefreshRequest =
+    RefreshRequest(this.login, this.refreshToken)
 
 internal fun LoginData.toLoginRequest(): LoginRequest = LoginRequest(login, password)
 

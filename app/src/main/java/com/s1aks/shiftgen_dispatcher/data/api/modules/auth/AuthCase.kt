@@ -5,14 +5,14 @@ import io.ktor.http.HttpStatusCode
 
 interface AuthCase {
 
+    suspend fun access(): HttpStatusCode
     suspend fun login(loginRequest: LoginRequest): LoginResponse
-    suspend fun access(accessRequest: AccessRequest): HttpStatusCode
     suspend fun refresh(refreshRequest: RefreshRequest): LoginResponse
     suspend fun register(registerRequest: RegisterRequest): RegisterResponse
 
     companion object {
-        const val LOGIN_URL = "${BASE_URL}/auth/login"
         const val ACCESS_URL = "${BASE_URL}/auth/access"
+        const val LOGIN_URL = "${BASE_URL}/auth/login"
         const val REFRESH_URL = "${BASE_URL}/auth/refresh"
         const val REGISTER_URL = "${BASE_URL}/auth/register"
     }

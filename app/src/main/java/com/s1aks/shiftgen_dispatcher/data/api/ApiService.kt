@@ -2,13 +2,9 @@ package com.s1aks.shiftgen_dispatcher.data.api
 
 import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REGISTER_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions.DirectionsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURES_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_INSERT_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersCase
@@ -22,9 +18,10 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.headers
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.java.KoinJavaComponent.inject
@@ -54,28 +51,39 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                 }
                 install(Auth) {
                     val localSecureStore: LocalSecureStore by inject(LocalSecureStore::class.java)
+                    val accessToken = localSecureStore.accessToken.toString()
+                    val refreshToken = localSecureStore.refreshToken.toString()
                     bearer {
                         loadTokens {
                             // Load tokens from a local storage and return them as the 'BearerTokens' instance
-                            BearerTokens(localSecureStore.accessToken.toString(), localSecureStore.refreshToken.toString())
+                            BearerTokens(accessToken, refreshToken)
                         }
 //                        refreshTokens {
 //                            // Refresh tokens and return them as the 'BearerTokens' instance
-//                            BearerTokens("def456", "xyz111")
+//                            BearerTokens(accessToken, refreshToken)
 //                        }
-                        sendWithoutRequest { request -> request.url.encodedPath == LOGIN_URL }
-                        sendWithoutRequest { request -> request.url.encodedPath == REGISTER_URL }
-                        sendWithoutRequest { request -> request.url.encodedPath == STRUCTURES_URL }
-                        sendWithoutRequest { request -> request.url.encodedPath == STRUCTURE_INSERT_URL }
+                        //sendWithoutRequest { true }
+//                        sendWithoutRequest { request ->
+//                            request.url.encodedPath.endsWith(LOGIN_URL)
+//                        }
+//                        sendWithoutRequest { request ->
+//                            request.url.encodedPath.endsWith(REGISTER_URL)
+//                        }
+//                        sendWithoutRequest { request ->
+//                            request.url.encodedPath.endsWith(STRUCTURES_URL)
+//                        }
+//                        sendWithoutRequest { request ->
+//                            request.url.encodedPath.endsWith(STRUCTURE_INSERT_URL)
+//                        }
                     }
                 }
                 defaultRequest {
-//                        headers {
-//                            append(HttpHeaders.ContentType, "application/vnd.any.response+json")
-//                            append(HttpHeaders.ContentType, "application/json")
-//                            append(HttpHeaders.Authorization, "Bearer *token*")
-//                            append(HttpHeaders.UserAgent, "ktor client")
-//                        }
+                    headers {
+//                        append(HttpHeaders.ContentType, "application/vnd.any.response+json")
+//                        append(HttpHeaders.ContentType, "application/json")
+//                            append(HttpHeaders.Authorization, "Bearer {}")
+                        append(HttpHeaders.UserAgent, "shiftgen client")
+                    }
                     contentType(ContentType.Application.Json)
                 }
             }
