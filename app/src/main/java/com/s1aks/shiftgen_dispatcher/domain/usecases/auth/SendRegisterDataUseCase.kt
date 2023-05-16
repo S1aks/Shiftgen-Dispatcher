@@ -6,6 +6,8 @@ import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.domain.Repository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class SendRegisterDataUseCase(
@@ -13,9 +15,17 @@ class SendRegisterDataUseCase(
     private val localSecureStore: LocalSecureStore
 ) {
     suspend fun execute(registerData: RegisterData): ResponseState<Boolean> {
+        val structureId: Int = withContext(Dispatchers.IO) {
+            repository.getStructures()[registerData.structure]
+                ?: runBlocking {
+                    repository.insertStructure(Structure(0, registerData.structure))
+                    delay(200)
+                    repository.getStructures()[registerData.structure]
+                        ?: throw RuntimeException("Ошибка создания структуры.")
+                }
+        }
         val tokensData = withContext(Dispatchers.IO) {
-            repository.insertStructure(Structure(name = registerData.structure))
-            repository.register(registerData)
+            repository.register(registerData, structureId)
         }
         return if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
             localSecureStore.apply {
@@ -25,7 +35,7 @@ class SendRegisterDataUseCase(
             }
             ResponseState.Success(true)
         } else {
-            ResponseState.Error(RuntimeException("Tokens mapping error"))
+            throw RuntimeException("Ошибка регистрации.")
         }
     }
 }

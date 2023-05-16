@@ -17,7 +17,7 @@ interface Repository {
     suspend fun access(): Boolean
     suspend fun login(loginData: LoginData): TokensData
     suspend fun refresh(refreshToken: RefreshData): TokensData
-    suspend fun register(registerData: RegisterData): TokensData
+    suspend fun register(registerData: RegisterData, structureId: Int): TokensData
 
     suspend fun getDirections(): List<Direction>
     suspend fun getDirection(id: Int): Direction

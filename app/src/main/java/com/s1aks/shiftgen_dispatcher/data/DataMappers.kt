@@ -27,6 +27,7 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkerRequ
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkerResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersResponse
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
+import com.s1aks.shiftgen_dispatcher.data.entities.Groups
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
 import com.s1aks.shiftgen_dispatcher.data.entities.RefreshData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
@@ -39,6 +40,9 @@ import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import java.time.YearMonth
 
+internal fun String.toGroupNumber(): Int = Groups.values().find { it.groupName == this }?.ordinal
+    ?: throw NullPointerException("Группа не существует.")
+
 internal fun RefreshData.toRefreshRequest(): RefreshRequest =
     RefreshRequest(this.login, this.refreshToken)
 
@@ -46,9 +50,8 @@ internal fun LoginData.toLoginRequest(): LoginRequest = LoginRequest(login, pass
 
 internal fun LoginResponse.toTokensData(): TokensData = TokensData(accessToken, refreshToken)
 
-internal fun RegisterData.toRegisterRequest(
-    groupNumber: Int, structureNumber: Int
-): RegisterRequest = RegisterRequest(login, email, password, groupNumber, structureNumber)
+internal fun RegisterData.toRegisterRequest(structureId: Int): RegisterRequest =
+    RegisterRequest(login, email, password, group.toGroupNumber(), structureId)
 
 internal fun RegisterResponse.toTokensData(): TokensData = TokensData(accessToken, refreshToken)
 

@@ -23,7 +23,7 @@ class SendLoginDataUseCase(
             }
             ResponseState.Success(true)
         } else {
-            ResponseState.Error(RuntimeException("Tokens mapping error"))
+            throw RuntimeException("Ошибка авторизации.")
         }
     }
 }

@@ -3,7 +3,6 @@ package com.s1aks.shiftgen_dispatcher.data
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
-import com.s1aks.shiftgen_dispatcher.data.entities.Groups
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
 import com.s1aks.shiftgen_dispatcher.data.entities.RefreshData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
@@ -30,14 +29,8 @@ class RepositoryImpl(
     override suspend fun refresh(refreshToken: RefreshData): TokensData =
         apiService.refresh(refreshToken.toRefreshRequest()).toTokensData()
 
-    override suspend fun register(registerData: RegisterData): TokensData {
-        val groupNumber = Groups.values().find { it.groupName == registerData.group }?.ordinal
-            ?: throw NullPointerException("Группа не существует.")
-        val structureNumber = apiService.structures().toStructureMap()[registerData.structure]
-            ?: throw NullPointerException("Структура не существует.")
-        return apiService.register(registerData.toRegisterRequest(groupNumber, structureNumber))
-            .toTokensData()
-    }
+    override suspend fun register(registerData: RegisterData, structureId: Int): TokensData =
+        apiService.register(registerData.toRegisterRequest(structureId)).toTokensData()
 
     override suspend fun getDirections(): List<Direction> =
         apiService.directions().toDirectionsList()
