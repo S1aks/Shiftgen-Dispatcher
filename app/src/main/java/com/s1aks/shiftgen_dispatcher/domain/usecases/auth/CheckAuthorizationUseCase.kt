@@ -30,10 +30,10 @@ class CheckAuthorizationUseCase(
                         localSecureStore.refreshToken = tokensData.refreshToken
                         ResponseState.Success(true)
                     } else {
-                        ResponseState.Error(RuntimeException("Ошибка сохранения токена."))
+                        throw RuntimeException("Ошибка сохранения токена.")
                     }
                 } else {
-                    ResponseState.Error(RuntimeException("Access токен ошибочный."))
+                    throw RuntimeException("Access токен ошибочный.")
                 }
             }
         } else {
