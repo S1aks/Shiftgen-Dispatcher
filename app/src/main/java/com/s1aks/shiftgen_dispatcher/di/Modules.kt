@@ -41,11 +41,6 @@ val dataAccessModule = module {
         val apiService = ApiService.create()
         RepositoryImpl(apiService)
     }
-    viewModel { LoginViewModel(sendLoginDataUseCase = get(), checkAuthorizationUseCase = get()) }
-    viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
-    viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
-    viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }
-    viewModel { WorkersViewModel(getWorkersUseCase = get()) }
 }
 
 val useCasesModule = module {
@@ -62,4 +57,12 @@ val useCasesModule = module {
     single<GetShiftsUseCase> { GetShiftsUseCase(repository = get()) }
     single<GetStructuresUseCase> { GetStructuresUseCase(repository = get()) }
     single<GetWorkersUseCase> { GetWorkersUseCase(repository = get()) }
+}
+
+val viewModelsModule = module {
+    viewModel { LoginViewModel(sendLoginDataUseCase = get(), checkAuthorizationUseCase = get()) }
+    viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
+    viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
+    viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }
+    viewModel { WorkersViewModel(getWorkersUseCase = get()) }
 }

@@ -1,5 +1,6 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.content
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,12 +14,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.DrawerState
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.ListAlt
@@ -32,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,7 +76,7 @@ fun DrawerHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp)
+            .padding(vertical = 10.dp)
             .size(100.dp)
             .clip(CircleShape),
         contentAlignment = Alignment.Center
@@ -84,7 +89,7 @@ fun DrawerHeader() {
         )
         Image(
             modifier = Modifier
-                .scale(1.4f),
+                .scale(1.0f),
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = "",
         )
@@ -108,20 +113,33 @@ fun DrawerItem(
     selected: Boolean,
     onItemClick: () -> Unit
 ) {
-    TextButton(
-        modifier = Modifier.height(50.dp),
+    Button(
+        colors = buttonColors(
+            backgroundColor = Color.Transparent,
+            contentColor = colors.primary,
+        ),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, if (selected) colors.primary else colors.secondary),
+        modifier = Modifier
+            .height(50.dp)
+            .padding(horizontal = 10.dp, vertical = 2.dp)
+            .fillMaxWidth(),
         enabled = selected,
         onClick = { onItemClick() })
     {
         Icon(
             modifier = Modifier
-                .scale(1.6f)
-                .padding(horizontal = 16.dp)
-                .offset(y = 2.dp),
+                .scale(1.2f)
+                .padding(horizontal = 10.dp)
+                .offset(y = 0.dp),
             imageVector = item.icon,
             contentDescription = item.title
         )
-        Text(text = item.title, fontSize = 28.sp)
+        Text(
+            text = item.title, fontSize = 18.sp,
+            textAlign = TextAlign.Left,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
