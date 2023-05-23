@@ -100,7 +100,7 @@ class ApiServiceImpl(
         client.get(DIRECTIONS_URL).getData()
 
     override suspend fun directionGet(idRequest: IdRequest): DirectionResponse =
-        client.get(DIRECTION_GET_URL) { setBody(idRequest) }.getData()
+        client.post(DIRECTION_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun directionInsert(directionRequest: DirectionRequest): HttpStatusCode =
         client.post(DIRECTION_INSERT_URL) { setBody(directionRequest) }.status
@@ -112,10 +112,10 @@ class ApiServiceImpl(
         client.post(DIRECTION_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun shifts(shiftsRequest: ShiftsRequest): ShiftsResponse =
-        client.get(SHIFTS_URL) { setBody(shiftsRequest) }.getData()
+        client.post(SHIFTS_URL) { setBody(shiftsRequest) }.getData()
 
     override suspend fun shiftGet(idRequest: IdRequest): ShiftResponse =
-        client.get(SHIFT_GET_URL) { setBody(idRequest) }.getData()
+        client.post(SHIFT_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun shiftInsert(shiftRequest: ShiftRequest): HttpStatusCode =
         client.post(SHIFT_INSERT_URL) { setBody(shiftRequest) }.status
@@ -130,7 +130,7 @@ class ApiServiceImpl(
         client.get(STRUCTURES_URL).getData()
 
     override suspend fun structureGet(idRequest: IdRequest): StructureResponse =
-        client.get(STRUCTURE_GET_URL) { setBody(idRequest) }.getData()
+        client.post(STRUCTURE_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun structureInsert(structureRequest: StructureRequest): HttpStatusCode =
         client.post(STRUCTURE_INSERT_URL) { setBody(structureRequest) }.status
@@ -145,7 +145,7 @@ class ApiServiceImpl(
         client.get(TIME_BLOCKS_URL).getData()
 
     override suspend fun timeBlockGet(idRequest: IdRequest): TimeBlockResponse =
-        client.get(TIME_BLOCK_GET_URL) { setBody(idRequest) }.getData()
+        client.post(TIME_BLOCK_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest): HttpStatusCode =
         client.post(TIME_BLOCK_INSERT_URL) { setBody(timeBlockRequest) }.status
@@ -160,18 +160,18 @@ class ApiServiceImpl(
         client.get(TIMESHEETS_URL).getData()
 
     override suspend fun timeSheetGet(idRequest: IdRequest): TimeSheetResponse =
-        client.get(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.getData()
+        client.post(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.getData()
 
     override suspend fun timeSheetsGetByYearMonth(
         timeSheetsYearMonthRequest: TimeSheetsYearMonthRequest
     ): TimeSheetsResponse =
-        client.get(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }
+        client.post(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }
             .getData()
 
     override suspend fun timeSheetsGetByWorkerIdYearMonth(
         timeSheetsWorkerIdYearMonthRequest: TimeSheetsWorkerIdYearMonthRequest
     ): TimeSheetsResponse =
-        client.get(TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL) {
+        client.post(TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL) {
             setBody(timeSheetsWorkerIdYearMonthRequest)
         }.getData()
 
@@ -188,7 +188,7 @@ class ApiServiceImpl(
         client.get(WORKERS_URL).getData()
 
     override suspend fun workerGet(idRequest: IdRequest): WorkerResponse =
-        client.get(WORKER_GET_URL) { setBody(idRequest) }.getData()
+        client.post(WORKER_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun workerInsert(workerRequest: WorkerRequest): HttpStatusCode =
         client.post(WORKER_INSERT_URL) { setBody(workerRequest) }.status
