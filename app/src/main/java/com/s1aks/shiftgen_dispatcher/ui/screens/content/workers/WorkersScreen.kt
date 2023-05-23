@@ -1,10 +1,32 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.content.workers
 
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 
 @Composable
-fun WorkersScreen(navController: NavHostController, viewModel: WorkersViewModel) {
+fun WorkersScreen(
+    navController: NavHostController,
+    onComposing: (AppBarState) -> Unit,
+    viewModel: WorkersViewModel
+) {
+    LaunchedEffect(key1 = true) {
+        onComposing(
+            AppBarState(
+                title = "Рабочие",
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Default.Add, "")
+                    }
+                }
+            )
+        )
+    }
     Text(text = "Workers")
 }

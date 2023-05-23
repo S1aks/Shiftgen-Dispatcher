@@ -1,8 +1,13 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts
 
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,12 +18,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 import com.s1aks.shiftgen_dispatcher.utils.toastError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun ShiftsScreen(navController: NavHostController, viewModel: ShiftsViewModel) {
+fun ShiftsScreen(
+    navController: NavHostController,
+    onComposing: (AppBarState) -> Unit,
+    viewModel: ShiftsViewModel
+) {
+    LaunchedEffect(key1 = true) {
+        onComposing(
+            AppBarState(
+                title = "Смены",
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Default.Add, "")
+                    }
+                }
+            )
+        )
+    }
     ShiftsScreenUI(viewModel.shiftsState)
 }
 

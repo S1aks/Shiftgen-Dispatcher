@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsScreen
@@ -43,14 +44,29 @@ fun NavGraphBuilder.startGraph(navController: NavHostController) {
     }
 }
 
-fun NavGraphBuilder.mainGraph(navController: NavHostController) {
+fun NavGraphBuilder.mainGraph(
+    navController: NavHostController,
+    onComposing: (AppBarState) -> Unit
+) {
     composable(Screen.Shifts.route) {
-        ShiftsScreen(navController = navController, viewModel = koinViewModel())
+        ShiftsScreen(
+            navController = navController,
+            onComposing = onComposing,
+            viewModel = koinViewModel()
+        )
     }
     composable(Screen.Workers.route) {
-        WorkersScreen(navController = navController, viewModel = koinViewModel())
+        WorkersScreen(
+            navController = navController,
+            onComposing = onComposing,
+            viewModel = koinViewModel()
+        )
     }
     composable(Screen.Directions.route) {
-        DirectionsScreen(navController = navController, viewModel = koinViewModel())
+        DirectionsScreen(
+            navController = navController,
+            onComposing = onComposing,
+            viewModel = koinViewModel()
+        )
     }
 }

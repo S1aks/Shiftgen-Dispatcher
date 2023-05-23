@@ -82,7 +82,7 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
 //                        append(HttpHeaders.ContentType, "application/vnd.any.response+json")
 //                        append(HttpHeaders.ContentType, "application/json")
 //                            append(HttpHeaders.Authorization, "Bearer {}")
-                        append(HttpHeaders.UserAgent, "shiftgen client")
+                        append(HttpHeaders.UserAgent, "shiftgen dispatcher client")
                     }
                     contentType(ContentType.Application.Json)
                 }

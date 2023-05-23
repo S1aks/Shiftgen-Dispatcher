@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +32,11 @@ import androidx.compose.material.icons.filled.Route
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +44,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,6 +79,16 @@ fun MainScreen(
 
 @Composable
 fun DrawerHeader() {
+    Text(
+        modifier = Modifier
+            .padding(top = 10.dp)
+            .fillMaxWidth(),
+        text = stringResource(id = R.string.app_name),
+        color = colors.primaryVariant,
+        fontSize = 26.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center
+    )
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -205,11 +221,17 @@ fun PreviewDrawerContent() {
     DrawerContent()
 }
 
+data class AppBarState(
+    val title: String = "",
+    val actions: (@Composable RowScope.() -> Unit)? = null
+)
+
 @Composable
 fun MainScreenUI(
     onLogout: () -> Unit = {}
 ) {
     val mainNavController = rememberNavController()
+    var appBarState by remember { mutableStateOf(AppBarState()) }
     val scaffoldState =
         rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val scope = rememberCoroutineScope()
@@ -217,13 +239,15 @@ fun MainScreenUI(
         scaffoldState = scaffoldState,
         topBar = {
             AppBar(
+                title = appBarState.title,
                 onNavigationIconClick = {
                     scope.launch {
                         scaffoldState.drawerState.apply {
                             if (isClosed) open() else close()
                         }
                     }
-                }
+                },
+                actions = { appBarState.actions?.invoke(this) }
             )
         },
         drawerContent = {
@@ -239,15 +263,14 @@ fun MainScreenUI(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
+            contentAlignment = Alignment.Center
         ) {
             NavHost(
                 navController = mainNavController,
                 startDestination = Screen.Shifts.route,
                 route = NavRoutes.MainRoute.name
             ) {
-                mainGraph(mainNavController)
+                mainGraph(mainNavController) { appBarState = it }
             }
         }
     }
