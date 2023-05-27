@@ -28,6 +28,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.domain.models.ShiftModel
+import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 import com.s1aks.shiftgen_dispatcher.utils.toastError
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +45,7 @@ fun ShiftsScreen(
             AppBarState(
                 title = "Смены",
                 actions = {
-                    IconButton(onClick = { navController.navigate("") }) {
+                    IconButton(onClick = { navController.navigate(Screen.ShiftAdd.route) }) {
                         Icon(imageVector = Icons.Default.Add, "Добавить")
                     }
                 }

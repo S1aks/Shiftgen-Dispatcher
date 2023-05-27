@@ -8,8 +8,11 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_add.DirectionAddScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_add.ShiftAddScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_add.WorkerAddScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -58,6 +61,12 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
+    composable(Screen.ShiftAdd.route) {
+        ShiftAddScreen(
+            navController = navController,
+            viewModel = koinViewModel()
+        )
+    }
     composable(Screen.Workers.route) {
         WorkersScreen(
             navController = navController,
@@ -65,10 +74,22 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
+    composable(Screen.WorkerAdd.route) {
+        WorkerAddScreen(
+            navController = navController,
+            viewModel = koinViewModel()
+        )
+    }
     composable(Screen.Directions.route) {
         DirectionsScreen(
             navController = navController,
             onComposing = onComposing,
+            viewModel = koinViewModel()
+        )
+    }
+    composable(Screen.DirectionAdd.route) {
+        DirectionAddScreen(
+            navController = navController,
             viewModel = koinViewModel()
         )
     }

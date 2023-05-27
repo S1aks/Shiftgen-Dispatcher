@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 
 @Composable
@@ -21,7 +22,7 @@ fun WorkersScreen(
             AppBarState(
                 title = "Рабочие",
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.navigate(Screen.WorkerAdd.route) }) {
                         Icon(imageVector = Icons.Default.Add, "")
                     }
                 }
