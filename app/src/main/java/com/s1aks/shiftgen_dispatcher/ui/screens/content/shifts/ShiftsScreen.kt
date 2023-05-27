@@ -1,8 +1,14 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -11,13 +17,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
-import com.s1aks.shiftgen_dispatcher.data.entities.Shift
+import com.s1aks.shiftgen_dispatcher.domain.models.ShiftModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 import com.s1aks.shiftgen_dispatcher.utils.toastError
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,8 +44,8 @@ fun ShiftsScreen(
             AppBarState(
                 title = "Смены",
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.Add, "")
+                    IconButton(onClick = { navController.navigate("") }) {
+                        Icon(imageVector = Icons.Default.Add, "Добавить")
                     }
                 }
             )
@@ -44,12 +54,84 @@ fun ShiftsScreen(
     ShiftsScreenUI(viewModel.shiftsState)
 }
 
+private val testShift = ShiftModel(
+    "25.05.2023",
+    "20:00",
+    "Рейс 512",
+    "Москва - Ростов",
+    "Михайлов Н.А.",
+    "14:25"
+)
+
+@Preview(showBackground = true)
+@Composable
+fun ShiftsItem(
+    shift: ShiftModel = testShift   // todo REMOVE test
+) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(3.dp)
+    ) {
+        val (date, time, shift_name, worker, work_time) = createRefs()
+        val startGuideline = createGuidelineFromStart(0.25f)
+        val endGuideline = createGuidelineFromStart(0.85f)
+        Text(text = shift.start_date,
+            modifier = Modifier
+                .constrainAs(date) {
+                    start.linkTo(parent.start)
+                    end.linkTo(startGuideline)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(time.top)
+                }
+        )
+        Text(text = shift.start_time,
+            modifier = Modifier
+                .constrainAs(time) {
+                    start.linkTo(parent.start)
+                    end.linkTo(startGuideline)
+                    top.linkTo(date.bottom)
+                    bottom.linkTo(parent.bottom)
+                }
+        )
+        Text(text = "${shift.name} ${shift.direction}",
+            modifier = Modifier
+                .constrainAs(shift_name) {
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(worker.top)
+                }
+        )
+        Text(text = shift.worker,
+            modifier = Modifier
+                .constrainAs(worker) {
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    top.linkTo(shift_name.bottom)
+                    bottom.linkTo(parent.bottom)
+                }
+        )
+        Text(text = shift.work_time,
+            modifier = Modifier
+                .constrainAs(work_time) {
+                    start.linkTo(endGuideline)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }
+        )
+    }
+    Divider(color = colors.primaryVariant, thickness = 1.dp)
+}
+
 @Composable
 fun ShiftsScreenUI(
-    responseStateFlow: StateFlow<ResponseState<List<Shift>>> = MutableStateFlow(ResponseState.Idle)
+    responseStateFlow: StateFlow<ResponseState<List<ShiftModel>>> = MutableStateFlow(ResponseState.Idle)
 ) {
     var loadingState by rememberSaveable { mutableStateOf(false) }
     val responseState by responseStateFlow.collectAsState()
+    var shifts by remember { mutableStateOf(listOf<ShiftModel>()) }
     when (responseState) {
         is ResponseState.Idle -> {
             loadingState = false
@@ -60,7 +142,7 @@ fun ShiftsScreenUI(
         }
 
         is ResponseState.Success -> {
-
+            shifts = (responseState as ResponseState.Success).item
         }
 
         is ResponseState.Error -> {
@@ -70,10 +152,13 @@ fun ShiftsScreenUI(
     if (loadingState) {
         CircularProgressIndicator()
     } else {
-        Text(text = "Shifts")
+        LazyColumn {
+            items(shifts) { shift ->
+                ShiftsItem(shift)
+            }
+        }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

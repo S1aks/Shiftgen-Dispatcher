@@ -2,9 +2,6 @@ package com.s1aks.shiftgen_dispatcher.utils
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposableTarget
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope

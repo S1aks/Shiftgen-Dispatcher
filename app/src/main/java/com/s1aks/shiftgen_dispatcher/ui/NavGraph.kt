@@ -23,8 +23,11 @@ sealed class Screen(val route: String) {
     object Register : Screen("register")
     object Main : Screen("main")
     object Shifts : Screen("shifts")
+    object ShiftAdd : Screen("shift_add")
     object Workers : Screen("workers")
+    object WorkerAdd : Screen("worker_add")
     object Directions : Screen("directions")
+    object DirectionAdd : Screen("direction_add")
 }
 
 fun NavController.clearAndNavigate(route: String) {
