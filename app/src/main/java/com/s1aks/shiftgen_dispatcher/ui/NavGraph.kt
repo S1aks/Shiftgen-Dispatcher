@@ -52,9 +52,11 @@ fun NavGraphBuilder.startGraph(navController: NavHostController) {
 
 fun NavGraphBuilder.mainGraph(
     navController: NavHostController,
+    drawerEnable: (Boolean) -> Unit,
     onComposing: (AppBarState) -> Unit
 ) {
     composable(Screen.Shifts.route) {
+        drawerEnable(true)
         ShiftsScreen(
             navController = navController,
             onComposing = onComposing,
@@ -62,12 +64,15 @@ fun NavGraphBuilder.mainGraph(
         )
     }
     composable(Screen.ShiftAdd.route) {
+        drawerEnable(false)
         ShiftAddScreen(
             navController = navController,
+            onComposing = onComposing,
             viewModel = koinViewModel()
         )
     }
     composable(Screen.Workers.route) {
+        drawerEnable(true)
         WorkersScreen(
             navController = navController,
             onComposing = onComposing,
@@ -75,12 +80,15 @@ fun NavGraphBuilder.mainGraph(
         )
     }
     composable(Screen.WorkerAdd.route) {
+        drawerEnable(false)
         WorkerAddScreen(
             navController = navController,
+            onComposing = onComposing,
             viewModel = koinViewModel()
         )
     }
     composable(Screen.Directions.route) {
+        drawerEnable(true)
         DirectionsScreen(
             navController = navController,
             onComposing = onComposing,
@@ -88,8 +96,10 @@ fun NavGraphBuilder.mainGraph(
         )
     }
     composable(Screen.DirectionAdd.route) {
+        drawerEnable(false)
         DirectionAddScreen(
             navController = navController,
+            onComposing = onComposing,
             viewModel = koinViewModel()
         )
     }

@@ -13,17 +13,20 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun AppBar(
     title: String = "",
+    navigationIconVisible: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {}
 ) {
     TopAppBar(
         title = { Text(text = title) },
         navigationIcon = {
-            IconButton(onClick = onNavigationIconClick) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Toggle drawer"
-                )
+            if (navigationIconVisible) {
+                IconButton(onClick = onNavigationIconClick) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Боковое меню"
+                    )
+                }
             }
         },
         actions = actions

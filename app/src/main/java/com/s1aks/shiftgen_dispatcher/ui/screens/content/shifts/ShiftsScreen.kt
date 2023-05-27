@@ -6,12 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.domain.models.ShiftModel
 import com.s1aks.shiftgen_dispatcher.ui.Screen
+import com.s1aks.shiftgen_dispatcher.ui.elements.AddIconButton
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 import com.s1aks.shiftgen_dispatcher.utils.toastError
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,9 +42,7 @@ fun ShiftsScreen(
             AppBarState(
                 title = "Смены",
                 actions = {
-                    IconButton(onClick = { navController.navigate(Screen.ShiftAdd.route) }) {
-                        Icon(imageVector = Icons.Default.Add, "Добавить")
-                    }
+                    AddIconButton { navController.navigate(Screen.ShiftAdd.route) }
                 }
             )
         )
