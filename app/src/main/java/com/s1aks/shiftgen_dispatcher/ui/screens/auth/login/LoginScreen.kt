@@ -20,8 +20,10 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,11 +70,11 @@ fun LoginScreenUI(
     onSuccessResponse: () -> Unit = {}
 ) {
     var login by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordEnable by rememberSaveable { mutableStateOf(false) }
-    var buttonLoginEnable by rememberSaveable { mutableStateOf(false) }
-    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     var loadingState by rememberSaveable { mutableStateOf(false) }
+    val passwordEnable by remember { derivedStateOf { login.length >= 4 } }
+    val buttonLoginEnable by remember { derivedStateOf { login.length >= 4 && password.length >= 4 } }
     val responseState by responseStateFlow.collectAsState()
     when (responseState) {
         is ResponseState.Idle -> {
@@ -91,9 +93,6 @@ fun LoginScreenUI(
             (responseState as ResponseState.Error).toastError(context = LocalContext.current)
         }
     }
-    val checkTextFields = fun() {
-        buttonLoginEnable = login.length >= 4 && password.length >= 4
-    }
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -107,11 +106,7 @@ fun LoginScreenUI(
             OutlinedTextField(
                 value = login,
                 singleLine = true,
-                onValueChange = {
-                    login = it
-                    passwordEnable = login.length >= 4
-                    checkTextFields()
-                },
+                onValueChange = { login = it },
                 isError = login.length < 4,
                 label = { Text(text = "Логин") },
                 keyboardOptions = KeyboardOptions(
@@ -122,10 +117,7 @@ fun LoginScreenUI(
             OutlinedTextField(
                 value = password,
                 singleLine = true,
-                onValueChange = {
-                    password = it
-                    checkTextFields()
-                },
+                onValueChange = { password = it },
                 isError = password.length < 4,
                 label = { Text(text = "Пароль") },
                 keyboardOptions = KeyboardOptions(

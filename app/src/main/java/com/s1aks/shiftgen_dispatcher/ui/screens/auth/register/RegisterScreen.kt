@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -91,16 +92,31 @@ fun RegisterScreenUI(
 ) {
     var login by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var group by rememberSaveable { mutableStateOf("") }
     var structure by rememberSaveable { mutableStateOf("") }
     var emailValid by rememberSaveable { mutableStateOf(false) }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var structureEnable by rememberSaveable { mutableStateOf(false) }
-    var buttonRegisterEnable by rememberSaveable { mutableStateOf(false) }
     val groupsList = Groups.values().drop(1).map { it.groupName }
     var structuresMap: StructuresMap by rememberSaveable { mutableStateOf(mapOf()) }
     var structureLoading by rememberSaveable { mutableStateOf(false) }
+    val loginFieldOk = fun(): Boolean = login.length >= 4
+    val emailFieldOk = fun(): Boolean = emailValid
+    val passwordFieldOk = fun(): Boolean = password.length >= 4
+    val groupFieldOk = fun(): Boolean = group in groupsList
+    val structureFieldOk = fun(): Boolean =
+        if (structureEnable) structure.length >= 4 && structure !in structuresMap.keys
+        else structure in structuresMap.keys
+    val buttonRegisterEnable by remember {
+        derivedStateOf {
+            loginFieldOk()
+                    && emailFieldOk()
+                    && passwordFieldOk()
+                    && groupFieldOk()
+                    && structureFieldOk()
+        }
+    }
     val structuresState by structuresStateFlow.collectAsState()
     when (structuresState) {
         ResponseState.Idle -> {
@@ -138,20 +154,6 @@ fun RegisterScreenUI(
             (responseState as ResponseState.Error).toastError(context = LocalContext.current)
         }
     }
-    val loginFieldOk = fun(): Boolean = login.length >= 4
-    val emailFieldOk = fun(): Boolean = emailValid
-    val passwordFieldOk = fun(): Boolean = password.length >= 4
-    val groupFieldOk = fun(): Boolean = group in groupsList
-    val structureFieldOk = fun(): Boolean =
-        if (structureEnable) structure.length >= 4 && structure !in structuresMap.keys
-        else structure in structuresMap.keys
-    val checkTextFields = fun() {
-        buttonRegisterEnable = loginFieldOk()
-                && emailFieldOk()
-                && passwordFieldOk()
-                && groupFieldOk()
-                && structureFieldOk()
-    }
     var expandedGroup by rememberSaveable { mutableStateOf(false) }
     var expandedStructure by rememberSaveable { mutableStateOf(false) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
@@ -180,10 +182,7 @@ fun RegisterScreenUI(
             OutlinedTextField(
                 value = login,
                 singleLine = true,
-                onValueChange = {
-                    login = it
-                    checkTextFields()
-                },
+                onValueChange = { login = it },
                 isError = !loginFieldOk(),
                 label = { Text(text = "Логин") },
                 keyboardOptions = KeyboardOptions(
@@ -197,7 +196,6 @@ fun RegisterScreenUI(
                 onValueChange = {
                     email = it
                     emailValid = email.isNotBlank() && email.isValidEmail()
-                    checkTextFields()
                 },
                 isError = !emailFieldOk(),
                 label = { Text(text = "E-mail") },
@@ -209,10 +207,7 @@ fun RegisterScreenUI(
             OutlinedTextField(
                 value = password,
                 singleLine = true,
-                onValueChange = {
-                    password = it
-                    checkTextFields()
-                },
+                onValueChange = { password = it },
                 isError = !passwordFieldOk(),
                 label = { Text(text = "Пароль") },
                 keyboardOptions = KeyboardOptions(
@@ -234,15 +229,11 @@ fun RegisterScreenUI(
             Box {
                 OutlinedTextField(
                     modifier = Modifier.onGloballyPositioned { coordinates ->
-                        //This value is used to assign to the DropDown the same width
                         textFieldSize = coordinates.size.toSize()
                     },
                     value = group,
                     singleLine = true,
-                    onValueChange = {
-                        group = it
-                        checkTextFields()
-                    },
+                    onValueChange = { group = it },
                     label = { Text(text = "Группа") },
                     trailingIcon = {
                         Icon(
@@ -275,7 +266,6 @@ fun RegisterScreenUI(
                                 group = groupName
                                 expandedGroup = false
                                 focusManager.clearFocus()
-                                checkTextFields()
                             }
                         ) { Text(text = groupName) }
                     }
@@ -286,10 +276,7 @@ fun RegisterScreenUI(
                     modifier = Modifier.focusRequester(focusRequester),
                     value = structure,
                     singleLine = true,
-                    onValueChange = {
-                        structure = it
-                        checkTextFields()
-                    },
+                    onValueChange = { structure = it },
                     isError = !structureFieldOk(),
                     label = { Text(text = "Структура") },
                     trailingIcon = {
@@ -326,7 +313,6 @@ fun RegisterScreenUI(
                                 structureEnable = structureItem.value == 0
                                 structure = if (structureEnable) "" else structureItem.key
                                 focusManager.clearFocus()
-                                checkTextFields()
                             }
                         ) { Text(text = structureItem.key) }
                     }
