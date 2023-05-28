@@ -18,6 +18,7 @@ fun DirectionsScreen(
         onComposing(
             AppBarState(
                 title = "Направления",
+                drawerEnabled = true,
                 actions = {
                     AddIconButton { navController.navigate(Screen.DirectionAdd.route) }
                 }

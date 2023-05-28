@@ -18,6 +18,7 @@ fun WorkersScreen(
         onComposing(
             AppBarState(
                 title = "Рабочие",
+                drawerEnabled = true,
                 actions = {
                     AddIconButton { navController.navigate(Screen.WorkerAdd.route) }
                 }

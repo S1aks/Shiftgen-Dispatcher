@@ -32,6 +32,7 @@ interface Repository {
     suspend fun deleteShift(id: Int): Boolean
 
     suspend fun getStructures(): StructuresMap
+    suspend fun getStructureId(): Int
     suspend fun getStructure(id: Int): Structure
     suspend fun insertStructure(structure: Structure): Boolean
     suspend fun updateStructure(structure: Structure): Boolean

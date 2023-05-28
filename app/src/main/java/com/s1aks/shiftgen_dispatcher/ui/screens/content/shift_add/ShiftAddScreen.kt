@@ -16,6 +16,7 @@ fun ShiftAddScreen(
         onComposing(
             AppBarState(
                 title = "Добавить смену",
+                drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = false) { navController.popBackStack() }
                 }

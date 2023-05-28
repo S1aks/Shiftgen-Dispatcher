@@ -21,6 +21,11 @@ data class StructureResponse(
 )
 
 @Serializable
+data class StructureIdResponse(
+    val structureId: Int
+)
+
+@Serializable
 data class StructuresResponse(
     val list: StructuresMap
 )

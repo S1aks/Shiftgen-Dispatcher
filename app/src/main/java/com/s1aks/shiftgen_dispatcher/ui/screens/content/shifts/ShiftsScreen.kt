@@ -41,6 +41,7 @@ fun ShiftsScreen(
         onComposing(
             AppBarState(
                 title = "Смены",
+                drawerEnabled = true,
                 actions = {
                     AddIconButton { navController.navigate(Screen.ShiftAdd.route) }
                 }

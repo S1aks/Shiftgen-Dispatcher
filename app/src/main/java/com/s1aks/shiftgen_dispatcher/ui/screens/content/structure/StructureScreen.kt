@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_add
+package com.s1aks.shiftgen_dispatcher.ui.screens.content.structure
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,15 +7,15 @@ import com.s1aks.shiftgen_dispatcher.ui.elements.DoneIconButton
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 
 @Composable
-fun DirectionAddScreen(
+fun StructureScreen(
     navController: NavHostController,
     onComposing: (AppBarState) -> Unit,
-    viewModel: DirectionAddViewModel
+    viewModel: StructureViewModel
 ) {
     LaunchedEffect(key1 = true) {
         onComposing(
             AppBarState(
-                title = "Добавить направление",
+                title = "Редактировать структуру",
                 drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = false) { navController.popBackStack() }

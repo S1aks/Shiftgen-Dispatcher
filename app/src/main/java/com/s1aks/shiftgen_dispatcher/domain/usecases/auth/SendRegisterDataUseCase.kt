@@ -5,17 +5,19 @@ import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.domain.Repository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class SendRegisterDataUseCase(
+    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
     private val repository: Repository,
     private val localSecureStore: LocalSecureStore
 ) {
     suspend fun execute(registerData: RegisterData): ResponseState<Boolean> {
-        val structureId: Int = withContext(Dispatchers.IO) {
+        val structureId: Int = withContext(scope.coroutineContext) {
             repository.getStructures()[registerData.structure]
                 ?: runBlocking {
                     repository.insertStructure(Structure(0, registerData.structure))

@@ -16,6 +16,7 @@ fun WorkerAddScreen(
         onComposing(
             AppBarState(
                 title = "Добавить рабочего",
+                drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = false) { navController.popBackStack() }
                 }

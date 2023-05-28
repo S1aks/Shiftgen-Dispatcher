@@ -20,6 +20,7 @@ class LocalSecureStore(private val preferences: SharedPreferences) {
         set(value) = preferences.edit().putString("refresh_token", value).apply()
 
     fun clear() {
+        structureId = -1
         accessToken = ""
         refreshToken = ""
     }

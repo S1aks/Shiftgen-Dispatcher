@@ -12,6 +12,7 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftReques
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsResponse
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureIdResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresResponse
@@ -88,6 +89,8 @@ internal fun Structure.toStructure(): Structure = Structure(
 )
 
 internal fun StructureResponse.toStructure(): Structure = structure.toStructure()
+
+internal fun StructureIdResponse.toStructureId(): Int = structureId
 
 internal fun StructuresResponse.toStructureMap(): StructuresMap = list
 

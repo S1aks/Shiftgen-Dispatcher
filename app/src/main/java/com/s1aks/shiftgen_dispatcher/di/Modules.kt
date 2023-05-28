@@ -20,6 +20,7 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_add.DirectionA
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_add.ShiftAddViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.structure.StructureViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_add.WorkerAddViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -65,6 +66,7 @@ val useCasesModule = module {
 val viewModelsModule = module {
     viewModel { LoginViewModel(sendLoginDataUseCase = get(), checkAuthorizationUseCase = get()) }
     viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
+    viewModel { StructureViewModel() }
     viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
     viewModel { ShiftAddViewModel() }
     viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }

@@ -223,6 +223,7 @@ fun PreviewDrawerContent() {
 
 data class AppBarState(
     val title: String = "",
+    val drawerEnabled: Boolean = true,
     val actions: (@Composable RowScope.() -> Unit)? = null
 )
 
@@ -232,7 +233,6 @@ fun MainScreenUI(
 ) {
     val mainNavController = rememberNavController()
     var appBarState by remember { mutableStateOf(AppBarState()) }
-    var drawerEnable by remember { mutableStateOf(true) }
     val scaffoldState =
         rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val scope = rememberCoroutineScope()
@@ -241,7 +241,7 @@ fun MainScreenUI(
         topBar = {
             AppBar(
                 title = appBarState.title,
-                navigationIconVisible = drawerEnable,
+                navigationIconVisible = appBarState.drawerEnabled,
                 onNavigationIconClick = {
                     scope.launch {
                         scaffoldState.drawerState.apply {
@@ -253,7 +253,7 @@ fun MainScreenUI(
             )
         },
         drawerContent = {
-            if (drawerEnable) {
+            if (appBarState.drawerEnabled) {
                 DrawerContent(
                     navController = mainNavController,
                     scope = scope,
@@ -262,7 +262,7 @@ fun MainScreenUI(
                 )
             }
         },
-        drawerGesturesEnabled = drawerEnable
+        drawerGesturesEnabled = appBarState.drawerEnabled
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -275,7 +275,7 @@ fun MainScreenUI(
                 startDestination = Screen.Shifts.route,
                 route = NavRoutes.MainRoute.name
             ) {
-                mainGraph(mainNavController, { drawerEnable = it }) { appBarState = it }
+                mainGraph(mainNavController) { appBarState = it }
             }
         }
     }

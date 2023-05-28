@@ -65,6 +65,9 @@ class RepositoryImpl(
     override suspend fun getStructures(): StructuresMap =
         apiService.structures().toStructureMap()
 
+    override suspend fun getStructureId(): Int =
+        apiService.structureId().toStructureId()
+
     override suspend fun getStructure(id: Int): Structure =
         apiService.structureGet(IdRequest(id)).toStructure()
 
