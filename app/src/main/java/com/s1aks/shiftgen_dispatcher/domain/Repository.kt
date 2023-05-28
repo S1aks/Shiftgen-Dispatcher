@@ -2,7 +2,6 @@ package com.s1aks.shiftgen_dispatcher.domain
 
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
-import com.s1aks.shiftgen_dispatcher.data.entities.RefreshData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
@@ -11,12 +10,12 @@ import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
+import io.ktor.http.HttpStatusCode
 import java.time.YearMonth
 
 interface Repository {
-    suspend fun access(): Boolean
+    suspend fun access(): HttpStatusCode
     suspend fun login(loginData: LoginData): TokensData
-    suspend fun refresh(refreshToken: RefreshData): TokensData
     suspend fun register(registerData: RegisterData, structureId: Int): TokensData
 
     suspend fun getDirections(): List<Direction>

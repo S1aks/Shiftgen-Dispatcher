@@ -2,11 +2,9 @@ package com.s1aks.shiftgen_dispatcher.data.api
 
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.ACCESS_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REFRESH_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REGISTER_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RefreshRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RegisterRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RegisterResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
@@ -27,11 +25,13 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.SHIFT_UPDATE_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsResponse
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureIdResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURES_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_DELETE_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_GET_URL
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_ID_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_INSERT_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_UPDATE_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresResponse
@@ -90,9 +90,6 @@ class ApiServiceImpl(
     override suspend fun login(loginRequest: LoginRequest): LoginResponse =
         client.post(LOGIN_URL) { setBody(loginRequest) }.getData()
 
-    override suspend fun refresh(refreshRequest: RefreshRequest): LoginResponse =
-        client.post(REFRESH_URL) { setBody(refreshRequest) }.getData()
-
     override suspend fun register(registerRequest: RegisterRequest): RegisterResponse =
         client.post(REGISTER_URL) { setBody(registerRequest) }.getData()
 
@@ -128,6 +125,9 @@ class ApiServiceImpl(
 
     override suspend fun structures(): StructuresResponse =
         client.get(STRUCTURES_URL).getData()
+
+    override suspend fun structureId(): StructureIdResponse =
+        client.get(STRUCTURE_ID_URL).getData()
 
     override suspend fun structureGet(idRequest: IdRequest): StructureResponse =
         client.post(STRUCTURE_GET_URL) { setBody(idRequest) }.getData()

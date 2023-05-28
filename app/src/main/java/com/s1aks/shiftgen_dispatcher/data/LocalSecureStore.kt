@@ -9,7 +9,7 @@ class LocalSecureStore(private val preferences: SharedPreferences) {
 
     var structureId: Int?
         get() = preferences.getInt("structure_id", -1)
-        set(value) = preferences.edit().putInt("login", value ?: -1).apply()
+        set(value) = preferences.edit().putInt("structure_id", value ?: -1).apply()
 
     var accessToken: String?
         get() = preferences.getString("access_token", "")

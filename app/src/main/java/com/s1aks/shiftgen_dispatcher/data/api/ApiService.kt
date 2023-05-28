@@ -1,8 +1,10 @@
 package com.s1aks.shiftgen_dispatcher.data.api
 
-import android.util.Log
 import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REFRESH_URL
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginResponse
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RefreshRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.directions.DirectionsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase
@@ -10,6 +12,7 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBl
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.workers.WorkersCase
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
@@ -20,6 +23,8 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
@@ -51,13 +56,13 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                     connectTimeoutMillis = 6000L
                     socketTimeoutMillis = 6000L
                 }
+                expectSuccess = false
                 install(Auth) {
                     bearer {
                         val localSecureStore: LocalSecureStore by inject(LocalSecureStore::class.java)
                         sendWithoutRequest { request ->
                             val path = request.url.encodedPath
                             path != "/auth/login"
-                                    && path != "/auth/refresh"
                                     && path != "/auth/register"
                                     && path != "/structures"
                                     && path != "/insert/structure"
@@ -65,14 +70,30 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                         loadTokens {
                             val accessToken = localSecureStore.accessToken.toString()
                             val refreshToken = localSecureStore.refreshToken.toString()
-                            Log.d("TAG", "$accessToken \n $refreshToken")
                             // Load tokens from a local storage and return them as the 'BearerTokens' instance
                             BearerTokens(accessToken, refreshToken)
                         }
-//                        refreshTokens {
-//                            // Refresh tokens and return them as the 'BearerTokens' instance
-//                            BearerTokens(accessToken, refreshToken)
-//                        }
+                        refreshTokens {
+                            val login = localSecureStore.login ?: ""
+                            val refreshToken = localSecureStore.refreshToken
+                            if (!refreshToken.isNullOrEmpty()) {
+                                val tokensData = client.post(REFRESH_URL) {
+                                    setBody(RefreshRequest(login, refreshToken))
+                                }.body<LoginResponse>()
+                                if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
+                                    localSecureStore.accessToken = tokensData.accessToken
+                                    localSecureStore.refreshToken = tokensData.refreshToken
+                                    BearerTokens(
+                                        accessToken = tokensData.accessToken,
+                                        refreshToken = tokensData.refreshToken
+                                    )
+                                } else {
+                                    throw RuntimeException("Ошибка получения токена.")
+                                }
+                            } else {
+                                BearerTokens(accessToken = "", refreshToken = "")
+                            }
+                        }
                     }
                 }
                 defaultRequest {

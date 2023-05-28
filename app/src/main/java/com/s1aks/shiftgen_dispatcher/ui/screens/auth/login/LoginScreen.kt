@@ -1,6 +1,7 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.auth.login
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,16 +50,20 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
-    LoginScreenUI(
-        responseStateFlow = viewModel.loginState,
-        onLoginClick = { loginData ->
-            viewModel.sendData(loginData)
-        },
-        onRegisterClick = { navController.navigate(Screen.Register.route) },
-        onSuccessResponse = {
-            navController.clearAndNavigate(Screen.Main.route)
-        }
-    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        LoginScreenUI(
+            responseStateFlow = viewModel.loginState,
+            onLoginClick = { loginData ->
+                viewModel.sendData(loginData)
+            },
+            onRegisterClick = { navController.navigate(Screen.Register.route) },
+            onSuccessResponse = { navController.clearAndNavigate(Screen.Main.route) }
+        )
+    }
     LaunchedEffect(Unit) { viewModel.checkAuthorization() }
 }
 
@@ -93,16 +98,16 @@ fun LoginScreenUI(
             (responseState as ResponseState.Error).toastError(context = LocalContext.current)
         }
     }
-    Column(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        if (loadingState) {
-            CircularProgressIndicator()
-        } else {
+    if (loadingState) {
+        CircularProgressIndicator()
+    } else {
+        Column(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             OutlinedTextField(
                 value = login,
                 singleLine = true,

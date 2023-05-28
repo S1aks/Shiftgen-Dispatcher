@@ -4,7 +4,6 @@ import com.s1aks.shiftgen_dispatcher.data.api.ApiService
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
-import com.s1aks.shiftgen_dispatcher.data.entities.RefreshData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
@@ -14,20 +13,18 @@ import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import com.s1aks.shiftgen_dispatcher.domain.Repository
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
 import java.time.YearMonth
 
 class RepositoryImpl(
     private val apiService: ApiService
 ) : Repository {
-    override suspend fun access(): Boolean =
-        apiService.access().isSuccess()
+    override suspend fun access(): HttpStatusCode =
+        apiService.access()
 
     override suspend fun login(loginData: LoginData): TokensData =
         apiService.login(loginData.toLoginRequest()).toTokensData()
-
-    override suspend fun refresh(refreshToken: RefreshData): TokensData =
-        apiService.refresh(refreshToken.toRefreshRequest()).toTokensData()
 
     override suspend fun register(registerData: RegisterData, structureId: Int): TokensData =
         apiService.register(registerData.toRegisterRequest(structureId)).toTokensData()

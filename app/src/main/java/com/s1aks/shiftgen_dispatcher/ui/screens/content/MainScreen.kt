@@ -15,16 +15,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
+import androidx.compose.material.Divider
 import androidx.compose.material.DrawerState
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Domain
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Logout
@@ -84,7 +87,7 @@ fun DrawerHeader() {
             .padding(top = 10.dp)
             .fillMaxWidth(),
         text = stringResource(id = R.string.app_name),
-        color = colors.primaryVariant,
+        color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
         fontSize = 26.sp,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center
@@ -114,12 +117,15 @@ fun DrawerHeader() {
 
 sealed class MainNavItem(
     val title: String,
-    val icon: ImageVector,
-    val route: String
+    val icon: ImageVector?,
+    val route: String,
+    val isDivider: Boolean = false,
 ) {
+    object Divider : MainNavItem("", null, "", true)
     object Shifts : MainNavItem("Смены", Icons.Default.ListAlt, Screen.Shifts.route)
     object Workers : MainNavItem("Рабочие", Icons.Default.Groups, Screen.Workers.route)
     object Directions : MainNavItem("Направления", Icons.Default.Route, Screen.Directions.route)
+    object Structure : MainNavItem("Структура", Icons.Default.Domain, Screen.Structure.route)
     object Exit : MainNavItem("Выход", Icons.Default.Logout, Screen.Login.route)
 }
 
@@ -129,33 +135,40 @@ fun DrawerItem(
     selected: Boolean,
     onItemClick: () -> Unit
 ) {
-    Button(
-        colors = buttonColors(
-            backgroundColor = Color.Transparent,
-            contentColor = colors.primary,
-        ),
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, if (selected) colors.primary else colors.secondary),
-        modifier = Modifier
-            .height(50.dp)
-            .padding(horizontal = 10.dp, vertical = 2.dp)
-            .fillMaxWidth(),
-        enabled = selected,
-        onClick = { onItemClick() })
-    {
-        Icon(
+    if (item.isDivider) {
+        Divider(
+            thickness = 20.dp,
+            color = Color.Transparent
+        )
+    } else {
+        Button(
             modifier = Modifier
-                .scale(1.2f)
-                .padding(horizontal = 10.dp)
-                .offset(y = 0.dp),
-            imageVector = item.icon,
-            contentDescription = item.title
-        )
-        Text(
-            text = item.title, fontSize = 18.sp,
-            textAlign = TextAlign.Left,
-            modifier = Modifier.fillMaxWidth(),
-        )
+                .height(50.dp)
+                .padding(horizontal = 10.dp, vertical = 2.dp)
+                .fillMaxWidth(),
+            colors = buttonColors(
+                backgroundColor = Color.Transparent,
+                contentColor = colors.primary,
+            ),
+            border = BorderStroke(1.dp, if (selected) colors.primary else colors.secondary),
+            enabled = selected,
+            onClick = { onItemClick() })
+        {
+            Icon(
+                modifier = Modifier
+                    .scale(1.2f)
+                    .padding(horizontal = 10.dp)
+                    .offset(y = 0.dp),
+                imageVector = item.icon
+                    ?: throw RuntimeException("Ошибка иконки бокового меню"),
+                contentDescription = item.title
+            )
+            Text(
+                text = item.title, fontSize = 18.sp,
+                textAlign = TextAlign.Left,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
@@ -165,6 +178,9 @@ fun DrawerContent(
         MainNavItem.Shifts,
         MainNavItem.Workers,
         MainNavItem.Directions,
+        MainNavItem.Divider,
+        MainNavItem.Structure,
+        MainNavItem.Divider,
         MainNavItem.Exit
     ),
     navController: NavController? = null,
@@ -178,14 +194,16 @@ fun DrawerContent(
         if (item.route == Screen.Login.route) {
             onLogout()
         } else {
-            navController?.navigate(item.route) {
-                navController.graph.startDestinationRoute?.let { route ->
-                    popUpTo(route) {
-                        saveState = true
+            if (item !is MainNavItem.Divider) {
+                navController?.navigate(item.route) {
+                    navController.graph.startDestinationRoute?.let { route ->
+                        popUpTo(route) {
+                            saveState = true
+                        }
                     }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
             }
         }
         scope?.launch {

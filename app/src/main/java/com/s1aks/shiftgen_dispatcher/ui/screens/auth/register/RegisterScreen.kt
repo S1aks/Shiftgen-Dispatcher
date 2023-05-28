@@ -19,7 +19,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -73,13 +73,19 @@ fun RegisterScreen(
     navController: NavController,
     viewModel: RegisterViewModel
 ) {
-    RegisterScreenUI(
-        structuresStateFlow = viewModel.structuresState,
-        responseStateFlow = viewModel.registerState,
-        onRegisterClick = { registerData -> viewModel.sendData(registerData) },
-        onCancelClick = { navController.popBackStack() },
-        onSuccessResponse = { navController.clearAndNavigate(Screen.Main.route) }
-    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        RegisterScreenUI(
+            structuresStateFlow = viewModel.structuresState,
+            responseStateFlow = viewModel.registerState,
+            onRegisterClick = { registerData -> viewModel.sendData(registerData) },
+            onCancelClick = { navController.popBackStack() },
+            onSuccessResponse = { navController.clearAndNavigate(Screen.Main.route) }
+        )
+    }
 }
 
 @Composable
@@ -161,24 +167,24 @@ fun RegisterScreenUI(
     val iconStructure =
         if (expandedStructure) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
     val groupColor =
-        if (group.isEmpty()) MaterialTheme.colors.error.copy(ContentAlpha.high)
-        else MaterialTheme.colors.onSurface.copy(ContentAlpha.disabled)
+        if (group.isEmpty()) colors.error.copy(ContentAlpha.high)
+        else colors.onSurface.copy(ContentAlpha.disabled)
     val structureColor =
-        if (structure.isEmpty()) MaterialTheme.colors.error.copy(ContentAlpha.high)
-        else MaterialTheme.colors.onSurface.copy(ContentAlpha.disabled)
+        if (structure.isEmpty()) colors.error.copy(ContentAlpha.high)
+        else colors.onSurface.copy(ContentAlpha.disabled)
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
-    Column(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        if (loadingState) {
-            CircularProgressIndicator()
-        } else {
+    if (loadingState) {
+        CircularProgressIndicator()
+    } else {
+        Column(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             OutlinedTextField(
                 value = login,
                 singleLine = true,
@@ -251,7 +257,7 @@ fun RegisterScreenUI(
                         disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
                         backgroundColor = Color.Transparent,
                         disabledBorderColor = groupColor,
-                        disabledLabelColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
+                        disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
                     )
                 )
                 DropdownMenu(
@@ -297,7 +303,7 @@ fun RegisterScreenUI(
                         disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
                         backgroundColor = Color.Transparent,
                         disabledBorderColor = structureColor,
-                        disabledLabelColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
+                        disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
                     )
                 )
                 DropdownMenu(
