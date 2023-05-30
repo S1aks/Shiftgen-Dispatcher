@@ -64,12 +64,13 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                             val path = request.url.encodedPath
                             path != "/auth/login"
                                     && path != "/auth/register"
+                                    && path != "/auth/refresh"
                                     && path != "/structures"
                                     && path != "/insert/structure"
                         }
                         loadTokens {
-                            val accessToken = localSecureStore.accessToken.toString()
-                            val refreshToken = localSecureStore.refreshToken.toString()
+                            val accessToken = localSecureStore.accessToken ?: ""
+                            val refreshToken = localSecureStore.refreshToken ?: ""
                             // Load tokens from a local storage and return them as the 'BearerTokens' instance
                             BearerTokens(accessToken, refreshToken)
                         }
@@ -79,14 +80,12 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                             if (!refreshToken.isNullOrEmpty()) {
                                 val tokensData = client.post(REFRESH_URL) {
                                     setBody(RefreshRequest(login, refreshToken))
-                                }.body<LoginResponse>()
+                                }
+                                    .body<LoginResponse>()
                                 if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
                                     localSecureStore.accessToken = tokensData.accessToken
                                     localSecureStore.refreshToken = tokensData.refreshToken
-                                    BearerTokens(
-                                        accessToken = tokensData.accessToken,
-                                        refreshToken = tokensData.refreshToken
-                                    )
+                                    BearerTokens(tokensData.accessToken, tokensData.refreshToken)
                                 } else {
                                     throw RuntimeException("Ошибка получения токена.")
                                 }
