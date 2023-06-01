@@ -6,17 +6,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.elements.AddIconButton
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 
 @Composable
 fun WorkersScreen(
     navController: NavHostController,
-    onComposing: (AppBarState) -> Unit,
+    onComposing: (MainScreenState) -> Unit,
     viewModel: WorkersViewModel
 ) {
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         onComposing(
-            AppBarState(
+            MainScreenState(
                 title = "Рабочие",
                 drawerEnabled = true,
                 actions = {

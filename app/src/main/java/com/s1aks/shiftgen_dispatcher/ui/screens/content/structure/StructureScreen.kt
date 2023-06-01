@@ -30,13 +30,13 @@ import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.ui.elements.DoneIconButton
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
-import com.s1aks.shiftgen_dispatcher.utils.toastError
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
+import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 
 @Composable
 fun StructureScreen(
     navController: NavHostController,
-    onComposing: (AppBarState) -> Unit,
+    onComposing: (MainScreenState) -> Unit,
     viewModel: StructureViewModel
 ) {
     var screenState: StructureScreenState by remember {
@@ -44,45 +44,17 @@ fun StructureScreen(
     }
     var loadingState by rememberSaveable { mutableStateOf(false) }
     val responseState by viewModel.structureState.collectAsState()
-    when (responseState) {
-        is ResponseState.Idle -> {
-            loadingState = false
-        }
-
-        is ResponseState.Loading -> {
-            loadingState = true
-        }
-
-        is ResponseState.Success -> {
-            screenState.structureData = (responseState as ResponseState.Success<Structure>).item
-        }
-
-        is ResponseState.Error -> {
-            (responseState as ResponseState.Error).toastError(context = LocalContext.current)
-        }
+    responseState.onSuccess(LocalContext.current, { loadingState = it }) {
+        screenState.structureData = (responseState as ResponseState.Success<Structure>).item
     }
     val updateDataState by viewModel.updateStructureState.collectAsState()
-    when (updateDataState) {
-        ResponseState.Idle -> {
-            loadingState = false
-        }
-
-        ResponseState.Loading -> {
-            loadingState = true
-        }
-
-        is ResponseState.Success -> {
-            viewModel.toIdle()
-            navController.popBackStack()
-        }
-
-        is ResponseState.Error -> {
-            (updateDataState as ResponseState.Error).toastError(context = LocalContext.current)
-        }
+    updateDataState.onSuccess(LocalContext.current, { loadingState = it }) {
+        viewModel.toIdle()
+        navController.popBackStack()
     }
     LaunchedEffect(Unit) {
         onComposing(
-            AppBarState(
+            MainScreenState(
                 title = "Редактировать структуру",
                 drawerEnabled = false,
                 actions = {

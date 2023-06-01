@@ -38,3 +38,19 @@ fun <T> CoroutineScope.setFlow(
         }
     }
 }
+
+fun <T> ResponseState<T>.onSuccess(
+    context: Context,
+    loadingState: (Boolean) -> Unit,
+    successBlock: () -> Unit
+) {
+    when (this) {
+        ResponseState.Idle -> loadingState(false)
+
+        ResponseState.Loading -> loadingState(true)
+
+        is ResponseState.Success -> successBlock()
+
+        is ResponseState.Error -> toastError(context = context)
+    }
+}

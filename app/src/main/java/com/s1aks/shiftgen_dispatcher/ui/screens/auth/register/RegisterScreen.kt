@@ -63,10 +63,8 @@ import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
 import com.s1aks.shiftgen_dispatcher.utils.isValidEmail
-import com.s1aks.shiftgen_dispatcher.utils.toastError
+import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun RegisterScreen(
@@ -78,23 +76,40 @@ fun RegisterScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        RegisterScreenUI(
-            structuresStateFlow = viewModel.structuresState,
-            responseStateFlow = viewModel.registerState,
-            onRegisterClick = { registerData -> viewModel.sendData(registerData) },
-            onCancelClick = { navController.popBackStack() },
-            onSuccessResponse = { navController.clearAndNavigate(Screen.Main.route) }
-        )
+        val screenState: RegisterScreenState by remember {
+            mutableStateOf(RegisterScreenState(structureLoading = false, structuresMap = mapOf()))
+        }
+        var loadingState by rememberSaveable { mutableStateOf(false) }
+
+        val structuresState by viewModel.structuresState.collectAsState()
+        structuresState.onSuccess(LocalContext.current, { screenState.structureLoading = it }) {
+            screenState.structuresMap = (structuresState as ResponseState.Success).item
+        }
+        val responseState by viewModel.registerState.collectAsState()
+        responseState.onSuccess(LocalContext.current, { loadingState = it }) {
+            navController.clearAndNavigate(Screen.Main.route)
+        }
+        if (loadingState) {
+            CircularProgressIndicator()
+        } else {
+            RegisterScreenUI(
+                onRegisterClick = { registerData -> viewModel.sendData(registerData) },
+                onCancelClick = { navController.popBackStack() }
+            )
+        }
     }
 }
 
+data class RegisterScreenState(
+    var structureLoading: Boolean,
+    var structuresMap: StructuresMap
+)
+
 @Composable
 fun RegisterScreenUI(
-    structuresStateFlow: StateFlow<ResponseState<StructuresMap>> = MutableStateFlow(ResponseState.Idle),
-    responseStateFlow: StateFlow<ResponseState<Boolean>> = MutableStateFlow(ResponseState.Idle),
+    screenState: RegisterScreenState = RegisterScreenState(false, mapOf()),
     onRegisterClick: (RegisterData) -> Unit = {},
-    onCancelClick: () -> Unit = {},
-    onSuccessResponse: () -> Unit = {}
+    onCancelClick: () -> Unit = {}
 ) {
     var login by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -105,59 +120,20 @@ fun RegisterScreenUI(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var structureEnable by rememberSaveable { mutableStateOf(false) }
     val groupsList = Groups.values().drop(1).map { it.groupName }
-    var structuresMap: StructuresMap by rememberSaveable { mutableStateOf(mapOf()) }
-    var structureLoading by rememberSaveable { mutableStateOf(false) }
     val loginFieldOk = fun(): Boolean = login.length >= 4
     val emailFieldOk = fun(): Boolean = emailValid
     val passwordFieldOk = fun(): Boolean = password.length >= 4
     val groupFieldOk = fun(): Boolean = group in groupsList
     val structureFieldOk = fun(): Boolean =
-        if (structureEnable) structure.length >= 4 && structure !in structuresMap.keys
-        else structure in structuresMap.keys
-    val buttonRegisterEnable by remember {
+        if (structureEnable) structure.length >= 4 && structure !in screenState.structuresMap.keys
+        else structure in screenState.structuresMap.keys
+    val allFieldsOk by remember {
         derivedStateOf {
             loginFieldOk()
                     && emailFieldOk()
                     && passwordFieldOk()
                     && groupFieldOk()
                     && structureFieldOk()
-        }
-    }
-    val structuresState by structuresStateFlow.collectAsState()
-    when (structuresState) {
-        ResponseState.Idle -> {
-            structureLoading = false
-        }
-
-        ResponseState.Loading -> {
-            structureLoading = true
-        }
-
-        is ResponseState.Success -> {
-            structuresMap = (structuresState as ResponseState.Success).item
-        }
-
-        is ResponseState.Error -> {
-            (structuresState as ResponseState.Error).toastError(context = LocalContext.current)
-        }
-    }
-    var loadingState by rememberSaveable { mutableStateOf(false) }
-    val responseState by responseStateFlow.collectAsState()
-    when (responseState) {
-        ResponseState.Idle -> {
-            loadingState = false
-        }
-
-        ResponseState.Loading -> {
-            loadingState = true
-        }
-
-        is ResponseState.Success -> {
-            onSuccessResponse()
-        }
-
-        is ResponseState.Error -> {
-            (responseState as ResponseState.Error).toastError(context = LocalContext.current)
         }
     }
     var expandedGroup by rememberSaveable { mutableStateOf(false) }
@@ -175,181 +151,177 @@ fun RegisterScreenUI(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
-    if (loadingState) {
-        CircularProgressIndicator()
-    } else {
-        Column(
-            modifier = Modifier
-                .padding(4.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            OutlinedTextField(
-                value = login,
-                singleLine = true,
-                onValueChange = { login = it },
-                isError = !loginFieldOk(),
-                label = { Text(text = "Логин") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text
-                )
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        OutlinedTextField(
+            value = login,
+            singleLine = true,
+            onValueChange = { login = it },
+            isError = !loginFieldOk(),
+            label = { Text(text = "Логин") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Text
             )
+        )
+        OutlinedTextField(
+            value = email,
+            singleLine = true,
+            onValueChange = {
+                email = it
+                emailValid = email.isNotBlank() && email.isValidEmail()
+            },
+            isError = !emailFieldOk(),
+            label = { Text(text = "E-mail") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Text
+            )
+        )
+        OutlinedTextField(
+            value = password,
+            singleLine = true,
+            onValueChange = { password = it },
+            isError = !passwordFieldOk(),
+            label = { Text(text = "Пароль") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
+            ),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    Icons.Filled.Visibility
+                else
+                    Icons.Filled.VisibilityOff
+                val description = if (passwordVisible) "Спрятать пароль" else "Показать пароль"
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = image, description)
+                }
+            }
+        )
+        Box {
             OutlinedTextField(
-                value = email,
-                singleLine = true,
-                onValueChange = {
-                    email = it
-                    emailValid = email.isNotBlank() && email.isValidEmail()
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    textFieldSize = coordinates.size.toSize()
                 },
-                isError = !emailFieldOk(),
-                label = { Text(text = "E-mail") },
+                value = group,
+                singleLine = true,
+                onValueChange = { group = it },
+                label = { Text(text = "Группа") },
+                trailingIcon = {
+                    Icon(
+                        iconGroup, "Группа пользователя",
+                        Modifier.clickable { expandedGroup = !expandedGroup },
+                        tint = groupColor
+                    )
+                },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Text
-                )
-            )
-            OutlinedTextField(
-                value = password,
-                singleLine = true,
-                onValueChange = { password = it },
-                isError = !passwordFieldOk(),
-                label = { Text(text = "Пароль") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Password
                 ),
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    val image = if (passwordVisible)
-                        Icons.Filled.Visibility
-                    else
-                        Icons.Filled.VisibilityOff
-                    val description = if (passwordVisible) "Спрятать пароль" else "Показать пароль"
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(imageVector = image, description)
-                    }
-                }
+                enabled = false,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
+                    backgroundColor = Color.Transparent,
+                    disabledBorderColor = groupColor,
+                    disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
+                )
             )
-            Box {
-                OutlinedTextField(
-                    modifier = Modifier.onGloballyPositioned { coordinates ->
-                        textFieldSize = coordinates.size.toSize()
-                    },
-                    value = group,
-                    singleLine = true,
-                    onValueChange = { group = it },
-                    label = { Text(text = "Группа") },
-                    trailingIcon = {
+            DropdownMenu(
+                expanded = expandedGroup,
+                onDismissRequest = { expandedGroup = false },
+                modifier = Modifier
+                    .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
+            ) {
+                groupsList.forEach { groupName ->
+                    DropdownMenuItem(
+                        onClick = {
+                            group = groupName
+                            expandedGroup = false
+                            focusManager.clearFocus()
+                        }
+                    ) { Text(text = groupName) }
+                }
+            }
+        }
+        Box {
+            OutlinedTextField(
+                modifier = Modifier.focusRequester(focusRequester),
+                value = structure,
+                singleLine = true,
+                onValueChange = { structure = it },
+                isError = !structureFieldOk(),
+                label = { Text(text = "Структура") },
+                trailingIcon = {
+                    if (screenState.structureLoading) CircularProgressIndicator(color = structureColor)
+                    else
                         Icon(
-                            iconGroup, "Группа пользователя",
-                            Modifier.clickable { expandedGroup = !expandedGroup },
-                            tint = groupColor
+                            iconStructure, "Группа пользователя",
+                            Modifier.clickable { expandedStructure = !expandedStructure },
+                            tint = structureColor
                         )
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next,
-                        keyboardType = KeyboardType.Text
-                    ),
-                    enabled = false,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-                        backgroundColor = Color.Transparent,
-                        disabledBorderColor = groupColor,
-                        disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
-                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Send,
+                    keyboardType = KeyboardType.Text
+                ),
+                enabled = structureEnable,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
+                    backgroundColor = Color.Transparent,
+                    disabledBorderColor = structureColor,
+                    disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
                 )
-                DropdownMenu(
-                    expanded = expandedGroup,
-                    onDismissRequest = { expandedGroup = false },
-                    modifier = Modifier
-                        .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
-                ) {
-                    groupsList.forEach { groupName ->
-                        DropdownMenuItem(
-                            onClick = {
-                                group = groupName
-                                expandedGroup = false
-                                focusManager.clearFocus()
-                            }
-                        ) { Text(text = groupName) }
-                    }
+            )
+            DropdownMenu(
+                expanded = expandedStructure,
+                onDismissRequest = { expandedStructure = false },
+                modifier = Modifier
+                    .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
+            ) {
+                screenState.structuresMap.forEach { structureItem ->
+                    DropdownMenuItem(
+                        onClick = {
+                            expandedStructure = false
+                            structureEnable = structureItem.value == 0
+                            structure = if (structureEnable) "" else structureItem.key
+                            focusManager.clearFocus()
+                        }
+                    ) { Text(text = structureItem.key) }
                 }
             }
-            Box {
-                OutlinedTextField(
-                    modifier = Modifier.focusRequester(focusRequester),
-                    value = structure,
-                    singleLine = true,
-                    onValueChange = { structure = it },
-                    isError = !structureFieldOk(),
-                    label = { Text(text = "Структура") },
-                    trailingIcon = {
-                        if (structureLoading) CircularProgressIndicator(color = structureColor)
-                        else
-                            Icon(
-                                iconStructure, "Группа пользователя",
-                                Modifier.clickable { expandedStructure = !expandedStructure },
-                                tint = structureColor
-                            )
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Send,
-                        keyboardType = KeyboardType.Text
-                    ),
-                    enabled = structureEnable,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-                        backgroundColor = Color.Transparent,
-                        disabledBorderColor = structureColor,
-                        disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
-                    )
-                )
-                DropdownMenu(
-                    expanded = expandedStructure,
-                    onDismissRequest = { expandedStructure = false },
-                    modifier = Modifier
-                        .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
-                ) {
-                    structuresMap.forEach { structureItem ->
-                        DropdownMenuItem(
-                            onClick = {
-                                expandedStructure = false
-                                structureEnable = structureItem.value == 0
-                                structure = if (structureEnable) "" else structureItem.key
-                                focusManager.clearFocus()
-                            }
-                        ) { Text(text = structureItem.key) }
-                    }
-                }
-                LaunchedEffect(structureEnable) {
-                    if (structureEnable) {
-                        delay(200)
-                        focusRequester.requestFocus()
-                    }
+            LaunchedEffect(structureEnable) {
+                if (structureEnable) {
+                    delay(200)
+                    focusRequester.requestFocus()
                 }
             }
-            Row {
-                Button(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .width(140.dp),
-                    onClick = {
-                        onRegisterClick(RegisterData(login, email, password, group, structure))
-                    },
-                    enabled = buttonRegisterEnable
-                ) {
-                    Text(text = "Регистрация")
-                }
-                TextButton(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .width(110.dp),
-                    onClick = onCancelClick
-                ) {
-                    Text(text = "Отмена")
-                }
+        }
+        Row {
+            Button(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .width(140.dp),
+                onClick = {
+                    onRegisterClick(RegisterData(login, email, password, group, structure))
+                },
+                enabled = allFieldsOk
+            ) {
+                Text(text = "Регистрация")
+            }
+            TextButton(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .width(110.dp),
+                onClick = onCancelClick
+            ) {
+                Text(text = "Отмена")
             }
         }
     }
