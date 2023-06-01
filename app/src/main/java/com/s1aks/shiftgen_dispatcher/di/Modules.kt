@@ -14,6 +14,7 @@ import com.s1aks.shiftgen_dispatcher.domain.usecases.content.directions.GetDirec
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetShiftsUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.GetStructureUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.GetStructuresUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.UpdateStructureUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.workers.GetWorkersUseCase
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterViewModel
@@ -64,13 +65,14 @@ val useCasesModule = module {
         GetStructureUseCase(repository = get(), localSecureStore = get())
     }
     single<GetStructuresUseCase> { GetStructuresUseCase(repository = get()) }
+    single<UpdateStructureUseCase> { UpdateStructureUseCase(repository = get()) }
     single<GetWorkersUseCase> { GetWorkersUseCase(repository = get()) }
 }
 
 val viewModelsModule = module {
     viewModel { LoginViewModel(sendLoginDataUseCase = get(), checkAuthorizationUseCase = get()) }
     viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
-    viewModel { StructureViewModel(getStructureUseCase = get()) }
+    viewModel { StructureViewModel(getStructureUseCase = get(), updateStructureUseCase = get()) }
     viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
     viewModel { ShiftAddViewModel() }
     viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }

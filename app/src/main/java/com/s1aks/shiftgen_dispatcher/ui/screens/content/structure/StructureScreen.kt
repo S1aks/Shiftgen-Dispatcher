@@ -2,9 +2,11 @@ package com.s1aks.shiftgen_dispatcher.ui.screens.content.structure
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,20 +18,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.ui.elements.DoneIconButton
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.AppBarState
 import com.s1aks.shiftgen_dispatcher.utils.toastError
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun StructureScreen(
@@ -37,54 +39,11 @@ fun StructureScreen(
     onComposing: (AppBarState) -> Unit,
     viewModel: StructureViewModel
 ) {
-    var buttonDoneEnable by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(key1 = true) {
-        onComposing(
-            AppBarState(
-                title = "Редактировать структуру",
-                drawerEnabled = false,
-                actions = {
-                    DoneIconButton(enabled = false) {
-                        navController.popBackStack()
-                    }
-                }
-            )
-        )
+    var screenState: StructureScreenState by remember {
+        mutableStateOf(StructureScreenState(allFieldsOk = false, structureData = null))
     }
-    StructureScreenUI(viewModel.structureState) { buttonDoneEnable = it }
-}
-
-@Composable
-fun StructureScreenUI(
-    responseStateFlow: StateFlow<ResponseState<Structure>> = MutableStateFlow(ResponseState.Idle),
-    buttonEnable: (Boolean) -> Unit = {}
-) {
     var loadingState by rememberSaveable { mutableStateOf(false) }
-    val responseState by responseStateFlow.collectAsState()
-
-    var name by rememberSaveable { mutableStateOf("") }
-    var description by rememberSaveable { mutableStateOf("") }
-    var restHours by rememberSaveable { mutableStateOf(0) }
-    var allowedConsecutiveNights by rememberSaveable { mutableStateOf(0) }
-    var nightStartHour by rememberSaveable { mutableStateOf(0) }
-    var nightEndHour by rememberSaveable { mutableStateOf(6) }
-    val nameFieldOk = fun(): Boolean = name.length in 4..25
-    val descriptionFieldOk = fun(): Boolean = description.length < 256
-    val restHoursFieldOk = fun(): Boolean = restHours in 0..48
-    val allowedConsecutiveNightsFieldOk = fun(): Boolean = allowedConsecutiveNights in 0..10
-    val nightStartHourFieldOk = fun(): Boolean = nightStartHour in 0..23
-    val nightEndHourFieldOk = fun(): Boolean = nightEndHour in 0..23
-    val buttonDoneEnable by remember {
-        derivedStateOf {
-            nameFieldOk()
-                    && descriptionFieldOk()
-                    && restHoursFieldOk()
-                    && allowedConsecutiveNightsFieldOk()
-                    && nightStartHourFieldOk()
-                    && nightEndHourFieldOk()
-        }
-    }
-    buttonEnable(buttonDoneEnable)
+    val responseState by viewModel.structureState.collectAsState()
     when (responseState) {
         is ResponseState.Idle -> {
             loadingState = false
@@ -95,88 +54,190 @@ fun StructureScreenUI(
         }
 
         is ResponseState.Success -> {
-            val structure = (responseState as ResponseState.Success<Structure>).item
-            name = structure.name
-            description = structure.description ?: ""
-            restHours = structure.restHours
-            allowedConsecutiveNights = structure.allowedConsecutiveNights
-            nightStartHour = structure.nightStartHour
-            nightEndHour = structure.nightEndHour
+            screenState.structureData = (responseState as ResponseState.Success<Structure>).item
         }
 
         is ResponseState.Error -> {
             (responseState as ResponseState.Error).toastError(context = LocalContext.current)
         }
     }
-    if (loadingState) {
+    val updateDataState by viewModel.updateStructureState.collectAsState()
+    when (updateDataState) {
+        ResponseState.Idle -> {
+            loadingState = false
+        }
+
+        ResponseState.Loading -> {
+            loadingState = true
+        }
+
+        is ResponseState.Success -> {
+            viewModel.toIdle()
+            navController.popBackStack()
+        }
+
+        is ResponseState.Error -> {
+            (updateDataState as ResponseState.Error).toastError(context = LocalContext.current)
+        }
+    }
+    LaunchedEffect(Unit) {
+        onComposing(
+            AppBarState(
+                title = "Редактировать структуру",
+                drawerEnabled = false,
+                actions = {
+                    DoneIconButton(enabled = screenState.allFieldsOk) {
+                        screenState.structureData?.let { viewModel.saveData(it) }
+                    }
+                }
+            )
+        )
+    }
+    if (loadingState || screenState.structureData == null) {
         CircularProgressIndicator()
     } else {
-        Column(
-            modifier = Modifier
-                .padding(4.dp)
-                .fillMaxSize()
-        ) {
-            OutlinedTextField(
-                value = name,
-                singleLine = true,
-                onValueChange = { name = it },
-                isError = !nameFieldOk(),
-                label = { Text(text = "Название") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Text
-                )
-            )
-            OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
-                isError = !descriptionFieldOk(),
-                label = { Text(text = "Описание") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Text
-                )
-            )
-            OutlinedTextField(
-                value = restHours.toString(),
-                singleLine = true,
-                onValueChange = { restHours = it.toInt() },
-                isError = !restHoursFieldOk(),
-                label = { Text(text = "Часов отдыха после смены") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
-                )
-            )
-            OutlinedTextField(
-                value = allowedConsecutiveNights.toString(),
-                singleLine = true,
-                onValueChange = { allowedConsecutiveNights = it.toInt() },
-                isError = !allowedConsecutiveNightsFieldOk(),
-                label = { Text(text = "Разрешенных ночей подряд") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
-                )
-            )
-            OutlinedTextField(
-                value = nightStartHour.toString(),
-                singleLine = true,
-                onValueChange = { nightStartHour = it.toInt() },
-                isError = !nightStartHourFieldOk(),
-                label = { Text(text = "Час начала ночной смены") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
-                )
-            )
-            OutlinedTextField(
-                value = nightEndHour.toString(),
-                singleLine = true,
-                onValueChange = { nightEndHour = it.toInt() },
-                isError = !nightEndHourFieldOk(),
-                label = { Text(text = "Час окончания ночной смены") },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Number
-                )
-            )
+        StructureScreenUI(screenState) { screenState = it }
+    }
+}
+
+data class StructureScreenState(
+    val allFieldsOk: Boolean,
+    var structureData: Structure?
+)
+
+@Composable
+fun StructureScreenUI(
+    screenState: StructureScreenState = StructureScreenState(false, null),
+    returnState: (StructureScreenState) -> Unit = {}
+) {
+    var id by rememberSaveable { mutableStateOf(0) }
+    var name by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
+    var restHours by rememberSaveable { mutableStateOf("") }
+    var allowedConsecutiveNights by rememberSaveable { mutableStateOf("") }
+    var nightStartHour by rememberSaveable { mutableStateOf("") }
+    var nightEndHour by rememberSaveable { mutableStateOf("") }
+    val nameFieldOk = fun(): Boolean = name.length in 4..25
+    val descriptionFieldOk = fun(): Boolean = description.length < 256
+    val restHoursFieldOk = fun(): Boolean = restHours.toIntOrNull() in 0..48
+    val allowedConsecutiveNightsFieldOk =
+        fun(): Boolean = allowedConsecutiveNights.toIntOrNull() in 0..10
+    val nightStartHourFieldOk = fun(): Boolean = nightStartHour.toIntOrNull() in 0..23
+    val nightEndHourFieldOk = fun(): Boolean = nightEndHour.toIntOrNull() in 0..23
+    val allFieldsOk by remember {
+        derivedStateOf {
+            nameFieldOk()
+                    && descriptionFieldOk()
+                    && restHoursFieldOk()
+                    && allowedConsecutiveNightsFieldOk()
+                    && nightStartHourFieldOk()
+                    && nightEndHourFieldOk()
         }
+    }
+    if (screenState.structureData?.id != id) {
+        screenState.structureData?.let { data ->
+            id = data.id
+            name = data.name
+            description = data.description ?: ""
+            restHours = data.restHours.toString()
+            allowedConsecutiveNights = data.allowedConsecutiveNights.toString()
+            nightStartHour = data.nightStartHour.toString()
+            nightEndHour = data.nightEndHour.toString()
+        }
+    }
+    returnState(
+        StructureScreenState(
+            allFieldsOk = allFieldsOk,
+            structureData = if (allFieldsOk) {
+                Structure(
+                    id,
+                    name,
+                    description,
+                    restHours.toInt(),
+                    allowedConsecutiveNights.toInt(),
+                    nightStartHour.toInt(),
+                    nightEndHour.toInt()
+                )
+            } else null
+        )
+    )
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxSize()
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = name,
+            singleLine = true,
+            onValueChange = { name = it },
+            isError = !nameFieldOk(),
+            label = { Text(text = "Название") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next, keyboardType = KeyboardType.Text
+            )
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = description,
+            onValueChange = { description = it },
+            isError = !descriptionFieldOk(),
+            label = { Text(text = "Описание") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next, keyboardType = KeyboardType.Text
+            )
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = restHours,
+            singleLine = true,
+            onValueChange = { restHours = it },
+            isError = !restHoursFieldOk(),
+            label = { Text(text = "Часов отдыха после смены") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
+            )
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = allowedConsecutiveNights,
+            singleLine = true,
+            onValueChange = { allowedConsecutiveNights = it },
+            isError = !allowedConsecutiveNightsFieldOk(),
+            label = { Text(text = "Разрешенных ночей подряд") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
+            )
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = nightStartHour,
+            singleLine = true,
+            onValueChange = { nightStartHour = it },
+            isError = !nightStartHourFieldOk(),
+            label = { Text(text = "Час начала ночной смены") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
+            )
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = nightEndHour,
+            singleLine = true,
+            onValueChange = { nightEndHour = it },
+            isError = !nightEndHourFieldOk(),
+            label = { Text(text = "Час окончания ночной смены") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Number
+            )
+        )
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = "Пин диспетчера: 25258",
+            color = colors.primary,
+            fontSize = 24.sp
+        )
     }
 }
 
