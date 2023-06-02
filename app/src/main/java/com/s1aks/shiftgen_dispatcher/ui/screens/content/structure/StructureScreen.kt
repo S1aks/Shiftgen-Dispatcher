@@ -49,7 +49,8 @@ fun StructureScreen(
     }
     val updateDataState by viewModel.updateStructureState.collectAsState()
     updateDataState.onSuccess(LocalContext.current, { loadingState = it }) {
-        viewModel.toIdle()
+        screenState.structureData = null
+        viewModel.clearStates()
         navController.popBackStack()
     }
     LaunchedEffect(Unit) {

@@ -117,11 +117,11 @@ fun DrawerItem(
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.Transparent,
-                contentColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onSurface,
             ),
             border = BorderStroke(
                 1.dp,
-                if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.secondary
+                if (selected) MaterialTheme.colors.onSurface else MaterialTheme.colors.surface
             ),
             enabled = selected,
             onClick = { onItemClick() })

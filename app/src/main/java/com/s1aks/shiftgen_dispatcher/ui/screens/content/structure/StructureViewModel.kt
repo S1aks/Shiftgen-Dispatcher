@@ -29,7 +29,7 @@ class StructureViewModel(
         viewModelScope.setFlow(_updateStructureState) { updateStructureUseCase.execute(structure) }
     }
 
-    fun toIdle() {
+    fun clearStates() {
         _structureState.value = ResponseState.Idle
         _updateStructureState.value = ResponseState.Idle
     }

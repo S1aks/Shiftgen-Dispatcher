@@ -33,7 +33,7 @@ fun <T> CoroutineScope.setFlow(
             }
             flow.emit(ResponseState.Error(exception))
         } finally {
-            delay(200)
+            delay(50)
             flow.emit(ResponseState.Idle)
         }
     }
