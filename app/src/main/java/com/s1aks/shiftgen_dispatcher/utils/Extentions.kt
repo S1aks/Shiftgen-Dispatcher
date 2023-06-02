@@ -2,7 +2,6 @@ package com.s1aks.shiftgen_dispatcher.utils
 
 import android.content.Context
 import android.widget.Toast
-import coil.network.HttpException
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -10,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import java.net.UnknownHostException
 
 fun ResponseState.Error.toastError(context: Context) {
     Toast.makeText(context, this.error.localizedMessage, Toast.LENGTH_SHORT).show()
@@ -23,10 +23,10 @@ fun <T> CoroutineScope.setFlow(
         flow.emit(ResponseState.Loading)
         try {
             flow.emit(block())
+        } catch (exception: UnknownHostException) {
+            flow.emit(ResponseState.Error(RuntimeException("Ошибка соединения с сервером!")))
         } catch (exception: ConnectException) {
             flow.emit(ResponseState.Error(RuntimeException("Ошибка соединения с сервером!")))
-        } catch (exception: HttpException) {
-            flow.emit(ResponseState.Error(exception))
         } catch (exception: Throwable) {
             if (exception is CancellationException) {
                 throw exception
