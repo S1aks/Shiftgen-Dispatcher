@@ -71,7 +71,14 @@ internal fun ShiftResponse.toShift(): Shift = shift
 internal fun ShiftsResponse.toShiftsList(): List<Shift> = list
 
 internal fun Structure.toStructureRequest(): StructureRequest = StructureRequest(
-    id, name, description, restHours, allowedConsecutiveNights, nightStartHour, nightEndHour
+    id,
+    name,
+    description,
+    restHours,
+    allowedConsecutiveNights,
+    nightStartHour,
+    nightEndHour,
+    dispatcherPin
 )
 
 internal fun StructureResponse.toStructure(): Structure = structure

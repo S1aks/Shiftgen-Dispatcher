@@ -129,7 +129,7 @@ fun RegisterScreenUI(
     val structureFieldOk = fun(): Boolean =
         if (structureEnable) structure.length >= 4 && structure !in screenState.structuresMap.keys
         else structure in screenState.structuresMap.keys
-    val pinFieldOk = fun(): Boolean = pin.length == 5
+    val pinFieldOk = fun(): Boolean = if (!structureEnable) pin.length == 5 else true
     val allFieldsOk by remember {
         derivedStateOf {
             loginFieldOk()
