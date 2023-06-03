@@ -12,5 +12,6 @@ data class Structure(
     val restHours: Int = 0,
     val allowedConsecutiveNights: Int = 0,
     val nightStartHour: Int = 0,
-    val nightEndHour: Int = 6
+    val nightEndHour: Int = 6,
+    val dispatcherPin: String
 )

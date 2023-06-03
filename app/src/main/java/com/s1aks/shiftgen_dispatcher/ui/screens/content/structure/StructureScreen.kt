@@ -90,6 +90,7 @@ fun StructureScreenUI(
     var allowedConsecutiveNights by rememberSaveable { mutableStateOf("") }
     var nightStartHour by rememberSaveable { mutableStateOf("") }
     var nightEndHour by rememberSaveable { mutableStateOf("") }
+    var dispatcherPin by rememberSaveable { mutableStateOf("") }
     val nameFieldOk = fun(): Boolean = name.length in 4..25
     val descriptionFieldOk = fun(): Boolean = description.length < 256
     val restHoursFieldOk = fun(): Boolean = restHours.toIntOrNull() in 0..48
@@ -116,6 +117,7 @@ fun StructureScreenUI(
             allowedConsecutiveNights = data.allowedConsecutiveNights.toString()
             nightStartHour = data.nightStartHour.toString()
             nightEndHour = data.nightEndHour.toString()
+            dispatcherPin = data.dispatcherPin
         }
     }
     returnState(
@@ -129,7 +131,8 @@ fun StructureScreenUI(
                     restHours.toInt(),
                     allowedConsecutiveNights.toInt(),
                     nightStartHour.toInt(),
-                    nightEndHour.toInt()
+                    nightEndHour.toInt(),
+                    dispatcherPin
                 )
             } else null
         )
@@ -207,9 +210,9 @@ fun StructureScreenUI(
         )
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "Пин диспетчера: 25258",
+            text = "Пин диспетчера: $dispatcherPin",
             color = colors.primary,
-            fontSize = 24.sp
+            fontSize = 20.sp
         )
     }
 }

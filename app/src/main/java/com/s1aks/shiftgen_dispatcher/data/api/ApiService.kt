@@ -25,11 +25,15 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.koin.java.KoinJavaComponent.inject
 
@@ -78,10 +82,16 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                             val login = localSecureStore.login ?: ""
                             val refreshToken = localSecureStore.refreshToken
                             if (!refreshToken.isNullOrEmpty()) {
-                                val tokensData = client.post(REFRESH_URL) {
-                                    setBody(RefreshRequest(login, refreshToken))
+                                val refreshRequest = withContext(Dispatchers.IO) {
+                                    client.post(REFRESH_URL) {
+                                        setBody(RefreshRequest(login, refreshToken))
+                                    }
                                 }
-                                    .body<LoginResponse>()
+                                val tokensData = if (refreshRequest.status.isSuccess()) {
+                                    refreshRequest.body<LoginResponse>()
+                                } else {
+                                    throw RuntimeException(refreshRequest.bodyAsText())
+                                }
                                 if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
                                     localSecureStore.accessToken = tokensData.accessToken
                                     localSecureStore.refreshToken = tokensData.refreshToken

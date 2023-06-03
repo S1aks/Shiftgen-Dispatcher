@@ -17,7 +17,13 @@ class SendRegisterDataUseCase(
         val structureId: Int = withContext(Dispatchers.IO) {
             repository.getStructures()[registerData.structure]
                 ?: withContext(Dispatchers.IO) {
-                    repository.insertStructure(Structure(0, registerData.structure))
+                    repository.insertStructure(
+                        Structure(
+                            0,
+                            registerData.structure,
+                            dispatcherPin = registerData.dispatcherPin
+                        )
+                    )
                     delay(200)
                     repository.getStructures()[registerData.structure]
                         ?: throw RuntimeException("Ошибка создания структуры.")

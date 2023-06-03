@@ -80,10 +80,10 @@ fun RegisterScreen(
             mutableStateOf(RegisterScreenState(structureLoading = false, structuresMap = mapOf()))
         }
         var loadingState by rememberSaveable { mutableStateOf(false) }
-
         val structuresState by viewModel.structuresState.collectAsState()
         structuresState.onSuccess(LocalContext.current, { screenState.structureLoading = it }) {
-            screenState.structuresMap = (structuresState as ResponseState.Success).item
+            val struct = (structuresState as ResponseState.Success).item
+            screenState.structuresMap = struct
         }
         val responseState by viewModel.registerState.collectAsState()
         responseState.onSuccess(LocalContext.current, { loadingState = it }) {
@@ -93,6 +93,7 @@ fun RegisterScreen(
             CircularProgressIndicator()
         } else {
             RegisterScreenUI(
+                screenState = screenState,
                 onRegisterClick = { registerData -> viewModel.sendData(registerData) },
                 onCancelClick = { navController.popBackStack() }
             )
@@ -116,6 +117,7 @@ fun RegisterScreenUI(
     var password by remember { mutableStateOf("") }
     var group by rememberSaveable { mutableStateOf("") }
     var structure by rememberSaveable { mutableStateOf("") }
+    var pin by rememberSaveable { mutableStateOf("") }
     var emailValid by rememberSaveable { mutableStateOf(false) }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var structureEnable by rememberSaveable { mutableStateOf(false) }
@@ -127,6 +129,7 @@ fun RegisterScreenUI(
     val structureFieldOk = fun(): Boolean =
         if (structureEnable) structure.length >= 4 && structure !in screenState.structuresMap.keys
         else structure in screenState.structuresMap.keys
+    val pinFieldOk = fun(): Boolean = pin.length == 5
     val allFieldsOk by remember {
         derivedStateOf {
             loginFieldOk()
@@ -134,6 +137,7 @@ fun RegisterScreenUI(
                     && passwordFieldOk()
                     && groupFieldOk()
                     && structureFieldOk()
+                    && pinFieldOk()
         }
     }
     var expandedGroup by rememberSaveable { mutableStateOf(false) }
@@ -303,13 +307,28 @@ fun RegisterScreenUI(
                 }
             }
         }
+        if (!structureEnable && structure.isNotBlank()) {
+            OutlinedTextField(
+                value = pin,
+                singleLine = true,
+                onValueChange = { pin = it },
+                isError = !pinFieldOk(),
+                label = { Text(text = "Пин диспетчера") },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Number
+                )
+            )
+        }
         Row {
             Button(
                 modifier = Modifier
                     .padding(4.dp)
                     .width(140.dp),
                 onClick = {
-                    onRegisterClick(RegisterData(login, email, password, group, structure))
+                    onRegisterClick(
+                        RegisterData(login, email, password, group, structure, pin)
+                    )
                 },
                 enabled = allFieldsOk
             ) {
