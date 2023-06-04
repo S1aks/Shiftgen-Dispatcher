@@ -6,9 +6,9 @@ import com.s1aks.shiftgen_dispatcher.domain.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class UpdateStructureUseCase(
+class InsertStructureUseCase(
     private val repository: Repository
 ) {
     suspend fun execute(structure: Structure): ResponseState<Boolean> =
-        ResponseState.Success(withContext(Dispatchers.IO) { repository.updateStructure(structure) })
+        ResponseState.Success(withContext(Dispatchers.IO) { repository.insertStructure(structure) })
 }
