@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher
+package com.s1aks.shiftgen_dispatcher.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
