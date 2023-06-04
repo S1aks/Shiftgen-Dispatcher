@@ -85,7 +85,7 @@ fun RegisterScreen(
             val struct = (structuresState as ResponseState.Success).item
             screenState.structuresMap = struct
         }
-        val responseState by viewModel.registerState.collectAsState()
+        val responseState by viewModel.responseState.collectAsState()
         responseState.onSuccess(LocalContext.current, { loadingState = it }) {
             navController.clearAndNavigate(Screen.Main.route)
         }

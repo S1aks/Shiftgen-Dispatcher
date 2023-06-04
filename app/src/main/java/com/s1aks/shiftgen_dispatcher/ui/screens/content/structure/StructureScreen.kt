@@ -43,12 +43,12 @@ fun StructureScreen(
         mutableStateOf(StructureScreenState(allFieldsOk = false, structureData = null))
     }
     var loadingState by rememberSaveable { mutableStateOf(false) }
-    val responseState by viewModel.structureState.collectAsState()
-    responseState.onSuccess(LocalContext.current, { loadingState = it }) {
-        screenState.structureData = (responseState as ResponseState.Success<Structure>).item
+    val structureState by viewModel.structureState.collectAsState()
+    structureState.onSuccess(LocalContext.current, { loadingState = it }) {
+        screenState.structureData = (structureState as ResponseState.Success<Structure>).item
     }
-    val updateDataState by viewModel.updateStructureState.collectAsState()
-    updateDataState.onSuccess(LocalContext.current, { loadingState = it }) {
+    val responseState by viewModel.responseState.collectAsState()
+    responseState.onSuccess(LocalContext.current, { loadingState = it }) {
         screenState.structureData = null
         viewModel.clearStates()
         navController.popBackStack()

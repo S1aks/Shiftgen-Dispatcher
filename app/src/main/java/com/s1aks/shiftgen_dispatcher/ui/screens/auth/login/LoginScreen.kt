@@ -54,7 +54,7 @@ fun LoginScreen(
         contentAlignment = Alignment.Center
     ) {
         var loadingState by rememberSaveable { mutableStateOf(false) }
-        val responseState by viewModel.loginState.collectAsState()
+        val responseState by viewModel.responseState.collectAsState()
         responseState.onSuccess(LocalContext.current, { loadingState = it }) {
             navController.clearAndNavigate(Screen.Main.route)
         }

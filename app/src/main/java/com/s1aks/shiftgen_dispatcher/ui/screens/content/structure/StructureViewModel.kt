@@ -17,20 +17,20 @@ class StructureViewModel(
     private val _structureState: MutableStateFlow<ResponseState<Structure>> =
         MutableStateFlow(ResponseState.Idle)
     val structureState = _structureState.asStateFlow()
-    private val _updateStructureState: MutableStateFlow<ResponseState<Boolean>> =
+    private val _responseState: MutableStateFlow<ResponseState<Boolean>> =
         MutableStateFlow(ResponseState.Idle)
-    val updateStructureState = _updateStructureState.asStateFlow()
+    val responseState = _responseState.asStateFlow()
 
     init {
         viewModelScope.setFlow(_structureState) { getStructureUseCase.execute() }
     }
 
     fun saveData(structure: Structure) {
-        viewModelScope.setFlow(_updateStructureState) { updateStructureUseCase.execute(structure) }
+        viewModelScope.setFlow(_responseState) { updateStructureUseCase.execute(structure) }
     }
 
     fun clearStates() {
         _structureState.value = ResponseState.Idle
-        _updateStructureState.value = ResponseState.Idle
+        _responseState.value = ResponseState.Idle
     }
 }

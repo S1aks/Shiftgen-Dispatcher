@@ -18,15 +18,15 @@ class RegisterViewModel(
     private val _structuresState: MutableStateFlow<ResponseState<StructuresMap>> =
         MutableStateFlow(ResponseState.Loading)
     val structuresState = _structuresState.asStateFlow()
-    private val _registerState: MutableStateFlow<ResponseState<Boolean>> =
+    private val _responseState: MutableStateFlow<ResponseState<Boolean>> =
         MutableStateFlow(ResponseState.Idle)
-    val registerState = _registerState.asStateFlow()
+    val responseState = _responseState.asStateFlow()
 
     init {
         viewModelScope.setFlow(_structuresState) { getStructuresUseCase.execute() }
     }
 
     fun sendData(registerData: RegisterData) {
-        viewModelScope.setFlow(_registerState) { sendRegisterDataUseCase.execute(registerData) }
+        viewModelScope.setFlow(_responseState) { sendRegisterDataUseCase.execute(registerData) }
     }
 }

@@ -14,15 +14,15 @@ class LoginViewModel(
     private val checkAuthorizationUseCase: CheckAuthorizationUseCase,
     private val sendLoginDataUseCase: SendLoginDataUseCase
 ) : ViewModel() {
-    private val _loginState: MutableStateFlow<ResponseState<Boolean>> =
+    private val _responseState: MutableStateFlow<ResponseState<Boolean>> =
         MutableStateFlow(ResponseState.Idle)
-    val loginState = _loginState.asStateFlow()
+    val responseState = _responseState.asStateFlow()
 
     fun sendData(loginData: LoginData) {
-        viewModelScope.setFlow(_loginState) { sendLoginDataUseCase.execute(loginData) }
+        viewModelScope.setFlow(_responseState) { sendLoginDataUseCase.execute(loginData) }
     }
 
     fun checkAuthorization() {
-        viewModelScope.setFlow(_loginState) { checkAuthorizationUseCase.execute() }
+        viewModelScope.setFlow(_responseState) { checkAuthorizationUseCase.execute() }
     }
 }
