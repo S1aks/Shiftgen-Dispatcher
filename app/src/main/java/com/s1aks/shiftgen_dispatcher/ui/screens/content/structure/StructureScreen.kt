@@ -60,11 +60,12 @@ fun StructureScreen(
                 drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = screenState.allFieldsOk) {
-                        screenState.structureData?.let { viewModel.saveData(it) }
+                        screenState.structureData?.let { viewModel.updateData(it) }
                     }
                 }
             )
         )
+        viewModel.getData()
     }
     if (loadingState || screenState.structureData == null) {
         CircularProgressIndicator()

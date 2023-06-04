@@ -21,11 +21,11 @@ class StructureViewModel(
         MutableStateFlow(ResponseState.Idle)
     val responseState = _responseState.asStateFlow()
 
-    init {
+    fun getData() {
         viewModelScope.setFlow(_structureState) { getStructureUseCase.execute() }
     }
 
-    fun saveData(structure: Structure) {
+    fun updateData(structure: Structure) {
         viewModelScope.setFlow(_responseState) { updateStructureUseCase.execute(structure) }
     }
 

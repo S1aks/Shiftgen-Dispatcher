@@ -18,7 +18,7 @@ import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.UpdateSt
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.workers.GetWorkersUseCase
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterViewModel
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_add.DirectionAddViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_edit.DirectionEditViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_add.ShiftAddViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsViewModel
@@ -76,7 +76,7 @@ val viewModelsModule = module {
     viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
     viewModel { ShiftAddViewModel() }
     viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }
-    viewModel { DirectionAddViewModel() }
+    viewModel { DirectionEditViewModel() }
     viewModel { WorkersViewModel(getWorkersUseCase = get()) }
     viewModel { WorkerAddViewModel() }
 }

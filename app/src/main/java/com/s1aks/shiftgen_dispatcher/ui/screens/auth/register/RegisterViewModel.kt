@@ -22,7 +22,7 @@ class RegisterViewModel(
         MutableStateFlow(ResponseState.Idle)
     val responseState = _responseState.asStateFlow()
 
-    init {
+    fun getStructures() {
         viewModelScope.setFlow(_structuresState) { getStructuresUseCase.execute() }
     }
 

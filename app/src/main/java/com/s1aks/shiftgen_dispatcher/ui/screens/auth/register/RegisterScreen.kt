@@ -89,6 +89,9 @@ fun RegisterScreen(
         responseState.onSuccess(LocalContext.current, { loadingState = it }) {
             navController.clearAndNavigate(Screen.Main.route)
         }
+        LaunchedEffect(Unit) {
+            viewModel.getStructures()
+        }
         if (loadingState) {
             CircularProgressIndicator()
         } else {

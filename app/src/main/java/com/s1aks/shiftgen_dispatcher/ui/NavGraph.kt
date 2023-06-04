@@ -8,7 +8,7 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_add.DirectionAddScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_edit.DirectionEditScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_add.ShiftAddScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsScreen
@@ -100,7 +100,7 @@ fun NavGraphBuilder.mainGraph(
         )
     }
     composable(Screen.DirectionAdd.route) {
-        DirectionAddScreen(
+        DirectionEditScreen(
             navController = navController,
             onComposing = onComposing,
             viewModel = koinViewModel()
