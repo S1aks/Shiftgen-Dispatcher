@@ -20,10 +20,10 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_edit.DirectionEditViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsViewModel
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_add.ShiftAddViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_edit.ShiftEditViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.structure.StructureViewModel
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_add.WorkerAddViewModel
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_edit.WorkerEditViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -74,9 +74,9 @@ val viewModelsModule = module {
     viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
     viewModel { StructureViewModel(getStructureUseCase = get(), updateStructureUseCase = get()) }
     viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
-    viewModel { ShiftAddViewModel() }
+    viewModel { ShiftEditViewModel() }
     viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }
     viewModel { DirectionEditViewModel() }
     viewModel { WorkersViewModel(getWorkersUseCase = get()) }
-    viewModel { WorkerAddViewModel() }
+    viewModel { WorkerEditViewModel() }
 }

@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_add
+package com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_edit
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,10 +7,10 @@ import com.s1aks.shiftgen_dispatcher.ui.elements.DoneIconButton
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 
 @Composable
-fun ShiftAddScreen(
+fun ShiftEditScreen(
     navController: NavHostController,
     onComposing: (MainScreenState) -> Unit,
-    viewModel: ShiftAddViewModel
+    viewModel: ShiftEditViewModel
 ) {
     LaunchedEffect(Unit) {
         onComposing(
