@@ -28,12 +28,12 @@ sealed class Screen(val route: String) {
     object Register : Screen("register")
     object Main : Screen("main")
     object Structure : Screen("structure")
-    object Shifts : Screen("shifts")
-    object ShiftAdd : Screen("shift_add")
-    object Workers : Screen("workers")
-    object WorkerAdd : Screen("worker_add")
     object Directions : Screen("directions")
-    object DirectionAdd : Screen("direction_add")
+    object DirectionEdit : Screen("direction_edit/{id}")
+    object Shifts : Screen("shifts")
+    object ShiftEdit : Screen("shift_edit/{id}")
+    object Workers : Screen("workers")
+    object WorkerEdit : Screen("worker_edit/{id}")
 }
 
 fun NavController.clearAndNavigate(route: String) {
@@ -64,6 +64,21 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
+    composable(Screen.Directions.route) {
+        DirectionsScreen(
+            navController = navController,
+            onComposing = onComposing,
+            viewModel = koinViewModel()
+        )
+    }
+    composable(Screen.DirectionEdit.route) { backStackEntry ->
+        DirectionEditScreen(
+            navController = navController,
+            onComposing = onComposing,
+            viewModel = koinViewModel(),
+            backStackEntry.arguments?.getInt("id") ?: -1
+        )
+    }
     composable(Screen.Shifts.route) {
         ShiftsScreen(
             navController = navController,
@@ -71,7 +86,7 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    composable(Screen.ShiftAdd.route) {
+    composable(Screen.ShiftEdit.route) {
         ShiftEditScreen(
             navController = navController,
             onComposing = onComposing,
@@ -85,22 +100,8 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    composable(Screen.WorkerAdd.route) {
+    composable(Screen.WorkerEdit.route) {
         WorkerEditScreen(
-            navController = navController,
-            onComposing = onComposing,
-            viewModel = koinViewModel()
-        )
-    }
-    composable(Screen.Directions.route) {
-        DirectionsScreen(
-            navController = navController,
-            onComposing = onComposing,
-            viewModel = koinViewModel()
-        )
-    }
-    composable(Screen.DirectionAdd.route) {
-        DirectionEditScreen(
             navController = navController,
             onComposing = onComposing,
             viewModel = koinViewModel()

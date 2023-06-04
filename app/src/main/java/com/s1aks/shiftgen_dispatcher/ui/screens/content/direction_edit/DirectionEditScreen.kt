@@ -33,8 +33,10 @@ import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 fun DirectionEditScreen(
     navController: NavHostController,
     onComposing: (MainScreenState) -> Unit,
-    viewModel: DirectionEditViewModel
+    viewModel: DirectionEditViewModel,
+    id: Int
 ) {
+    val new by rememberSaveable { mutableStateOf(id < 0) }
     var screenState: DirectionEditScreenState by remember {
         mutableStateOf(DirectionEditScreenState(allFieldsOk = false, directionData = null))
     }
@@ -52,17 +54,26 @@ fun DirectionEditScreen(
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
-                title = "Добавить направление",
+                title = if (new) "Добавить направление" else "Редактировать направление",
                 drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = screenState.allFieldsOk) {
-                        screenState.directionData?.let { viewModel.updateData(it) }
+                        screenState.directionData?.let {
+                            if (new) {
+                                viewModel.insertData(it)
+                            } else {
+                                viewModel.updateData(it)
+                            }
+                        }
                     }
                 }
             )
         )
+        if (!new) {
+            viewModel.getData(id)
+        }
     }
-    if (loadingState) { // || screenState...Data == null
+    if (loadingState) {
         CircularProgressIndicator()
     } else {
         DirectionEditScreenUI(screenState) { screenState = it }
