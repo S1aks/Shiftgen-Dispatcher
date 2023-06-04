@@ -24,10 +24,12 @@ class CheckAuthorizationUseCase(
                     delay(200)
                     execute()
                 } else {
+                    localSecureStore.clear()
                     throw RuntimeException("Ошибка аутентификации.")
                 }
             }
         } else {
+            localSecureStore.clear()
             ResponseState.Idle
         }
     }

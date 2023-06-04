@@ -1,6 +1,7 @@
 package com.s1aks.shiftgen_dispatcher.utils
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import kotlinx.coroutines.CancellationException
@@ -54,3 +55,5 @@ fun <T> ResponseState<T>.onSuccess(
         is ResponseState.Error -> toastError(context = context)
     }
 }
+
+fun <T> T?.logd(): T? = this.also { Log.d("***", it.toString()) }

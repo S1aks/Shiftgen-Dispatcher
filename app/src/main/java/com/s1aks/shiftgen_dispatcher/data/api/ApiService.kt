@@ -20,7 +20,9 @@ import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -45,7 +47,9 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
 
         fun create(): ApiService = ApiServiceImpl(
             client = HttpClient(Android) {
+                val localSecureStore: LocalSecureStore by inject(LocalSecureStore::class.java)
                 install(Logging) {
+                    logger = Logger.ANDROID
                     level = LogLevel.ALL
                 }
                 install(ContentNegotiation) {
@@ -63,7 +67,6 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                 expectSuccess = false
                 install(Auth) {
                     bearer {
-                        val localSecureStore: LocalSecureStore by inject(LocalSecureStore::class.java)
                         sendWithoutRequest { request ->
                             val path = request.url.encodedPath
                             path != "/auth/login"
@@ -75,7 +78,6 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                         loadTokens {
                             val accessToken = localSecureStore.accessToken ?: ""
                             val refreshToken = localSecureStore.refreshToken ?: ""
-                            // Load tokens from a local storage and return them as the 'BearerTokens' instance
                             BearerTokens(accessToken, refreshToken)
                         }
                         refreshTokens {
@@ -95,7 +97,10 @@ interface ApiService : AuthCase, DirectionsCase, ShiftsCase, StructuresCase, Tim
                                 if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
                                     localSecureStore.accessToken = tokensData.accessToken
                                     localSecureStore.refreshToken = tokensData.refreshToken
-                                    BearerTokens(tokensData.accessToken, tokensData.refreshToken)
+                                    BearerTokens(
+                                        tokensData.accessToken,
+                                        tokensData.refreshToken
+                                    )
                                 } else {
                                     throw RuntimeException("Ошибка получения токена.")
                                 }

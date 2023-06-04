@@ -5,6 +5,7 @@ import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.domain.Repository
+import io.ktor.client.plugins.auth.providers.BearerTokens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -41,6 +42,7 @@ class SendRegisterDataUseCase(
             }
             ResponseState.Success(true)
         } else {
+            localSecureStore.clear()
             throw RuntimeException("Ошибка регистрации.")
         }
     }

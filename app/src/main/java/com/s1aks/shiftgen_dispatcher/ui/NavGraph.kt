@@ -6,8 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.login.LoginScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.auth.register.RegisterScreen
-import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreen
+import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.direction_add.DirectionAddScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.directions.DirectionsScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_add.ShiftAddScreen
@@ -16,6 +16,7 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.content.structure.StructureScree
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_add.WorkerAddScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersScreen
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 enum class NavRoutes {
     StartRoute,
@@ -48,7 +49,7 @@ fun NavGraphBuilder.startGraph(navController: NavHostController) {
         RegisterScreen(navController = navController, viewModel = koinViewModel())
     }
     composable(Screen.Main.route) {
-        MainScreen(navController = navController)
+        MainScreen(navController = navController, localSecureStore = koinInject())
     }
 }
 

@@ -21,18 +21,21 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
+import com.s1aks.shiftgen_dispatcher.di.dataAccessModule
 import com.s1aks.shiftgen_dispatcher.ui.NavRoutes
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
 import com.s1aks.shiftgen_dispatcher.ui.mainGraph
 import kotlinx.coroutines.launch
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
 import org.koin.java.KoinJavaComponent.inject
 
 @Composable
 fun MainScreen(
-    navController: NavController
+    navController: NavController,
+    localSecureStore: LocalSecureStore
 ) {
-    val localSecureStore: LocalSecureStore by inject(LocalSecureStore::class.java)
     MainScreenUI(
         onLogout = {
             localSecureStore.clear()
