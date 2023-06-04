@@ -62,8 +62,7 @@ internal fun DirectionsResponse.toDirectionsList(): List<Direction> = list
 internal fun YearMonth.toShiftsRequest(): ShiftsRequest = ShiftsRequest(this)
 
 internal fun Shift.toShiftRequest(): ShiftRequest = ShiftRequest(
-    id, name, periodYearMonth, periodicity, workerId,
-    structureId, directionId, startTime, timeBlocksIds
+    id, name, periodYearMonth, periodicity, workerId, directionId, startTime, timeBlocksIds
 )
 
 internal fun ShiftResponse.toShift(): Shift = shift
@@ -92,7 +91,7 @@ internal fun TimeBlockResponse.toTimeBlock(): TimeBlock = timeBlock
 internal fun TimeBlocksResponse.toTimeBlocksList(): List<TimeBlock> = list
 
 internal fun TimeBlock.toTimeBlockRequest(): TimeBlockRequest =
-    TimeBlockRequest(id, structureId, name, duration, action)
+    TimeBlockRequest(id, name, duration, action)
 
 internal fun TimeSheetResponse.toTimeSheet(): TimeSheet = timesheet
 
@@ -105,7 +104,7 @@ internal fun YearMonth.toTimeSheetsYearMonthRequestWithWorkerId(id: Int): TimeSh
     TimeSheetsWorkerIdYearMonthRequest(id, this)
 
 internal fun TimeSheet.toTimeSheetRequest(): TimeSheetRequest = TimeSheetRequest(
-    id, workerId, structureId, periodYearMonth, workedTime, calculatedTime, correctionTime
+    id, workerId, periodYearMonth, workedTime, calculatedTime, correctionTime
 )
 
 internal fun WorkerResponse.toWorker(): Worker = worker
@@ -113,5 +112,5 @@ internal fun WorkerResponse.toWorker(): Worker = worker
 internal fun WorkersResponse.toWorkersList(): List<Worker> = list
 
 internal fun Worker.toWorkerRequest(): WorkerRequest = WorkerRequest(
-    id, personnelNumber, userId, structureId, firstName, lastName, patronymic, accessToDirections
+    id, personnelNumber, userId, firstName, lastName, patronymic, accessToDirections
 )

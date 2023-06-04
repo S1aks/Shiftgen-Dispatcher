@@ -14,7 +14,6 @@ data class Shift(
     val periodYearMonth: YearMonth,
     val periodicity: Periodicity,
     var workerId: Int?,
-    val structureId: Int,
     val directionId: Int,
     @Serializable(with = LocalDateTimeSerializer::class)
     val startTime: LocalDateTime,

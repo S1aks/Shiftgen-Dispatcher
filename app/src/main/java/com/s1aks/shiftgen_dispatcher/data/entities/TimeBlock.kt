@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TimeBlock(
     val id: Int = 0,
-    val structureId: Int,
     val name: String,
     val duration: Long,
     val action: Action
