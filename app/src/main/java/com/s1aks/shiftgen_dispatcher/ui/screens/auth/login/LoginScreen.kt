@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -40,6 +39,7 @@ import androidx.navigation.NavController
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
+import com.s1aks.shiftgen_dispatcher.ui.elements.LoadingIndicator
 import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 
 @Composable
@@ -59,7 +59,7 @@ fun LoginScreen(
             navController.clearAndNavigate(Screen.Main.route)
         }
         if (loadingState) {
-            CircularProgressIndicator()
+            LoadingIndicator()
         } else {
             LoginScreenUI(
                 onLoginClick = { loginData -> viewModel.sendData(loginData) },

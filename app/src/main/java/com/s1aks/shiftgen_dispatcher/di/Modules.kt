@@ -99,7 +99,7 @@ val viewModelsModule = module {
     viewModel { StructureViewModel(getStructureUseCase = get(), updateStructureUseCase = get()) }
     viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
     viewModel { ShiftEditViewModel() }
-    viewModel { DirectionsViewModel(getDirectionsUseCase = get()) }
+    viewModel { DirectionsViewModel(getDirectionsUseCase = get(), deleteDirectionUseCase = get()) }
     viewModel {
         DirectionEditViewModel(
             getDirectionUseCase = get(),

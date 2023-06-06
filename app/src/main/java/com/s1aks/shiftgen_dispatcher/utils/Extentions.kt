@@ -3,6 +3,11 @@ package com.s1aks.shiftgen_dispatcher.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -11,10 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
-
-fun ResponseState.Error.toastError(context: Context) {
-    Toast.makeText(context, this.error.localizedMessage, Toast.LENGTH_SHORT).show()
-}
 
 fun <T> CoroutineScope.setFlow(
     flow: MutableStateFlow<ResponseState<T>>,
@@ -53,6 +54,22 @@ fun <T> ResponseState<T>.onSuccess(
         is ResponseState.Success -> successBlock()
 
         is ResponseState.Error -> toastError(context = context)
+    }
+}
+
+fun ResponseState.Error.toastError(context: Context) {
+    Toast.makeText(context, this.error.localizedMessage, Toast.LENGTH_SHORT).show()
+}
+
+fun NavGraphBuilder.idComposable(
+    route: String,
+    content: @Composable (id: Int) -> Unit
+) {
+    composable(
+        route = route,
+        arguments = listOf(navArgument("id") { type = NavType.StringType })
+    ) { backStackEntry ->
+        content(id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0)
     }
 }
 

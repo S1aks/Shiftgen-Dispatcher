@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +25,9 @@ import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.ui.elements.DoneIconButton
+import com.s1aks.shiftgen_dispatcher.ui.elements.LoadingIndicator
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
+import com.s1aks.shiftgen_dispatcher.utils.logd
 import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 
 @Composable
@@ -36,7 +37,7 @@ fun DirectionEditScreen(
     viewModel: DirectionEditViewModel,
     id: Int
 ) {
-    val new by rememberSaveable { mutableStateOf(id < 0) }
+    val new = id.logd() == 0
     var screenState: DirectionEditScreenState by remember {
         mutableStateOf(DirectionEditScreenState(allFieldsOk = false, directionData = null))
     }
@@ -73,8 +74,8 @@ fun DirectionEditScreen(
             viewModel.getData(id)
         }
     }
-    if (loadingState) {
-        CircularProgressIndicator()
+    if (loadingState || (!new && screenState.directionData == null)) {
+        LoadingIndicator()
     } else {
         DirectionEditScreenUI(screenState) { screenState = it }
     }
@@ -92,7 +93,7 @@ fun DirectionEditScreenUI(
 ) {
     var id by rememberSaveable { mutableStateOf(0) }
     var name by rememberSaveable { mutableStateOf("") }
-    val nameFieldOk = fun(): Boolean = name.length in 4..25
+    val nameFieldOk = fun(): Boolean = name.length in 4..30
     val allFieldsOk by remember {
         derivedStateOf {
             nameFieldOk()

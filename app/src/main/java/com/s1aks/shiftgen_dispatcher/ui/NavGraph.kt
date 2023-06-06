@@ -15,6 +15,7 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.structure.StructureScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_edit.WorkerEditScreen
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersScreen
+import com.s1aks.shiftgen_dispatcher.utils.idComposable
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -29,11 +30,11 @@ sealed class Screen(val route: String) {
     object Main : Screen("main")
     object Structure : Screen("structure")
     object Directions : Screen("directions")
-    object DirectionEdit : Screen("direction_edit/{id}")
+    class DirectionEdit(id: String = "0") : Screen("direction_edit/$id")
     object Shifts : Screen("shifts")
-    object ShiftEdit : Screen("shift_edit/{id}")
+    class ShiftEdit(id: String = "0") : Screen("shift_edit/$id")
     object Workers : Screen("workers")
-    object WorkerEdit : Screen("worker_edit/{id}")
+    class WorkerEdit(id: String = "0") : Screen("worker_edit/$id")
 }
 
 fun NavController.clearAndNavigate(route: String) {
@@ -71,12 +72,12 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    composable(Screen.DirectionEdit.route) { backStackEntry ->
+    idComposable(Screen.DirectionEdit("{id}").route) { id ->
         DirectionEditScreen(
             navController = navController,
             onComposing = onComposing,
             viewModel = koinViewModel(),
-            backStackEntry.arguments?.getInt("id") ?: -1
+            id
         )
     }
     composable(Screen.Shifts.route) {
@@ -86,11 +87,12 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    composable(Screen.ShiftEdit.route) {
+    idComposable(Screen.ShiftEdit("{id}").route) { id ->
         ShiftEditScreen(
             navController = navController,
             onComposing = onComposing,
-            viewModel = koinViewModel()
+            viewModel = koinViewModel(),
+            id
         )
     }
     composable(Screen.Workers.route) {
@@ -100,11 +102,12 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    composable(Screen.WorkerEdit.route) {
+    idComposable(Screen.WorkerEdit("{id}").route) { id ->
         WorkerEditScreen(
             navController = navController,
             onComposing = onComposing,
-            viewModel = koinViewModel()
+            viewModel = koinViewModel(),
+            id
         )
     }
 }

@@ -20,7 +20,7 @@ fun WorkersScreen(
                 title = "Рабочие",
                 drawerEnabled = true,
                 actions = {
-                    AddIconButton { navController.navigate(Screen.WorkerEdit.route) }
+                    AddIconButton { navController.navigate(Screen.WorkerEdit().route) }
                 }
             )
         )

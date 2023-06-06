@@ -10,7 +10,8 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 fun WorkerEditScreen(
     navController: NavHostController,
     onComposing: (MainScreenState) -> Unit,
-    viewModel: WorkerEditViewModel
+    viewModel: WorkerEditViewModel,
+    id: Int
 ) {
     LaunchedEffect(Unit) {
         onComposing(

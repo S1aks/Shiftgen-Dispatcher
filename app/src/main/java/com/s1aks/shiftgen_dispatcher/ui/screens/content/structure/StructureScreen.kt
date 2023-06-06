@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -30,6 +29,7 @@ import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.ui.elements.DoneIconButton
+import com.s1aks.shiftgen_dispatcher.ui.elements.LoadingIndicator
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 
@@ -68,7 +68,7 @@ fun StructureScreen(
         viewModel.getData()
     }
     if (loadingState || screenState.structureData == null) {
-        CircularProgressIndicator()
+        LoadingIndicator()
     } else {
         StructureScreenUI(screenState) { screenState = it }
     }

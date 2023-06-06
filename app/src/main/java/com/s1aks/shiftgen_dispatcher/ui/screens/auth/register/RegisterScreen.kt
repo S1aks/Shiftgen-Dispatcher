@@ -62,6 +62,7 @@ import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
+import com.s1aks.shiftgen_dispatcher.ui.elements.LoadingIndicator
 import com.s1aks.shiftgen_dispatcher.utils.isValidEmail
 import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 import kotlinx.coroutines.delay
@@ -93,7 +94,7 @@ fun RegisterScreen(
             viewModel.getStructures()
         }
         if (loadingState) {
-            CircularProgressIndicator()
+            LoadingIndicator()
         } else {
             RegisterScreenUI(
                 screenState = screenState,

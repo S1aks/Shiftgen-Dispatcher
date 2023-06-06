@@ -10,7 +10,8 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 fun ShiftEditScreen(
     navController: NavHostController,
     onComposing: (MainScreenState) -> Unit,
-    viewModel: ShiftEditViewModel
+    viewModel: ShiftEditViewModel,
+    id: Int
 ) {
     LaunchedEffect(Unit) {
         onComposing(
