@@ -108,5 +108,12 @@ val viewModelsModule = module {
         )
     }
     viewModel { WorkersViewModel(getWorkersUseCase = get(), deleteWorkerUseCase = get()) }
-    viewModel { WorkerEditViewModel() }
+    viewModel {
+        WorkerEditViewModel(
+            getWorkerUseCase = get(),
+            insertWorkerUseCase = get(),
+            updateWorkerUseCase = get(),
+            getDirectionsUseCase = get()
+        )
+    }
 }

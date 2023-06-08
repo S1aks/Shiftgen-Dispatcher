@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
@@ -27,7 +28,6 @@ import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.ui.elements.DoneIconButton
 import com.s1aks.shiftgen_dispatcher.ui.elements.LoadingIndicator
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
-import com.s1aks.shiftgen_dispatcher.utils.logd
 import com.s1aks.shiftgen_dispatcher.utils.onSuccess
 
 @Composable
@@ -37,7 +37,7 @@ fun DirectionEditScreen(
     viewModel: DirectionEditViewModel,
     id: Int
 ) {
-    val new = id.logd() == 0
+    val new = id == 0
     var screenState: DirectionEditScreenState by remember {
         mutableStateOf(DirectionEditScreenState(allFieldsOk = false, directionData = null))
     }
@@ -130,4 +130,10 @@ fun DirectionEditScreenUI(
             )
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewDirectionEditScreen() {
+    DirectionEditScreenUI()
 }
