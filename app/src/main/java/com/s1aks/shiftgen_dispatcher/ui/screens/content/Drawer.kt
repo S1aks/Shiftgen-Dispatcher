@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
 import androidx.compose.material.DrawerState
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
@@ -90,7 +89,7 @@ sealed class MainNavItem(
     val route: String,
     val isDivider: Boolean = false,
 ) {
-    object Divider : MainNavItem("", null, "", true)
+    object Spacer : MainNavItem("", null, "", true)
     object Shifts : MainNavItem("Смены", Icons.Default.ListAlt, Screen.Shifts.route)
     object Workers : MainNavItem("Рабочие", Icons.Default.Groups, Screen.Workers.route)
     object Directions : MainNavItem("Направления", Icons.Default.Route, Screen.Directions.route)
@@ -105,9 +104,8 @@ fun DrawerItem(
     onItemClick: () -> Unit
 ) {
     if (item.isDivider) {
-        Divider(
-            thickness = 20.dp,
-            color = Color.Transparent
+        Spacer(
+            modifier = Modifier.height(20.dp)
         )
     } else {
         Button(
@@ -150,9 +148,9 @@ fun DrawerContent(
         MainNavItem.Shifts,
         MainNavItem.Workers,
         MainNavItem.Directions,
-        MainNavItem.Divider,
+        MainNavItem.Spacer,
         MainNavItem.Structure,
-        MainNavItem.Divider,
+        MainNavItem.Spacer,
         MainNavItem.Exit
     ),
     navController: NavController? = null,
@@ -166,7 +164,7 @@ fun DrawerContent(
         if (item.route == Screen.Login.route) {
             onLogout()
         } else {
-            if (item !is MainNavItem.Divider) {
+            if (item !is MainNavItem.Spacer) {
                 navController?.navigate(item.route) {
                     navController.graph.startDestinationRoute?.let { route ->
                         popUpTo(route) {
