@@ -16,3 +16,8 @@ fun LoadingIndicator() {
         CircularProgressIndicator()
     }
 }
+
+data class ContextMenuItem(
+    val label: String,
+    val action: (id: Int) -> Unit
+)

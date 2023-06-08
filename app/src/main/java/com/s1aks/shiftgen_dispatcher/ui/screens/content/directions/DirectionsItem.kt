@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
+import com.s1aks.shiftgen_dispatcher.ui.elements.ContextMenuItem
 
 internal val testDirection = Direction(
     1,
@@ -30,7 +31,7 @@ internal val testDirection = Direction(
 
 @Preview(showBackground = true)
 @Composable
-fun DirectionItem(
+fun DirectionsItem(
     direction: Direction = testDirection,
     contextMenu: List<ContextMenuItem> = listOf()
 ) {

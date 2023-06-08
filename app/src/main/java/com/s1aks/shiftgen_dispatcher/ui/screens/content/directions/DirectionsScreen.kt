@@ -19,6 +19,7 @@ import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.elements.AddIconButton
+import com.s1aks.shiftgen_dispatcher.ui.elements.ContextMenuItem
 import com.s1aks.shiftgen_dispatcher.ui.elements.LoadingIndicator
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.MainScreenState
 import com.s1aks.shiftgen_dispatcher.utils.onSuccess
@@ -71,11 +72,6 @@ data class DirectionsScreenState(
     val contextMenu: List<ContextMenuItem>
 )
 
-data class ContextMenuItem(
-    val label: String,
-    val action: (id: Int) -> Unit
-)
-
 @Composable
 fun DirectionsScreenUI(
     screenState: DirectionsScreenState = DirectionsScreenState(listOf(testDirection), listOf())
@@ -84,7 +80,7 @@ fun DirectionsScreenUI(
         modifier = Modifier.fillMaxSize()
     ) {
         items(screenState.directions) { direction ->
-            DirectionItem(direction, screenState.contextMenu)
+            DirectionsItem(direction, screenState.contextMenu)
         }
     }
 }
