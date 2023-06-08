@@ -35,7 +35,7 @@ fun DirectionsScreen(
                 title = "Направления",
                 drawerEnabled = true,
                 actions = {
-                    AddIconButton { navController.navigate(Screen.DirectionEdit().route) }
+                    AddIconButton { navController.navigate(Screen.DirectionEdit("0").route) }
                 }
             )
         )

@@ -30,11 +30,11 @@ sealed class Screen(val route: String) {
     object Main : Screen("main")
     object Structure : Screen("structure")
     object Directions : Screen("directions")
-    class DirectionEdit(id: String = "0") : Screen("direction_edit/$id")
+    class DirectionEdit(id: String = "{id}") : Screen("direction_edit/$id")
     object Shifts : Screen("shifts")
-    class ShiftEdit(id: String = "0") : Screen("shift_edit/$id")
+    class ShiftEdit(id: String = "{id}") : Screen("shift_edit/$id")
     object Workers : Screen("workers")
-    class WorkerEdit(id: String = "0") : Screen("worker_edit/$id")
+    class WorkerEdit(id: String = "{id}") : Screen("worker_edit/$id")
 }
 
 fun NavController.clearAndNavigate(route: String) {
@@ -72,7 +72,7 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    idComposable(Screen.DirectionEdit("{id}").route) { id ->
+    idComposable(Screen.DirectionEdit().route) { id ->
         DirectionEditScreen(
             navController = navController,
             onComposing = onComposing,
@@ -87,7 +87,7 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    idComposable(Screen.ShiftEdit("{id}").route) { id ->
+    idComposable(Screen.ShiftEdit().route) { id ->
         ShiftEditScreen(
             navController = navController,
             onComposing = onComposing,
@@ -102,7 +102,7 @@ fun NavGraphBuilder.mainGraph(
             viewModel = koinViewModel()
         )
     }
-    idComposable(Screen.WorkerEdit("{id}").route) { id ->
+    idComposable(Screen.WorkerEdit().route) { id ->
         WorkerEditScreen(
             navController = navController,
             onComposing = onComposing,
