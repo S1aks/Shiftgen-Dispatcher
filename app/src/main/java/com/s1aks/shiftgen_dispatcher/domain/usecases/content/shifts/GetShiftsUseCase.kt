@@ -21,6 +21,7 @@ class GetShiftsUseCase(
         val timeBlocks = withContext(Dispatchers.IO) { repository.getTimeBlocks() }
         val model = shifts.map { shift ->
             ShiftModel(
+                shift.id,
                 shift.startTime.format(DateTimeFormatter.ofPattern("dd.MM.y")),
                 shift.startTime.format(DateTimeFormatter.ofPattern("HH:mm")),
                 shift.name,

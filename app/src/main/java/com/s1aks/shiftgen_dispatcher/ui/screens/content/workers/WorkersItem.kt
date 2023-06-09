@@ -55,7 +55,7 @@ fun WorkersItem(
                     isContextMenuVisible = true
                     pressOffset = DpOffset(it.x.dp, it.y.dp)
                 })
-            },
+            }
     ) {
         Row(
             modifier = Modifier.padding(16.dp)

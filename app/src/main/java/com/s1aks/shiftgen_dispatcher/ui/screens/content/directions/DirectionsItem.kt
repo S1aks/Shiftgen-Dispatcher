@@ -47,7 +47,7 @@ fun DirectionsItem(
                     isContextMenuVisible = true
                     pressOffset = DpOffset(it.x.dp, it.y.dp)
                 })
-            },
+            }
     ) {
         Text(
             modifier = Modifier.padding(16.dp),

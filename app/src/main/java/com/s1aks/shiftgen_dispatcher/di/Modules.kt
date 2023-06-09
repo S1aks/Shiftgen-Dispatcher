@@ -63,7 +63,7 @@ val useCasesModule = module {
     single { GetShiftUseCase(repository = get()) }
     single { InsertShiftUseCase(repository = get()) }
     single { UpdateShiftUseCase(repository = get()) }
-    single { DeleteShiftUseCase(repository = get()) }
+    single { DeleteShiftUseCase(repository = get(), getShiftsUseCase = get()) }
 
     single { GetStructuresUseCase(repository = get()) }
     single { GetStructureUseCase(repository = get(), localSecureStore = get()) }
@@ -82,7 +82,7 @@ val viewModelsModule = module {
     viewModel { LoginViewModel(sendLoginDataUseCase = get(), checkAuthorizationUseCase = get()) }
     viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
     viewModel { StructureViewModel(getStructureUseCase = get(), updateStructureUseCase = get()) }
-    viewModel { ShiftsViewModel(getShiftsUseCase = get()) }
+    viewModel { ShiftsViewModel(getShiftsUseCase = get(), deleteShiftUseCase = get()) }
     viewModel { ShiftEditViewModel() }
     viewModel { DirectionsViewModel(getDirectionsUseCase = get(), deleteDirectionUseCase = get()) }
     viewModel {
