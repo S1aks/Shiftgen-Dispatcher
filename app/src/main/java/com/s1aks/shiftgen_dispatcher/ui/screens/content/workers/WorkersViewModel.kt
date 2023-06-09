@@ -25,4 +25,8 @@ class WorkersViewModel(
     fun deleteData(id: Int) {
         viewModelScope.setFlow(_workersState) { deleteWorkerUseCase.execute(id) }
     }
+
+    fun clearStates() {
+        _workersState.value = ResponseState.Idle
+    }
 }

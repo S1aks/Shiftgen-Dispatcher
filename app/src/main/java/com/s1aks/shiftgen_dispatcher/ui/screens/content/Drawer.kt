@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DrawerState
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
@@ -49,7 +50,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun DrawerHeader() {
+fun DrawerHeader(
+    userName: String
+) {
     Text(
         modifier = Modifier
             .padding(top = 10.dp)
@@ -81,6 +84,16 @@ fun DrawerHeader() {
             contentDescription = "",
         )
     }
+    Text(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        text = userName,
+        color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
+        fontSize = 22.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center
+    )
 }
 
 sealed class MainNavItem(
@@ -119,7 +132,8 @@ fun DrawerItem(
             ),
             border = BorderStroke(
                 1.dp,
-                if (selected) MaterialTheme.colors.onSurface else MaterialTheme.colors.surface
+                if (selected) MaterialTheme.colors.onSurface.copy(ContentAlpha.disabled)
+                else MaterialTheme.colors.surface.copy(ContentAlpha.disabled)
             ),
             enabled = selected,
             onClick = { onItemClick() })
@@ -156,12 +170,14 @@ fun DrawerContent(
     navController: NavController? = null,
     scope: CoroutineScope? = null,
     drawerState: DrawerState? = null,
+    userName: String = "Username",
     onLogout: () -> Unit = {}
 ) {
     val navBackStackEntry = navController?.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.value?.destination?.route
     val itemClick: (MainNavItem) -> Unit = { item ->
         if (item.route == Screen.Login.route) {
+
             onLogout()
         } else {
             if (item !is MainNavItem.Spacer) {
@@ -181,7 +197,7 @@ fun DrawerContent(
         }
     }
     Column {
-        DrawerHeader()
+        DrawerHeader(userName = userName)
         LazyColumn {
             items(drawerItems) { item ->
                 DrawerItem(

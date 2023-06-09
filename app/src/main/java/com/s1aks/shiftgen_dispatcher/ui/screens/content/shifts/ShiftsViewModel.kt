@@ -20,4 +20,8 @@ class ShiftsViewModel(
     init {
         viewModelScope.setFlow(_shiftsState) { getShiftsUseCase.execute(YearMonth.now()) }
     }
+
+    fun clearStates() {
+        _shiftsState.value = ResponseState.Idle
+    }
 }

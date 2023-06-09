@@ -36,7 +36,10 @@ fun WorkersScreen(
                 title = "Рабочие",
                 drawerEnabled = true,
                 actions = {
-                    AddIconButton { navController.navigate(Screen.WorkerEdit("0").route) }
+                    AddIconButton {
+                        viewModel.clearStates()
+                        navController.navigate(Screen.WorkerEdit("0").route)
+                    }
                 }
             )
         )
@@ -47,6 +50,7 @@ fun WorkersScreen(
             workers = listOf(),
             contextMenu = listOf(
                 ContextMenuItem("Редактировать") { id ->
+                    viewModel.clearStates()
                     navController.navigate(Screen.WorkerEdit(id.toString()).route)
                 },
                 ContextMenuItem("Удалить") { id ->

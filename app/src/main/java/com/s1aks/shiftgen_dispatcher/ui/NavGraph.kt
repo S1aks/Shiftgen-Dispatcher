@@ -50,7 +50,11 @@ fun NavGraphBuilder.startGraph(navController: NavHostController) {
         RegisterScreen(navController = navController, viewModel = koinViewModel())
     }
     composable(Screen.Main.route) {
-        MainScreen(navController = navController, localSecureStore = koinInject())
+        MainScreen(
+            navController = navController,
+            localSecureStore = koinInject(),
+            client = koinInject()
+        )
     }
 }
 

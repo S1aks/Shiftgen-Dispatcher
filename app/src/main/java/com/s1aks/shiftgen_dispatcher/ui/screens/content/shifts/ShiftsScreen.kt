@@ -33,7 +33,10 @@ fun ShiftsScreen(
                 title = "Смены",
                 drawerEnabled = true,
                 actions = {
-                    AddIconButton { navController.navigate(Screen.ShiftEdit("0").route) }
+                    AddIconButton {
+                        viewModel.clearStates()
+                        navController.navigate(Screen.ShiftEdit("0").route)
+                    }
                 }
             )
         )

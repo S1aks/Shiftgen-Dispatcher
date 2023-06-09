@@ -36,7 +36,10 @@ fun DirectionsScreen(
                 title = "Направления",
                 drawerEnabled = true,
                 actions = {
-                    AddIconButton { navController.navigate(Screen.DirectionEdit("0").route) }
+                    AddIconButton {
+                        viewModel.clearStates()
+                        navController.navigate(Screen.DirectionEdit("0").route)
+                    }
                 }
             )
         )
@@ -47,6 +50,7 @@ fun DirectionsScreen(
             directions = listOf(),
             contextMenu = listOf(
                 ContextMenuItem("Редактировать") { id ->
+                    viewModel.clearStates()
                     navController.navigate(Screen.DirectionEdit(id.toString()).route)
                 },
                 ContextMenuItem("Удалить") { id ->

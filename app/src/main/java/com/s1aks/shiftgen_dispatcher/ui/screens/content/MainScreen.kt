@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.s1aks.shiftgen_dispatcher.data.LocalSecureStore
+import com.s1aks.shiftgen_dispatcher.data.api.KtorClient
 import com.s1aks.shiftgen_dispatcher.ui.NavRoutes
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
@@ -30,11 +31,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     navController: NavController,
-    localSecureStore: LocalSecureStore
+    localSecureStore: LocalSecureStore,
+    client: KtorClient
 ) {
     MainScreenUI(
+        userName = localSecureStore.login.toString(),
         onLogout = {
             localSecureStore.clear()
+            client.clearTokens()
             navController.clearAndNavigate(Screen.Login.route)
         }
     )
@@ -48,6 +52,7 @@ data class MainScreenState(
 
 @Composable
 fun MainScreenUI(
+    userName: String = "",
     onLogout: () -> Unit = {}
 ) {
     val mainNavController = rememberNavController()
@@ -77,6 +82,7 @@ fun MainScreenUI(
                     navController = mainNavController,
                     scope = scope,
                     drawerState = scaffoldState.drawerState,
+                    userName = userName,
                     onLogout = onLogout
                 )
             }

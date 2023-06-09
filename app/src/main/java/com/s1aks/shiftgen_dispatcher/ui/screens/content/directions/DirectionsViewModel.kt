@@ -25,4 +25,8 @@ class DirectionsViewModel(
     fun deleteData(id: Int) {
         viewModelScope.setFlow(_directionsState) { deleteDirectionUseCase.execute(id) }
     }
+
+    fun clearStates() {
+        _directionsState.value = ResponseState.Idle
+    }
 }
