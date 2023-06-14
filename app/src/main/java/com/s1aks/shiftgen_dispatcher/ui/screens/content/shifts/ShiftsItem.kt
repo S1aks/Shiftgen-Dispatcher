@@ -22,23 +22,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.s1aks.shiftgen_dispatcher.domain.models.ShiftModel
+import com.s1aks.shiftgen_dispatcher.domain.models.ShiftItemModel
 import com.s1aks.shiftgen_dispatcher.ui.elements.ContextMenuItem
 
-private val testShift = ShiftModel(
+private val testShift = ShiftItemModel(
     0,
-    "25.05.2023",
-    "20:00",
-    "Рейс 512",
     "Москва - Ростов",
     "Михайлов Н.А.",
-    "14:25"
+    "Москва",
+    "",
+    "",
+    "20"
 )
 
 @Preview(showBackground = true)
 @Composable
 fun ShiftsItem(
-    shift: ShiftModel = testShift,   // todo REMOVE test
+    shift: ShiftItemModel = testShift,   // todo REMOVE test
     contextMenu: List<ContextMenuItem> = listOf()
 ) {
     var isContextMenuVisible by rememberSaveable { mutableStateOf(false) }
@@ -63,7 +63,7 @@ fun ShiftsItem(
             val (date, time, shift_name, worker, work_time) = createRefs()
             val startGuideline = createGuidelineFromStart(0.25f)
             val endGuideline = createGuidelineFromStart(0.85f)
-            Text(text = shift.start_date,
+            Text(text = shift.startDay,
                 modifier = Modifier
                     .constrainAs(date) {
                         start.linkTo(parent.start)
@@ -72,7 +72,7 @@ fun ShiftsItem(
                         bottom.linkTo(time.top)
                     }
             )
-            Text(text = shift.start_time,
+            Text(text = shift.startTime,
                 modifier = Modifier
                     .constrainAs(time) {
                         start.linkTo(parent.start)
@@ -99,7 +99,7 @@ fun ShiftsItem(
                         bottom.linkTo(parent.bottom)
                     }
             )
-            Text(text = shift.work_time,
+            Text(text = shift.workTime,
                 modifier = Modifier
                     .constrainAs(work_time) {
                         start.linkTo(endGuideline)

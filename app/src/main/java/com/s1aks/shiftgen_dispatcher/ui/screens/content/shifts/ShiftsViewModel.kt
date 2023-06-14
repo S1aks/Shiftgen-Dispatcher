@@ -3,7 +3,7 @@ package com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
-import com.s1aks.shiftgen_dispatcher.domain.models.ShiftModel
+import com.s1aks.shiftgen_dispatcher.domain.models.ShiftItemModel
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.DeleteShiftUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetShiftsUseCase
 import com.s1aks.shiftgen_dispatcher.utils.setFlow
@@ -15,7 +15,7 @@ class ShiftsViewModel(
     private val getShiftsUseCase: GetShiftsUseCase,
     private val deleteShiftUseCase: DeleteShiftUseCase
 ) : ViewModel() {
-    private val _shiftsState: MutableStateFlow<ResponseState<List<ShiftModel>>> =
+    private val _shiftsState: MutableStateFlow<ResponseState<List<ShiftItemModel>>> =
         MutableStateFlow(ResponseState.Idle)
     val shiftsState = _shiftsState.asStateFlow()
 

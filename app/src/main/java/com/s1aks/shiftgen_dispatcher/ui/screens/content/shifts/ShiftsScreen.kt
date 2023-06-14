@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
-import com.s1aks.shiftgen_dispatcher.domain.models.ShiftModel
+import com.s1aks.shiftgen_dispatcher.domain.models.ShiftItemModel
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.elements.AddIconButton
 import com.s1aks.shiftgen_dispatcher.ui.elements.ContextMenuItem
@@ -73,7 +73,7 @@ fun ShiftsScreen(
 }
 
 data class ShiftsScreenState(
-    var shifts: List<ShiftModel>,
+    var shifts: List<ShiftItemModel>,
     val contextMenu: List<ContextMenuItem>
 )
 

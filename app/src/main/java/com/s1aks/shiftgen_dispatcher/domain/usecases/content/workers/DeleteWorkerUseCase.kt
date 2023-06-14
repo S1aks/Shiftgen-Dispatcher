@@ -7,13 +7,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DeleteWorkerUseCase(
-    private val repository: Repository
+    private val repository: Repository,
+    private val getWorkersUseCase: GetWorkersUseCase
 ) {
     suspend fun execute(id: Int): ResponseState<List<Worker>> {
         val deleteSuccess = withContext(Dispatchers.IO) { repository.deleteWorker(id) }
         if (deleteSuccess) {
-            val workers = withContext(Dispatchers.IO) { repository.getWorkers() }
-            return ResponseState.Success(workers)
+            return getWorkersUseCase.execute()
         } else {
             throw RuntimeException("Ошибка удаления рабочего.")
         }

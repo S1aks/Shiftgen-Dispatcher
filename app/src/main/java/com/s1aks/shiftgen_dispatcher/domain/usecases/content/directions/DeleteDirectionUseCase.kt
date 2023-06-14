@@ -7,13 +7,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DeleteDirectionUseCase(
-    private val repository: Repository
+    private val repository: Repository,
+    private val getDirectionsUseCase: GetDirectionsUseCase
 ) {
     suspend fun execute(id: Int): ResponseState<List<Direction>> {
         val deleteSuccess = withContext(Dispatchers.IO) { repository.deleteDirection(id) }
         if (deleteSuccess) {
-            val directions = withContext(Dispatchers.IO) { repository.getDirections() }
-            return ResponseState.Success(directions)
+            return getDirectionsUseCase.execute()
         } else {
             throw RuntimeException("Ошибка удаления направления.")
         }
