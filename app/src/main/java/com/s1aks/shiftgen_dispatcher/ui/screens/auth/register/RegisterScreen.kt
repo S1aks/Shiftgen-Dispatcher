@@ -1,6 +1,5 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.auth.register
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,21 +11,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
@@ -43,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -63,8 +54,12 @@ import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
 import com.s1aks.shiftgen_dispatcher.ui.Screen
 import com.s1aks.shiftgen_dispatcher.ui.clearAndNavigate
 import com.s1aks.shiftgen_dispatcher.ui.elements.LoadingIndicator
+import com.s1aks.shiftgen_dispatcher.utils.inc
 import com.s1aks.shiftgen_dispatcher.utils.isValidEmail
 import com.s1aks.shiftgen_dispatcher.utils.onSuccess
+import com.s1aks.shiftgen_dispatcher.utils.setOutlinedTextFieldBorderColor
+import com.s1aks.shiftgen_dispatcher.utils.setOutlinedTextFieldColorsWithThis
+import com.s1aks.shiftgen_dispatcher.utils.setOutlinedTextFieldIconByExpanded
 import kotlinx.coroutines.delay
 
 @Composable
@@ -147,15 +142,10 @@ fun RegisterScreenUI(
     var expandedGroup by rememberSaveable { mutableStateOf(false) }
     var expandedStructure by rememberSaveable { mutableStateOf(false) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
-    val iconGroup = if (expandedGroup) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
-    val iconStructure =
-        if (expandedStructure) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
-    val groupColor =
-        if (group.isEmpty()) colors.error.copy(ContentAlpha.high)
-        else colors.onSurface.copy(ContentAlpha.disabled)
-    val structureColor =
-        if (structure.isEmpty()) colors.error.copy(ContentAlpha.high)
-        else colors.onSurface.copy(ContentAlpha.disabled)
+    val iconGroup = expandedGroup.setOutlinedTextFieldIconByExpanded()
+    val iconStructure = expandedStructure.setOutlinedTextFieldIconByExpanded()
+    val groupColor = group.setOutlinedTextFieldBorderColor()
+    val structureColor = structure.setOutlinedTextFieldBorderColor()
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
@@ -225,7 +215,7 @@ fun RegisterScreenUI(
                 trailingIcon = {
                     Icon(
                         iconGroup, "Группа пользователя",
-                        Modifier.clickable { expandedGroup = !expandedGroup },
+                        Modifier.clickable { expandedGroup++ },
                         tint = groupColor
                     )
                 },
@@ -234,12 +224,7 @@ fun RegisterScreenUI(
                     keyboardType = KeyboardType.Text
                 ),
                 enabled = false,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-                    backgroundColor = Color.Transparent,
-                    disabledBorderColor = groupColor,
-                    disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
-                )
+                colors = groupColor.setOutlinedTextFieldColorsWithThis()
             )
             DropdownMenu(
                 expanded = expandedGroup,
@@ -271,7 +256,7 @@ fun RegisterScreenUI(
                     else
                         Icon(
                             iconStructure, "Группа пользователя",
-                            Modifier.clickable { expandedStructure = !expandedStructure },
+                            Modifier.clickable { expandedStructure++ },
                             tint = structureColor
                         )
                 },
@@ -280,12 +265,7 @@ fun RegisterScreenUI(
                     keyboardType = KeyboardType.Text
                 ),
                 enabled = structureEnable,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-                    backgroundColor = Color.Transparent,
-                    disabledBorderColor = structureColor,
-                    disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
-                )
+                colors = structureColor.setOutlinedTextFieldColorsWithThis()
             )
             DropdownMenu(
                 expanded = expandedStructure,
@@ -350,7 +330,6 @@ fun RegisterScreenUI(
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegisterScreen() {

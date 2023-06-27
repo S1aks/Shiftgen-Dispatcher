@@ -3,7 +3,17 @@ package com.s1aks.shiftgen_dispatcher.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -16,6 +26,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
+
+fun <T> T?.logd(): T? = this.also { Log.d("***", it.toString()) } // todo REMOVE
 
 fun <T> CoroutineScope.setFlow(
     flow: MutableStateFlow<ResponseState<T>>,
@@ -73,4 +85,20 @@ fun NavGraphBuilder.idComposable(
     }
 }
 
-fun <T> T?.logd(): T? = this.also { Log.d("***", it.toString()) }
+@Composable
+fun String.setOutlinedTextFieldBorderColor(): Color =
+    if (this.isEmpty()) colors.error.copy(ContentAlpha.high)
+    else colors.onSurface.copy(ContentAlpha.disabled)
+
+fun Boolean.setOutlinedTextFieldIconByExpanded(): ImageVector =
+    if (this) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
+
+@Composable
+fun Color.setOutlinedTextFieldColorsWithThis() = TextFieldDefaults.outlinedTextFieldColors(
+    disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
+    backgroundColor = Color.Transparent,
+    disabledBorderColor = this,
+    disabledLabelColor = colors.onSurface.copy(ContentAlpha.medium),
+)
+
+operator fun Boolean.inc() = !this

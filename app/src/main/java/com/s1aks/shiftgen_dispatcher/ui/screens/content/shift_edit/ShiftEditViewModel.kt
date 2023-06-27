@@ -41,10 +41,13 @@ class ShiftEditViewModel(
         MutableStateFlow(ResponseState.Idle)
     val responseState = _responseState.asStateFlow()
 
-    fun getData(id: Int) {
+    fun getBasicData() {
         viewModelScope.setFlow(_directionsState) { getDirectionsUseCase.execute() }
         viewModelScope.setFlow(_timeBlocksState) { getTimeBlocksUseCase.execute() }
         viewModelScope.setFlow(_workersState) { getWorkersUseCase.execute() }
+    }
+
+    fun getShiftData(id: Int) {
         viewModelScope.setFlow(_shiftState) { getShiftUseCase.execute(id) }
     }
 

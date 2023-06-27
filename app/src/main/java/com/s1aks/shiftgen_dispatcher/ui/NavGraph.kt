@@ -38,7 +38,8 @@ sealed class Screen(val route: String) {
 }
 
 fun NavController.clearAndNavigate(route: String) {
-    backQueue.clear()
+    popBackStack(graph.startDestinationId, true)
+    graph.setStartDestination(route)
     navigate(route)
 }
 
