@@ -2,21 +2,37 @@ package com.s1aks.shiftgen_dispatcher.ui.screens.content.shift_edit
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.res.Configuration
 import android.widget.DatePicker
 import android.widget.TimePicker
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,15 +40,20 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
@@ -52,6 +73,7 @@ import com.s1aks.shiftgen_dispatcher.utils.setOutlinedTextFieldIconByExpanded
 import com.s1aks.shiftgen_dispatcher.utils.toDay
 import com.s1aks.shiftgen_dispatcher.utils.toLocalDateTime
 import com.s1aks.shiftgen_dispatcher.utils.toTime
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -136,6 +158,7 @@ data class ShiftEditScreenReturnState(
     var shiftData: Shift? = null
 )
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ShiftEditScreenUI(
     screenState: ShiftEditScreenState = ShiftEditScreenState(),
@@ -221,185 +244,222 @@ fun ShiftEditScreenUI(
     val focusManager = LocalFocusManager.current
 //    val focusRequester = remember { FocusRequester() }
 
-    Column(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxSize()
+    val bottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+    )
+    val showModalSheet = rememberSaveable {
+        mutableStateOf(false)
+    }
+    val scope = rememberCoroutineScope()
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetState,
+        sheetContent = { BottomSheetContent() }
     ) {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = name,
-            singleLine = true,
-            onValueChange = { name = it },
-            isError = !nameFieldOk(),
-            label = { Text(text = "Наименование") },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next, keyboardType = KeyboardType.Text
-            )
-        )
-        Box {
+        Column(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxSize()
+        ) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = periodicity,
+                value = name,
                 singleLine = true,
-                onValueChange = { periodicity = it },
-                label = { Text(text = "Периодичность") },
-                trailingIcon = {
-                    Icon(
-                        iconPeriodicity, "Периодичность",
-                        Modifier.clickable { expandedPeriodicity++ },
-                        tint = periodicityColor
-                    )
-                },
+                onValueChange = { name = it },
+                isError = !nameFieldOk(),
+                label = { Text(text = "Наименование") },
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text
-                ),
-                enabled = false,
-                colors = periodicityColor.setOutlinedTextFieldColorsWithThis()
+                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Text
+                )
             )
-            DropdownMenu(
-                expanded = expandedPeriodicity,
-                onDismissRequest = { expandedPeriodicity = false }
-            ) {
-                periodicityList.forEach { name ->
-                    DropdownMenuItem(
-                        onClick = {
-                            periodicity = name
-                            expandedPeriodicity = false
-                            focusManager.clearFocus()
-                        }
-                    ) { Text(text = name) }
+            Box {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = periodicity,
+                    singleLine = true,
+                    onValueChange = { periodicity = it },
+                    label = { Text(text = "Периодичность") },
+                    trailingIcon = {
+                        Icon(
+                            iconPeriodicity, "Периодичность",
+                            Modifier.clickable { expandedPeriodicity++ },
+                            tint = periodicityColor
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    ),
+                    enabled = false,
+                    colors = periodicityColor.setOutlinedTextFieldColorsWithThis()
+                )
+                DropdownMenu(
+                    expanded = expandedPeriodicity,
+                    onDismissRequest = { expandedPeriodicity = false }
+                ) {
+                    periodicityList.forEach { name ->
+                        DropdownMenuItem(
+                            onClick = {
+                                periodicity = name
+                                expandedPeriodicity = false
+                                focusManager.clearFocus()
+                            }
+                        ) { Text(text = name) }
+                    }
                 }
             }
-        }
-        Box {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = worker,
-                singleLine = true,
-                onValueChange = { worker = it },
-                label = { Text(text = "Рабочий") },
-                trailingIcon = {
-                    Icon(
-                        iconWorker, "Рабочий",
-                        Modifier.clickable { expandedWorker++ },
-                        tint = workerColor
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text
-                ),
-                enabled = false,
-                colors = workerColor.setOutlinedTextFieldColorsWithThis()
-            )
-            DropdownMenu(
-                expanded = expandedWorker,
-                onDismissRequest = { expandedWorker = false }
-            ) {
-                workersList.forEach { name ->
-                    DropdownMenuItem(
-                        onClick = {
-                            worker = name
-                            expandedWorker = false
-                            focusManager.clearFocus()
-                        }
-                    ) { Text(text = name) }
+            Box {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = worker,
+                    singleLine = true,
+                    onValueChange = { worker = it },
+                    label = { Text(text = "Рабочий") },
+                    trailingIcon = {
+                        Icon(
+                            iconWorker, "Рабочий",
+                            Modifier.clickable { expandedWorker++ },
+                            tint = workerColor
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    ),
+                    enabled = false,
+                    colors = workerColor.setOutlinedTextFieldColorsWithThis()
+                )
+                DropdownMenu(
+                    expanded = expandedWorker,
+                    onDismissRequest = { expandedWorker = false }
+                ) {
+                    workersList.forEach { name ->
+                        DropdownMenuItem(
+                            onClick = {
+                                worker = name
+                                expandedWorker = false
+                                focusManager.clearFocus()
+                            }
+                        ) { Text(text = name) }
+                    }
                 }
             }
-        }
-        Box {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = direction,
-                singleLine = true,
-                onValueChange = { direction = it },
-                label = { Text(text = "Направление") },
-                trailingIcon = {
-                    Icon(
-                        iconDirection, "Направление",
-                        Modifier.clickable { expandedDirection++ },
-                        tint = directionColor
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text
-                ),
-                enabled = false,
-                colors = directionColor.setOutlinedTextFieldColorsWithThis()
-            )
-            DropdownMenu(
-                expanded = expandedDirection,
-                onDismissRequest = { expandedDirection = false }
-            ) {
-                directionsList.forEach { name ->
-                    DropdownMenuItem(
-                        onClick = {
-                            direction = name
-                            expandedDirection = false
-                            focusManager.clearFocus()
-                        }
-                    ) { Text(text = name) }
+            Box {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = direction,
+                    singleLine = true,
+                    onValueChange = { direction = it },
+                    label = { Text(text = "Направление") },
+                    trailingIcon = {
+                        Icon(
+                            iconDirection, "Направление",
+                            Modifier.clickable { expandedDirection++ },
+                            tint = directionColor
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    ),
+                    enabled = false,
+                    colors = directionColor.setOutlinedTextFieldColorsWithThis()
+                )
+                DropdownMenu(
+                    expanded = expandedDirection,
+                    onDismissRequest = { expandedDirection = false }
+                ) {
+                    directionsList.forEach { name ->
+                        DropdownMenuItem(
+                            onClick = {
+                                direction = name
+                                expandedDirection = false
+                                focusManager.clearFocus()
+                            }
+                        ) { Text(text = name) }
+                    }
                 }
             }
-        }
-        Box {
-            val context = LocalContext.current
-            var date = LocalDate.now()
-            var time = LocalTime.now()
-            val timePicker = TimePickerDialog(
-                context,
-                { _: TimePicker, mHours: Int, mMinutes: Int ->
-                    time = LocalTime.of(mHours, mMinutes)
-                    val dateTime = LocalDateTime.of(date, time)
-                    startTime = dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm"))
-                }, time.hour, time.minute, true
-            )
-            val datePicker = DatePickerDialog(
-                context,
-                { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-                    date = LocalDate.of(mYear, mMonth, mDayOfMonth)
-                    timePicker.show()
-                }, date.year, date.monthValue, date.dayOfMonth
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = startTime,
-                singleLine = true,
-                onValueChange = { startTime = it },
-                label = { Text(text = "Время начала") },
-                trailingIcon = {
-                    Icon(
-                        iconDirection, "Время начала",
-                        Modifier.clickable {
-                            datePicker.show()
-                        },
-                        tint = startTimeColor
+            Box {
+                val context = LocalContext.current
+                var date = LocalDate.now()
+                var time = LocalTime.now()
+                val timePicker = TimePickerDialog(
+                    context,
+                    { _: TimePicker, mHours: Int, mMinutes: Int ->
+                        time = LocalTime.of(mHours, mMinutes)
+                        val dateTime = LocalDateTime.of(date, time)
+                        startTime = dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm"))
+                    }, time.hour, time.minute, true
+                )
+                val datePicker = DatePickerDialog(
+                    context,
+                    { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+                        date = LocalDate.of(mYear, mMonth, mDayOfMonth)
+                        timePicker.show()
+                    }, date.year, date.monthValue, date.dayOfMonth
+                )
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = startTime,
+                    singleLine = true,
+                    onValueChange = { startTime = it },
+                    label = { Text(text = "Время начала") },
+                    trailingIcon = {
+                        Icon(
+                            iconDirection, "Время начала",
+                            Modifier.clickable {
+                                datePicker.show()
+                            },
+                            tint = startTimeColor
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    ),
+                    enabled = false,
+                    colors = startTimeColor.setOutlinedTextFieldColorsWithThis()
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .padding(top = 6.dp, bottom = 0.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Список временных блоков смены:")
+                Spacer(modifier = Modifier.weight(1.0f))
+                Icon(
+                    Icons.Filled.AddBox, "Переместить вверх",
+                    Modifier
+                        .clickable {
+                            showModalSheet.value = !showModalSheet.value
+                            scope.launch {
+                                bottomSheetState.show()
+                            }
+                        }
+                        .height(36.dp)
+                        .width(36.dp),
+                    tint = Color.Green
+                )
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colors.onSurface.copy(ContentAlpha.disabled),
+                        shape = RoundedCornerShape(5.dp)
                     )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text
-                ),
-                enabled = false,
-                colors = startTimeColor.setOutlinedTextFieldColorsWithThis()
-            )
-
+            ) {
+                items(listOf(testTimeBlock, testTimeBlock)) { timeBlock ->
+                    TimeBlocksItem(timeBlock)
+                }
+            }
         }
     }
 }
 
-@Preview(
-    name = "Light Mode",
-    showBackground = true
-)
-@Preview(
-    name = "Dark Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true
-)
+@Preview(showBackground = true)
 @Composable
 fun PreviewShiftEditScreen() {
     ShiftEditScreenUI()
