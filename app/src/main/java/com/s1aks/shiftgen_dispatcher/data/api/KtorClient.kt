@@ -43,9 +43,10 @@ class KtorClient(
         }
         install(ContentNegotiation) {
             json(Json {
+                encodeDefaults = true
                 ignoreUnknownKeys = true
-                prettyPrint = true
-                isLenient = true
+//                prettyPrint = true
+//                isLenient = true
             })
         }
         install(HttpTimeout) {

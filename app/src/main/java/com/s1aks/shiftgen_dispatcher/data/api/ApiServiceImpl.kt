@@ -35,14 +35,6 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.Structu
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_INSERT_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_UPDATE_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlockRequest
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlockResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCKS_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_DELETE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_GET_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_INSERT_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_UPDATE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase.Companion.TIMESHEETS_URL
@@ -140,21 +132,6 @@ class ApiServiceImpl(
 
     override suspend fun structureDelete(idRequest: IdRequest): HttpStatusCode =
         client.post(STRUCTURE_DELETE_URL) { setBody(idRequest) }.status
-
-    override suspend fun timeBlocks(): TimeBlocksResponse =
-        client.get(TIME_BLOCKS_URL).getData()
-
-    override suspend fun timeBlockGet(idRequest: IdRequest): TimeBlockResponse =
-        client.post(TIME_BLOCK_GET_URL) { setBody(idRequest) }.getData()
-
-    override suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest): HttpStatusCode =
-        client.post(TIME_BLOCK_INSERT_URL) { setBody(timeBlockRequest) }.status
-
-    override suspend fun timeBlockUpdate(timeBlockRequest: TimeBlockRequest): HttpStatusCode =
-        client.post(TIME_BLOCK_UPDATE_URL) { setBody(timeBlockRequest) }.status
-
-    override suspend fun timeBlockDelete(idRequest: IdRequest): HttpStatusCode =
-        client.post(TIME_BLOCK_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun timeSheets(): TimeSheetsResponse =
         client.get(TIMESHEETS_URL).getData()

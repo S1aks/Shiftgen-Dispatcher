@@ -24,11 +24,6 @@ import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.GetStruc
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.GetStructuresUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.InsertStructureUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.UpdateStructureUseCase
-import com.s1aks.shiftgen_dispatcher.domain.usecases.content.time_blocks.DeleteTimeBlockUseCase
-import com.s1aks.shiftgen_dispatcher.domain.usecases.content.time_blocks.GetTimeBlockUseCase
-import com.s1aks.shiftgen_dispatcher.domain.usecases.content.time_blocks.GetTimeBlocksUseCase
-import com.s1aks.shiftgen_dispatcher.domain.usecases.content.time_blocks.InsertTimeBlockUseCase
-import com.s1aks.shiftgen_dispatcher.domain.usecases.content.time_blocks.UpdateTimeBlockUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.workers.DeleteWorkerUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.workers.GetWorkerUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.workers.GetWorkersUseCase
@@ -76,12 +71,6 @@ val useCasesModule = module {
     single { UpdateStructureUseCase(repository = get()) }
     single { DeleteStructureUseCase(repository = get()) }
 
-    single { GetTimeBlocksUseCase(repository = get()) }
-    single { GetTimeBlockUseCase(repository = get()) }
-    single { InsertTimeBlockUseCase(repository = get()) }
-    single { UpdateTimeBlockUseCase(repository = get()) }
-    single { DeleteTimeBlockUseCase(repository = get(), getTimeBlocksUseCase = get()) }
-
     single { GetWorkersUseCase(repository = get()) }
     single { GetWorkerUseCase(repository = get()) }
     single { InsertWorkerUseCase(repository = get()) }
@@ -100,7 +89,6 @@ val viewModelsModule = module {
             insertShiftUseCase = get(),
             updateShiftUseCase = get(),
             getDirectionsUseCase = get(),
-            getTimeBlocksUseCase = get(),
             getWorkersUseCase = get()
         )
     }

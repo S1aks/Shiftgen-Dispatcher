@@ -15,9 +15,6 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.Structu
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlockRequest
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlockResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsResponse
@@ -33,7 +30,6 @@ import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
@@ -62,7 +58,16 @@ internal fun DirectionsResponse.toDirectionsList(): List<Direction> = list
 internal fun YearMonth.toShiftsRequest(): ShiftsRequest = ShiftsRequest(this)
 
 internal fun Shift.toShiftRequest(): ShiftRequest = ShiftRequest(
-    id, name, periodYearMonth, periodicity, workerId, directionId, startTime, timeBlocksIds
+    id,
+    name,
+    periodYearMonth,
+    periodicity,
+    workerId,
+    directionId,
+    action,
+    startTime,
+    duration,
+    restDuration
 )
 
 internal fun ShiftResponse.toShift(): Shift = shift
@@ -85,13 +90,6 @@ internal fun StructureResponse.toStructure(): Structure = structure
 internal fun StructureIdResponse.toStructureId(): Int = structureId
 
 internal fun StructuresResponse.toStructureMap(): StructuresMap = list
-
-internal fun TimeBlockResponse.toTimeBlock(): TimeBlock = timeBlock
-
-internal fun TimeBlocksResponse.toTimeBlocksList(): List<TimeBlock> = list
-
-internal fun TimeBlock.toTimeBlockRequest(): TimeBlockRequest =
-    TimeBlockRequest(id, name, duration, action)
 
 internal fun TimeSheetResponse.toTimeSheet(): TimeSheet = timesheet
 

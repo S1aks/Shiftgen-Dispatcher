@@ -1,5 +1,6 @@
 package com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts
 
+import com.s1aks.shiftgen_dispatcher.data.entities.Action
 import com.s1aks.shiftgen_dispatcher.data.entities.Periodicity
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.utils.LocalDateTimeSerializer
@@ -17,9 +18,11 @@ data class ShiftRequest(
     val periodicity: Periodicity,
     val workerId: Int?,
     val directionId: Int,
+    val action: Action,
     @Serializable(with = LocalDateTimeSerializer::class)
     val startTime: LocalDateTime,
-    val timeBlocksIds: List<Int>
+    val duration: Long,
+    val restDuration: Long
 )
 
 @Serializable

@@ -66,7 +66,7 @@ fun WorkersItem(
             )
             Text(
                 modifier = Modifier.padding(horizontal = 3.dp),
-                text = worker.fio()
+                text = worker.fio() ?: ""
             )
             Spacer(modifier = Modifier.weight(1.0f))
             Text(

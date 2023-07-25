@@ -8,7 +8,6 @@ import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
@@ -76,21 +75,6 @@ class RepositoryImpl(
 
     override suspend fun deleteStructure(id: Int): Boolean =
         apiService.structureDelete(IdRequest(id)).isSuccess()
-
-    override suspend fun getTimeBlocks(): List<TimeBlock> =
-        apiService.timeBlocks().toTimeBlocksList()
-
-    override suspend fun getTimeBlock(id: Int): TimeBlock =
-        apiService.timeBlockGet(IdRequest(id)).toTimeBlock()
-
-    override suspend fun insertTimeBlock(timeBlock: TimeBlock): Boolean =
-        apiService.timeBlockInsert(timeBlock.toTimeBlockRequest()).isSuccess()
-
-    override suspend fun updateTimeBlock(timeBlock: TimeBlock): Boolean =
-        apiService.timeBlockUpdate(timeBlock.toTimeBlockRequest()).isSuccess()
-
-    override suspend fun deleteTimeBlock(id: Int): Boolean =
-        apiService.timeBlockDelete(IdRequest(id)).isSuccess()
 
     override suspend fun getTimeSheet(): List<TimeSheet> =
         apiService.timeSheets().toTimeSheetsList()

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Domain
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Route
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -86,7 +87,7 @@ fun DrawerHeader(
     }
     Text(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(bottom = 8.dp)
             .fillMaxWidth(),
         text = userName,
         color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
@@ -107,7 +108,8 @@ sealed class MainNavItem(
     object Workers : MainNavItem("Рабочие", Icons.Default.Groups, Screen.Workers.route)
     object Directions : MainNavItem("Направления", Icons.Default.Route, Screen.Directions.route)
     object Structure : MainNavItem("Структура", Icons.Default.Domain, Screen.Structure.route)
-    object Exit : MainNavItem("Выход", Icons.Default.Logout, Screen.Login.route)
+    object User : MainNavItem("Пользователь", Icons.Default.Person, Screen.Structure.route)
+    object Exit : MainNavItem("Смена пользователя", Icons.Default.Logout, Screen.Login.route)
 }
 
 @Composable
@@ -163,6 +165,7 @@ fun DrawerContent(
         MainNavItem.Workers,
         MainNavItem.Directions,
         MainNavItem.Spacer,
+        MainNavItem.User,
         MainNavItem.Structure,
         MainNavItem.Spacer,
         MainNavItem.Exit

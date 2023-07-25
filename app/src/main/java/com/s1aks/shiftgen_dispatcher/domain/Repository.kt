@@ -6,7 +6,6 @@ import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
@@ -36,12 +35,6 @@ interface Repository {
     suspend fun insertStructure(structure: Structure): Boolean
     suspend fun updateStructure(structure: Structure): Boolean
     suspend fun deleteStructure(id: Int): Boolean
-
-    suspend fun getTimeBlocks(): List<TimeBlock>
-    suspend fun getTimeBlock(id: Int): TimeBlock
-    suspend fun insertTimeBlock(timeBlock: TimeBlock): Boolean
-    suspend fun updateTimeBlock(timeBlock: TimeBlock): Boolean
-    suspend fun deleteTimeBlock(id: Int): Boolean
 
     suspend fun getTimeSheet(): List<TimeSheet>
     suspend fun getTimeSheet(id: Int): TimeSheet

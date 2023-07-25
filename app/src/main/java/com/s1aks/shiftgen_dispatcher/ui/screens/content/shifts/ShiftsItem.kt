@@ -25,9 +25,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.s1aks.shiftgen_dispatcher.domain.models.ShiftItemModel
 import com.s1aks.shiftgen_dispatcher.ui.elements.ContextMenuItem
 
-private val testShift = ShiftItemModel(
+val testShift = ShiftItemModel(
     0,
-    "Москва - Ростов",
+    "365 Москва",
     "Михайлов Н.А.",
     "Москва",
     "",
@@ -81,7 +81,7 @@ fun ShiftsItem(
                         bottom.linkTo(parent.bottom)
                     }
             )
-            Text(text = "${shift.name} ${shift.direction}",
+            Text(text = "${shift.name} в ${shift.direction}",
                 modifier = Modifier
                     .constrainAs(shift_name) {
                         start.linkTo(startGuideline)
