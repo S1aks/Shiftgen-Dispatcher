@@ -55,7 +55,7 @@ fun DirectionEditScreen(
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
-                title = if (new) "Добавить направление" else "Редактировать направление",
+                title = { Text(if (new) "Добавить направление" else "Редактировать направление") },
                 drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = screenState.allFieldsOk) {

@@ -1,13 +1,13 @@
 package com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_edit
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -76,7 +76,7 @@ fun WorkerEditScreen(
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
-                title = if (new) "Добавить рабочего" else "Редактировать рабочего",
+                title = { Text(if (new) "Добавить рабочего" else "Редактировать рабочего") },
                 drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = screenState.allFieldsOk) {
@@ -226,12 +226,12 @@ fun WorkerEditScreenUI(
             items(directions) { direction ->
                 val checked = accessList.contains(direction.id)
                 DirectionAccessItem(direction.name, checked) {
-                    if (checked) {
-                        accessList = accessList.filter { it != direction.id }
+                    accessList = if (checked) {
+                        accessList.filter { it != direction.id }
                     } else {
                         val list = accessList.toMutableList()
                         list.add(direction.id)
-                        accessList = list
+                        list
                     }
                 }
             }

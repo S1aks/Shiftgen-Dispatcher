@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -45,7 +46,7 @@ fun MainScreen(
 }
 
 data class MainScreenState(
-    val title: String = "",
+    val title: @Composable () -> Unit = { Text("") },
     val drawerEnabled: Boolean = true,
     val actions: (@Composable RowScope.() -> Unit)? = null
 )
@@ -72,9 +73,8 @@ fun MainScreenUI(
                             if (isClosed) open() else close()
                         }
                     }
-                },
-                actions = { screenState.actions?.invoke(this) }
-            )
+                }
+            ) { screenState.actions?.invoke(this) }
         },
         drawerContent = {
             if (screenState.drawerEnabled) {

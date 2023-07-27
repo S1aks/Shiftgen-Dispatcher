@@ -3,6 +3,7 @@ package com.s1aks.shiftgen_dispatcher.ui.screens.content.workers
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,7 +34,7 @@ fun WorkersScreen(
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
-                title = "Рабочие",
+                title = { Text("Рабочие") },
                 drawerEnabled = true,
                 actions = {
                     AddIconButton {

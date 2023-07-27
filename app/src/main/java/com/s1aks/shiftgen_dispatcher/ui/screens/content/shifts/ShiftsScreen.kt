@@ -3,6 +3,7 @@ package com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,7 +35,7 @@ fun ShiftsScreen(
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
-                title = "Смены",
+                title = { Text("Смены") },
                 drawerEnabled = true,
                 actions = {
                     AddIconButton {

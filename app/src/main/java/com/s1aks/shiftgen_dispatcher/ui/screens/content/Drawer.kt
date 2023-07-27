@@ -107,8 +107,8 @@ sealed class MainNavItem(
     object Shifts : MainNavItem("Смены", Icons.Default.ListAlt, Screen.Shifts.route)
     object Workers : MainNavItem("Рабочие", Icons.Default.Groups, Screen.Workers.route)
     object Directions : MainNavItem("Направления", Icons.Default.Route, Screen.Directions.route)
+    object User : MainNavItem("Пользователь", Icons.Default.Person, "")
     object Structure : MainNavItem("Структура", Icons.Default.Domain, Screen.Structure.route)
-    object User : MainNavItem("Пользователь", Icons.Default.Person, Screen.Structure.route)
     object Exit : MainNavItem("Смена пользователя", Icons.Default.Logout, Screen.Login.route)
 }
 

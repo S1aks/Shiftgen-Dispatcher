@@ -111,7 +111,7 @@ fun ShiftEditScreen(
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
-                title = if (new) "Добавить смену" else "Редактировать смену",
+                title = { Text(if (new) "Добавить смену" else "Редактировать смену") },
                 drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = returnState.allFieldsOk) {

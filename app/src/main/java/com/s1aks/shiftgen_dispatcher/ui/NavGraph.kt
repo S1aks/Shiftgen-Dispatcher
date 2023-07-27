@@ -28,6 +28,7 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Register : Screen("register")
     object Main : Screen("main")
+    object User : Screen("user")
     object Structure : Screen("structure")
     object Directions : Screen("directions")
     class DirectionEdit(id: String = "{id}") : Screen("direction_edit/$id")

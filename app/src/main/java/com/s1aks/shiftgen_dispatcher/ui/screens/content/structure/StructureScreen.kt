@@ -56,7 +56,7 @@ fun StructureScreen(
     LaunchedEffect(Unit) {
         onComposing(
             MainScreenState(
-                title = "Редактировать структуру",
+                title = { Text("Редактировать структуру") },
                 drawerEnabled = false,
                 actions = {
                     DoneIconButton(enabled = screenState.allFieldsOk) {
