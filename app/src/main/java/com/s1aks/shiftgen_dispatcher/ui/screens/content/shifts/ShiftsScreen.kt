@@ -51,7 +51,7 @@ fun ShiftsScreen(
                         navController.navigate(Screen.ShiftEdit(id.toString()).route)
                     },
                     ContextMenuItem("Удалить") { id ->
-                        viewModel.deleteData(id, YearMonth.now())
+                        viewModel.deleteData(id, yearMonth)
                     }
                 )
             )
