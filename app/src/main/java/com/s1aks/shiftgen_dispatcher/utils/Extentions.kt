@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
+import java.time.YearMonth
 
 fun <T> T?.logd(): T? = this.also { Log.d("***", it.toString()) } // todo REMOVE
 
@@ -102,3 +103,7 @@ fun Color.setOutlinedTextFieldColorsWithThis() = TextFieldDefaults.outlinedTextF
 )
 
 operator fun Boolean.inc() = !this
+
+operator fun YearMonth.inc(): YearMonth = plusMonths(1)
+
+operator fun YearMonth.dec(): YearMonth = minusMonths(1)

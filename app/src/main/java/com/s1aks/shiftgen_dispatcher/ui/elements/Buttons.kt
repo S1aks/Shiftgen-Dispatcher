@@ -9,9 +9,12 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -51,5 +54,41 @@ fun DoneIconButton(
         onClick = { onClick() }
     ) {
         Icon(imageVector = Icons.Default.Done, "Подтвердить")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PrevIconButton(
+    enabled: Boolean = true,
+    onClick: () -> Unit = {}
+) {
+    IconButton(
+        enabled = enabled,
+        onClick = { onClick() }
+    ) {
+        Icon(
+            imageVector = Icons.Default.ArrowBackIos,
+            contentDescription = "Подтвердить",
+            tint = if (enabled) Color.Green else Color.Gray
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NextIconButton(
+    enabled: Boolean = true,
+    onClick: () -> Unit = {}
+) {
+    IconButton(
+        enabled = enabled,
+        onClick = { onClick() }
+    ) {
+        Icon(
+            imageVector = Icons.Default.ArrowForwardIos,
+            contentDescription = "Подтвердить",
+            tint = if (enabled) Color.Green else Color.Gray
+        )
     }
 }
