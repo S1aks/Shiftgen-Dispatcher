@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ fun ShiftsScreen(
     viewModel: ShiftsViewModel
 ) {
     var yearMonth by rememberSaveable { mutableStateOf(YearMonth.now()) }
+    var yearMonths by rememberSaveable { mutableStateOf(listOf<String>(yearMonth.toString())) }
     val screenState: ShiftsScreenState by remember {
         mutableStateOf(
             ShiftsScreenState(
@@ -57,10 +59,21 @@ fun ShiftsScreen(
             )
         )
     }
-    var loadingState by rememberSaveable { mutableStateOf(false) }
-    val responseState by viewModel.shiftsState.collectAsState()
-    responseState.onSuccess(LocalContext.current, { loadingState = it }) {
-        screenState.shifts = (responseState as ResponseState.Success).item
+    var yearMonthsLoadingState by rememberSaveable { mutableStateOf(false) }
+    val yearMonthsState by viewModel.yearMonthsState.collectAsState()
+    yearMonthsState.onSuccess(LocalContext.current, { yearMonthsLoadingState = it }) {
+        yearMonths = (yearMonthsState as ResponseState.Success).item
+    }
+    var shiftsLoadingState by rememberSaveable { mutableStateOf(false) }
+    val shiftsState by viewModel.shiftsState.collectAsState()
+    shiftsState.onSuccess(LocalContext.current, { shiftsLoadingState = it }) {
+        screenState.shifts = (shiftsState as ResponseState.Success).item
+    }
+    val loadingState by remember {
+        derivedStateOf {
+            yearMonthsLoadingState
+                    || shiftsLoadingState
+        }
     }
     LaunchedEffect(yearMonth) {
         onComposing(
@@ -69,13 +82,23 @@ fun ShiftsScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        val prevButtonEnabled = if (yearMonths.isEmpty()) {
+                            false
+                        } else {
+                            yearMonths.contains(yearMonth.minusMonths(1).toString())
+                        }
+                        val nextButtonEnabled = if (yearMonths.isEmpty()) {
+                            false
+                        } else {
+                            yearMonths.contains(yearMonth.plusMonths(1).toString())
+                        }
                         Text(
                             modifier = Modifier.padding(end = 8.dp),
                             text = "Смены"
                         )
-                        PrevIconButton(enabled = true) { yearMonth-- }
+                        PrevIconButton(enabled = prevButtonEnabled) { yearMonth-- }
                         Text(yearMonth.toString())
-                        NextIconButton(enabled = true) { yearMonth++ }
+                        NextIconButton(enabled = nextButtonEnabled) { yearMonth++ }
                     }
                 },
                 drawerEnabled = true,
@@ -90,7 +113,7 @@ fun ShiftsScreen(
         screenState.shifts = listOf()
         viewModel.getData(yearMonth)
     }
-    if (loadingState) {
+    if (loadingState || yearMonths.isEmpty()) {
         LoadingIndicator()
     } else {
         ShiftsScreenUI(screenState)

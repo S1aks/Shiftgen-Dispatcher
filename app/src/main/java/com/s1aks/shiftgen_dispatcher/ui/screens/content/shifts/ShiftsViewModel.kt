@@ -15,6 +15,9 @@ class ShiftsViewModel(
     private val getShiftsUseCase: GetShiftsUseCase,
     private val deleteShiftUseCase: DeleteShiftUseCase
 ) : ViewModel() {
+    private val _yearMonthsState: MutableStateFlow<ResponseState<List<String>>> =
+        MutableStateFlow(ResponseState.Idle)
+    val yearMonthsState = _yearMonthsState.asStateFlow()
     private val _shiftsState: MutableStateFlow<ResponseState<List<ShiftItemModel>>> =
         MutableStateFlow(ResponseState.Idle)
     val shiftsState = _shiftsState.asStateFlow()
@@ -28,6 +31,7 @@ class ShiftsViewModel(
     }
 
     fun clearStates() {
+        _yearMonthsState.value = ResponseState.Idle
         _shiftsState.value = ResponseState.Idle
     }
 }

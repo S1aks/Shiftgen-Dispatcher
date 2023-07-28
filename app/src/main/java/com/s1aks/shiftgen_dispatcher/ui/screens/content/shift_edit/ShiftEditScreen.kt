@@ -101,8 +101,7 @@ fun ShiftEditScreen(
     }
     val loadingState by remember {
         derivedStateOf {
-            (!new && screenState.shiftData == null)
-                    || directionsLoadingState
+            directionsLoadingState
                     || workersLoadingState
                     || shiftLoadingState
                     || responseLoadingState
@@ -131,7 +130,7 @@ fun ShiftEditScreen(
             viewModel.getShiftData(id)
         }
     }
-    if (loadingState) {
+    if (loadingState || (!new && screenState.shiftData == null)) {
         LoadingIndicator()
     } else {
         ShiftEditScreenUI(screenState) { returnState = it }
@@ -403,9 +402,9 @@ fun ShiftEditScreenUI(
             val datePicker = DatePickerDialog(
                 context,
                 { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-                    dateStart = LocalDate.of(mYear, mMonth, mDayOfMonth)
+                    dateStart = LocalDate.of(mYear, mMonth + 1, mDayOfMonth)
                     timePicker.show()
-                }, dateStart.year, dateStart.monthValue, dateStart.dayOfMonth
+                }, dateStart.year, dateStart.monthValue - 1, dateStart.dayOfMonth
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -441,9 +440,9 @@ fun ShiftEditScreenUI(
             val datePicker = DatePickerDialog(
                 context,
                 { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-                    dateEnd = LocalDate.of(mYear, mMonth, mDayOfMonth)
+                    dateEnd = LocalDate.of(mYear, mMonth + 1, mDayOfMonth)
                     timePicker.show()
-                }, dateEnd.year, dateEnd.monthValue, dateEnd.dayOfMonth
+                }, dateEnd.year, dateEnd.monthValue - 1, dateEnd.dayOfMonth
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
