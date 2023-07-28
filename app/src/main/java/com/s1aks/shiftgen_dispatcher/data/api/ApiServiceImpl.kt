@@ -23,8 +23,10 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.SHIFT_GET_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.SHIFT_INSERT_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.SHIFT_UPDATE_URL
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.YEAR_MONTHS_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsResponse
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.YearMonthsResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureIdResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureResponse
@@ -114,6 +116,9 @@ class ApiServiceImpl(
 
     override suspend fun shiftDelete(idRequest: IdRequest): HttpStatusCode =
         client.post(SHIFT_DELETE_URL) { setBody(idRequest) }.status
+
+    override suspend fun getYearMonths(): YearMonthsResponse =
+        client.post(YEAR_MONTHS_URL).getData()
 
     override suspend fun structures(): StructuresResponse =
         client.get(STRUCTURES_URL).getData()

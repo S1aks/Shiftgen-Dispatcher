@@ -6,12 +6,14 @@ import com.s1aks.shiftgen_dispatcher.data.ResponseState
 import com.s1aks.shiftgen_dispatcher.domain.models.ShiftItemModel
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.DeleteShiftUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetShiftsUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetYearMonthsUseCase
 import com.s1aks.shiftgen_dispatcher.utils.setFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.YearMonth
 
 class ShiftsViewModel(
+    private val getYearMonthsUseCase: GetYearMonthsUseCase,
     private val getShiftsUseCase: GetShiftsUseCase,
     private val deleteShiftUseCase: DeleteShiftUseCase
 ) : ViewModel() {
@@ -23,6 +25,7 @@ class ShiftsViewModel(
     val shiftsState = _shiftsState.asStateFlow()
 
     fun getData(yearMonth: YearMonth) {
+        viewModelScope.setFlow(_yearMonthsState) { getYearMonthsUseCase.execute() }
         viewModelScope.setFlow(_shiftsState) { getShiftsUseCase.execute(yearMonth) }
     }
 

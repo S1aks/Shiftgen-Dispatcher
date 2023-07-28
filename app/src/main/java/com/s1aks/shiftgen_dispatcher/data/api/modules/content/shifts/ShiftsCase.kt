@@ -10,6 +10,7 @@ interface ShiftsCase {
     suspend fun shiftInsert(shiftRequest: ShiftRequest): HttpStatusCode
     suspend fun shiftUpdate(shiftRequest: ShiftRequest): HttpStatusCode
     suspend fun shiftDelete(idRequest: IdRequest): HttpStatusCode
+    suspend fun getYearMonths(): YearMonthsResponse
 
     companion object {
         const val SHIFTS_URL = "$BASE_URL/shifts"
@@ -17,5 +18,6 @@ interface ShiftsCase {
         const val SHIFT_INSERT_URL = "$BASE_URL/shift/insert"
         const val SHIFT_UPDATE_URL = "$BASE_URL/shift/update"
         const val SHIFT_DELETE_URL = "$BASE_URL/shift/delete"
+        const val YEAR_MONTHS_URL = "$BASE_URL/shifts/yearmonths"
     }
 }

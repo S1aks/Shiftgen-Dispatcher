@@ -28,6 +28,7 @@ interface Repository {
     suspend fun insertShift(shift: Shift): Boolean
     suspend fun updateShift(shift: Shift): Boolean
     suspend fun deleteShift(id: Int): Boolean
+    suspend fun getYearMonths(): List<String>
 
     suspend fun getStructures(): StructuresMap
     suspend fun getStructureId(): Int

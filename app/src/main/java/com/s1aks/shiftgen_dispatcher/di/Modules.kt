@@ -17,6 +17,7 @@ import com.s1aks.shiftgen_dispatcher.domain.usecases.content.directions.UpdateDi
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.DeleteShiftUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetShiftUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetShiftsUseCase
+import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.GetYearMonthsUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.InsertShiftUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.shifts.UpdateShiftUseCase
 import com.s1aks.shiftgen_dispatcher.domain.usecases.content.structures.DeleteStructureUseCase
@@ -38,75 +39,56 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.content.shifts.ShiftsViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.structure.StructureViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_edit.WorkerEditViewModel
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val dataAccessModule = module {
-    single { LocalSecureStore(context = get()) }
-    single { KtorClient(localSecureStore = get()) }
+    singleOf(::LocalSecureStore)
+    singleOf(::KtorClient)
     single<ApiService> { ApiServiceImpl(client = get<KtorClient>().instance) }
     single<Repository> { RepositoryImpl(apiService = get()) }
 }
 
 val useCasesModule = module {
-    single { CheckAuthorizationUseCase(repository = get(), localSecureStore = get()) }
-    single { SendLoginDataUseCase(repository = get(), localSecureStore = get()) }
-    single { SendRegisterDataUseCase(repository = get(), localSecureStore = get()) }
+    singleOf(::CheckAuthorizationUseCase)
+    singleOf(::SendLoginDataUseCase)
+    singleOf(::SendRegisterDataUseCase)
 
-    single { GetDirectionsUseCase(repository = get()) }
-    single { GetDirectionUseCase(repository = get()) }
-    single { InsertDirectionUseCase(repository = get()) }
-    single { UpdateDirectionUseCase(repository = get()) }
-    single { DeleteDirectionUseCase(repository = get(), getDirectionsUseCase = get()) }
+    singleOf(::GetDirectionsUseCase)
+    singleOf(::GetDirectionUseCase)
+    singleOf(::InsertDirectionUseCase)
+    singleOf(::UpdateDirectionUseCase)
+    singleOf(::DeleteDirectionUseCase)
 
-    single { GetShiftsUseCase(repository = get()) }
-    single { GetShiftUseCase(repository = get()) }
-    single { InsertShiftUseCase(repository = get()) }
-    single { UpdateShiftUseCase(repository = get()) }
-    single { DeleteShiftUseCase(repository = get(), getShiftsUseCase = get()) }
+    singleOf(::GetShiftsUseCase)
+    singleOf(::GetShiftUseCase)
+    singleOf(::InsertShiftUseCase)
+    singleOf(::UpdateShiftUseCase)
+    singleOf(::DeleteShiftUseCase)
+    singleOf(::GetYearMonthsUseCase)
 
-    single { GetStructuresUseCase(repository = get()) }
-    single { GetStructureUseCase(repository = get(), localSecureStore = get()) }
-    single { InsertStructureUseCase(repository = get()) }
-    single { UpdateStructureUseCase(repository = get()) }
-    single { DeleteStructureUseCase(repository = get()) }
+    singleOf(::GetStructuresUseCase)
+    singleOf(::GetStructureUseCase)
+    singleOf(::InsertStructureUseCase)
+    singleOf(::UpdateStructureUseCase)
+    singleOf(::DeleteStructureUseCase)
 
-    single { GetWorkersUseCase(repository = get()) }
-    single { GetWorkerUseCase(repository = get()) }
-    single { InsertWorkerUseCase(repository = get()) }
-    single { UpdateWorkerUseCase(repository = get()) }
-    single { DeleteWorkerUseCase(repository = get(), getWorkersUseCase = get()) }
+    singleOf(::GetWorkersUseCase)
+    singleOf(::GetWorkerUseCase)
+    singleOf(::InsertWorkerUseCase)
+    singleOf(::UpdateWorkerUseCase)
+    singleOf(::DeleteWorkerUseCase)
 }
 
 val viewModelsModule = module {
-    viewModel { LoginViewModel(sendLoginDataUseCase = get(), checkAuthorizationUseCase = get()) }
-    viewModel { RegisterViewModel(getStructuresUseCase = get(), sendRegisterDataUseCase = get()) }
-    viewModel { StructureViewModel(getStructureUseCase = get(), updateStructureUseCase = get()) }
-    viewModel { ShiftsViewModel(getShiftsUseCase = get(), deleteShiftUseCase = get()) }
-    viewModel {
-        ShiftEditViewModel(
-            getShiftUseCase = get(),
-            insertShiftUseCase = get(),
-            updateShiftUseCase = get(),
-            getDirectionsUseCase = get(),
-            getWorkersUseCase = get()
-        )
-    }
-    viewModel { DirectionsViewModel(getDirectionsUseCase = get(), deleteDirectionUseCase = get()) }
-    viewModel {
-        DirectionEditViewModel(
-            getDirectionUseCase = get(),
-            insertDirectionUseCase = get(),
-            updateDirectionUseCase = get()
-        )
-    }
-    viewModel { WorkersViewModel(getWorkersUseCase = get(), deleteWorkerUseCase = get()) }
-    viewModel {
-        WorkerEditViewModel(
-            getWorkerUseCase = get(),
-            insertWorkerUseCase = get(),
-            updateWorkerUseCase = get(),
-            getDirectionsUseCase = get()
-        )
-    }
+    viewModelOf(::LoginViewModel)
+    viewModelOf(::RegisterViewModel)
+    viewModelOf(::StructureViewModel)
+    viewModelOf(::ShiftsViewModel)
+    viewModelOf(::ShiftEditViewModel)
+    viewModelOf(::DirectionsViewModel)
+    viewModelOf(::DirectionEditViewModel)
+    viewModelOf(::WorkersViewModel)
+    viewModelOf(::WorkerEditViewModel)
 }

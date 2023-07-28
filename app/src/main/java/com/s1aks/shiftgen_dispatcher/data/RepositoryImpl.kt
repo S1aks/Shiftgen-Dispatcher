@@ -58,6 +58,9 @@ class RepositoryImpl(
     override suspend fun deleteShift(id: Int): Boolean =
         apiService.shiftDelete(IdRequest(id)).isSuccess()
 
+    override suspend fun getYearMonths(): List<String> =
+        apiService.getYearMonths().toYearMonths()
+
     override suspend fun getStructures(): StructuresMap =
         apiService.structures().toStructureMap()
 
