@@ -60,7 +60,6 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
 @Composable
@@ -155,7 +154,6 @@ fun ShiftEditScreenUI(
 ) {
     var id by rememberSaveable { mutableStateOf(0) }
     var name by rememberSaveable { mutableStateOf("") }
-    val periodYearMonth by rememberSaveable { mutableStateOf(YearMonth.now().toString()) }
     val periodicityList: List<String> = Periodicity.values().map { it.label }
     var periodicity by rememberSaveable { mutableStateOf(Periodicity.SINGLE.label) }
     val workersList: List<String> =
@@ -237,7 +235,6 @@ fun ShiftEditScreenUI(
                 Shift(
                     id,
                     name,
-                    YearMonth.parse(periodYearMonth),
                     periodicity.getPeriodicity(),
                     screenState.workers?.firstOrNull { it.fio() == worker }?.id,
                     screenState.directions?.firstOrNull { it.name == direction }?.id

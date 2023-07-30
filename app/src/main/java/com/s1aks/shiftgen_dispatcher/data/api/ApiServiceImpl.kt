@@ -118,7 +118,7 @@ class ApiServiceImpl(
         client.post(SHIFT_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun getYearMonths(): YearMonthsResponse =
-        client.post(YEAR_MONTHS_URL).getData()
+        client.get(YEAR_MONTHS_URL).getData()
 
     override suspend fun structures(): StructuresResponse =
         client.get(STRUCTURES_URL).getData()

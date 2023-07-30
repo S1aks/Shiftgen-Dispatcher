@@ -120,7 +120,8 @@ fun RegisterScreenUI(
     var emailValid by rememberSaveable { mutableStateOf(false) }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var structureEnable by rememberSaveable { mutableStateOf(false) }
-    val groupsList = Groups.values().drop(1).map { it.groupName }
+    val groupsList =
+        listOf(Groups.values()[1].groupName) // Groups.values().drop(1).map { it.groupName }
     val loginFieldOk = fun(): Boolean = login.length >= 4
     val emailFieldOk = fun(): Boolean = emailValid
     val passwordFieldOk = fun(): Boolean = password.length >= 4

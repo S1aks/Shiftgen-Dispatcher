@@ -61,7 +61,6 @@ internal fun YearMonth.toShiftsRequest(): ShiftsRequest = ShiftsRequest(this)
 internal fun Shift.toShiftRequest(): ShiftRequest = ShiftRequest(
     id,
     name,
-    periodYearMonth,
     periodicity,
     workerId,
     directionId,

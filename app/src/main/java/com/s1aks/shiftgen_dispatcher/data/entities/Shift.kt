@@ -11,9 +11,6 @@ import java.time.YearMonth
 data class Shift(
     val id: Int = 0,
     val name: String,
-    @Serializable(with = YearMonthSerializer::class)
-    @SerialName("yearMonth")
-    val periodYearMonth: YearMonth,
     val periodicity: Periodicity,
     var workerId: Int?,
     val directionId: Int,

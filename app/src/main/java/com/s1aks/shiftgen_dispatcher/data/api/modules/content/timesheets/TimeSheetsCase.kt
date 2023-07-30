@@ -15,7 +15,7 @@ interface TimeSheetsCase {
 
     companion object {
         const val TIMESHEETS_URL = "$BASE_URL/timesheets"
-        const val TIMESHEET_GET_BY_ID_URL = "$BASE_URL/timesheet/get_by_id"
+        const val TIMESHEET_GET_BY_ID_URL = "$BASE_URL/timesheet/get"
         const val TIMESHEET_GET_BY_WORKER_ID_URL = "$BASE_URL/timesheet/get_by_worker_id"
         const val TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL =
             "$BASE_URL/timesheet/get_by_worker_id_in_year_month"
