@@ -67,7 +67,7 @@ fun StructureScreen(
         )
         viewModel.getData()
     }
-    if (loadingState || screenState.structureData == null) {
+    if (loadingState) {
         LoadingIndicator()
     } else {
         StructureScreenUI(screenState) { screenState = it }
