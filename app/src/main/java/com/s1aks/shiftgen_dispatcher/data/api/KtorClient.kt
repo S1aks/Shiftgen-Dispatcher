@@ -34,7 +34,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 class KtorClient(
-    localSecureStore: LocalSecureStore
+    private val localSecureStore: LocalSecureStore
 ) {
     val instance: HttpClient = HttpClient(Android) {
         install(Logging) {

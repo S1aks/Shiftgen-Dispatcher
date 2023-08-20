@@ -41,13 +41,14 @@ import com.s1aks.shiftgen_dispatcher.ui.screens.content.worker_edit.WorkerEditVi
 import com.s1aks.shiftgen_dispatcher.ui.screens.content.workers.WorkersViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val dataAccessModule = module {
     singleOf(::LocalSecureStore)
     singleOf(::KtorClient)
-    single<ApiService> { ApiServiceImpl(client = get<KtorClient>().instance) }
-    single<Repository> { RepositoryImpl(apiService = get()) }
+    single { ApiServiceImpl(client = get<KtorClient>().instance) } bind ApiService::class
+    singleOf(::RepositoryImpl) bind Repository::class
 }
 
 val useCasesModule = module {
