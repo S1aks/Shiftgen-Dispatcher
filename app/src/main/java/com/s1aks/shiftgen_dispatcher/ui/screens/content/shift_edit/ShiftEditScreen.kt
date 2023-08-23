@@ -237,6 +237,7 @@ fun ShiftEditScreenUI(
                     name,
                     periodicity.getPeriodicity(),
                     screenState.workers?.firstOrNull { it.fio() == worker }?.id,
+                    false, // todo
                     screenState.directions?.firstOrNull { it.name == direction }?.id
                         ?: throw RuntimeException("Empty direction."),
                     Action.WORK,

@@ -1,11 +1,8 @@
 package com.s1aks.shiftgen_dispatcher.data.entities
 
 import com.s1aks.shiftgen_dispatcher.utils.LocalDateTimeSerializer
-import com.s1aks.shiftgen_dispatcher.utils.YearMonthSerializer
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
-import java.time.YearMonth
 
 @Serializable
 data class Shift(
@@ -13,6 +10,7 @@ data class Shift(
     val name: String,
     val periodicity: Periodicity,
     var workerId: Int?,
+    val manualWorkerSelection: Boolean = false,
     val directionId: Int,
     val action: Action,
     @Serializable(with = LocalDateTimeSerializer::class)

@@ -63,6 +63,7 @@ internal fun Shift.toShiftRequest(): ShiftRequest = ShiftRequest(
     name,
     periodicity,
     workerId,
+    manualWorkerSelection,
     directionId,
     action,
     startTime,

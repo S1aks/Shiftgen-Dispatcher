@@ -15,6 +15,7 @@ data class ShiftRequest(
     val name: String,
     val periodicity: Periodicity,
     val workerId: Int?,
+    val manualWorkerSelection: Boolean,
     val directionId: Int,
     val action: Action,
     @Serializable(with = LocalDateTimeSerializer::class)
