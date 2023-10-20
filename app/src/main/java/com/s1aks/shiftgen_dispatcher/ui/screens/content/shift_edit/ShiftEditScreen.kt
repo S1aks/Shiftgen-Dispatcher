@@ -157,8 +157,7 @@ fun ShiftEditScreenUI(
     val periodicityList: List<String> = Periodicity.values().map { it.label }
     var periodicity by rememberSaveable { mutableStateOf(Periodicity.SINGLE.label) }
     val workersList: List<String> =
-        listOf("Автоматически")
-    //.plus(screenState.workers?.map { it.fio() } ?: listOf())
+        listOf("Автоматически").plus(screenState.workers?.map { it.fio() } ?: listOf())
     var worker by rememberSaveable { mutableStateOf(workersList[0]) }
     val directionsList: List<String> =
         if (worker == workersList[0]) {
@@ -206,7 +205,7 @@ fun ShiftEditScreenUI(
             name = data.name
             periodicity = data.periodicity.label
             worker =
-                screenState.workers?.firstOrNull { it.id == data.workerId }.fio() ?: workersList[0]
+                screenState.workers?.firstOrNull { it.id == data.workerId }?.fio() ?: workersList[0]
             direction = screenState.directions?.firstOrNull { it.id == data.directionId }?.name
                 ?: throw RuntimeException("Shift not contains direction value.")
             startTime = data.startTime.run {
@@ -237,7 +236,7 @@ fun ShiftEditScreenUI(
                     name,
                     periodicity.getPeriodicity(),
                     screenState.workers?.firstOrNull { it.fio() == worker }?.id,
-                    false, // todo
+                    worker != workersList[0],
                     screenState.directions?.firstOrNull { it.name == direction }?.id
                         ?: throw RuntimeException("Empty direction."),
                     Action.WORK,

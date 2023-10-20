@@ -28,8 +28,8 @@ fun Long.getMinutes(): Int {
 }
 
 
-fun Worker?.fio(): String? =
-    this?.let {
+fun Worker.fio(): String =
+    this.let {
         StringBuilder()
             .append(lastName)
             .append(if (firstName.isNotBlank()) " ${firstName.first()}." else "")
