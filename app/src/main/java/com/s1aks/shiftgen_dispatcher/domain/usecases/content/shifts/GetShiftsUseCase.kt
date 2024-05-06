@@ -21,7 +21,7 @@ class GetShiftsUseCase(
             val direction = directions.first { it.id == shift.directionId }.name
             val worker = shift.workerId?.let { workerId ->
                 workers.firstOrNull { it.id == workerId }
-            }.fio() ?: ""
+            }?.fio() ?: ""
             ShiftItemModel(
                 shift.id,
                 shift.name,
