@@ -3,34 +3,30 @@ package com.s1aks.shiftgen_dispatcher.data
 import com.s1aks.shiftgen_dispatcher.data.api.ApiService
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
 import com.s1aks.shiftgen_dispatcher.data.entities.Direction
-import com.s1aks.shiftgen_dispatcher.data.entities.Groups
 import com.s1aks.shiftgen_dispatcher.data.entities.LoginData
 import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
 import com.s1aks.shiftgen_dispatcher.domain.Repository
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
 import java.time.YearMonth
 
 class RepositoryImpl(
     private val apiService: ApiService
 ) : Repository {
+    override suspend fun access(): HttpStatusCode =
+        apiService.access()
+
     override suspend fun login(loginData: LoginData): TokensData =
         apiService.login(loginData.toLoginRequest()).toTokensData()
 
-    override suspend fun register(registerData: RegisterData): TokensData {
-        val groupNumber = Groups.values().find { it.groupName == registerData.group }?.ordinal
-            ?: throw RuntimeException("Error find group.")
-        val structureNumber = apiService.structures().toStructureMap()
-            .filterValues { it == registerData.structure }.entries.first().key
-        return apiService.register(registerData.toRegisterRequest(groupNumber, structureNumber))
-            .toTokensData()
-    }
+    override suspend fun register(registerData: RegisterData, structureId: Int): TokensData =
+        apiService.register(registerData.toRegisterRequest(structureId)).toTokensData()
 
     override suspend fun getDirections(): List<Direction> =
         apiService.directions().toDirectionsList()
@@ -62,8 +58,14 @@ class RepositoryImpl(
     override suspend fun deleteShift(id: Int): Boolean =
         apiService.shiftDelete(IdRequest(id)).isSuccess()
 
+    override suspend fun getYearMonths(): List<String> =
+        apiService.getYearMonths().toYearMonths()
+
     override suspend fun getStructures(): StructuresMap =
         apiService.structures().toStructureMap()
+
+    override suspend fun getStructureId(): Int =
+        apiService.structureId().toStructureId()
 
     override suspend fun getStructure(id: Int): Structure =
         apiService.structureGet(IdRequest(id)).toStructure()
@@ -76,21 +78,6 @@ class RepositoryImpl(
 
     override suspend fun deleteStructure(id: Int): Boolean =
         apiService.structureDelete(IdRequest(id)).isSuccess()
-
-    override suspend fun getTimeBlocks(): List<TimeBlock> =
-        apiService.timeBlocks().toTimeBlocksList()
-
-    override suspend fun getTimeBlock(id: Int): TimeBlock =
-        apiService.timeBlockGet(IdRequest(id)).toTimeBlock()
-
-    override suspend fun insertTimeBlock(timeBlock: TimeBlock): Boolean =
-        apiService.timeBlockInsert(timeBlock.toTimeBlockRequest()).isSuccess()
-
-    override suspend fun updateTimeBlock(timeBlock: TimeBlock): Boolean =
-        apiService.timeBlockUpdate(timeBlock.toTimeBlockRequest()).isSuccess()
-
-    override suspend fun deleteTimeBlock(id: Int): Boolean =
-        apiService.timeBlockDelete(IdRequest(id)).isSuccess()
 
     override suspend fun getTimeSheet(): List<TimeSheet> =
         apiService.timeSheets().toTimeSheetsList()

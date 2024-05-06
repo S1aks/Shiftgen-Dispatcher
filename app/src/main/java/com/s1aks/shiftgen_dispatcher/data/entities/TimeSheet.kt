@@ -8,7 +8,6 @@ import java.time.YearMonth
 data class TimeSheet(
     val id: Int = 0,
     val workerId: Int,
-    val structureId: Int,
     @Serializable(with = YearMonthSerializer::class)
     val periodYearMonth: YearMonth,
     var workedTime: Long = 0L,

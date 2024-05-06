@@ -12,12 +12,18 @@ data class StructureRequest(
     val restHours: Int,
     val allowedConsecutiveNights: Int,
     val nightStartHour: Int,
-    val nightEndHour: Int
+    val nightEndHour: Int,
+    val dispatcherPin: String
 )
 
 @Serializable
 data class StructureResponse(
     val structure: Structure
+)
+
+@Serializable
+data class StructureIdResponse(
+    val structureId: Int
 )
 
 @Serializable

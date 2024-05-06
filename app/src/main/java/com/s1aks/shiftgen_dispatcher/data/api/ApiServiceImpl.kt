@@ -1,11 +1,10 @@
 package com.s1aks.shiftgen_dispatcher.data.api
 
+import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.ACCESS_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.LOGIN_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REFRESH_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.AuthCase.Companion.REGISTER_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.LoginResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RefreshRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RegisterRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.auth.RegisterResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.IdRequest
@@ -24,24 +23,20 @@ import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.SHIFT_GET_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.SHIFT_INSERT_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.SHIFT_UPDATE_URL
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsCase.Companion.YEAR_MONTHS_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.ShiftsResponse
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.shifts.YearMonthsResponse
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureIdResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructureResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURES_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_DELETE_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_GET_URL
+import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_ID_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_INSERT_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresCase.Companion.STRUCTURE_UPDATE_URL
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.structures.StructuresResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlockRequest
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlockResponse
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCKS_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_DELETE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_GET_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_INSERT_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksCase.Companion.TIME_BLOCK_UPDATE_URL
-import com.s1aks.shiftgen_dispatcher.data.api.modules.content.time_blocks.TimeBlocksResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetRequest
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetResponse
 import com.s1aks.shiftgen_dispatcher.data.api.modules.content.timesheets.TimeSheetsCase.Companion.TIMESHEETS_URL
@@ -83,11 +78,11 @@ class ApiServiceImpl(
         }
     }
 
+    override suspend fun access(): HttpStatusCode =
+        client.get(ACCESS_URL).status
+
     override suspend fun login(loginRequest: LoginRequest): LoginResponse =
         client.post(LOGIN_URL) { setBody(loginRequest) }.getData()
-
-    override suspend fun refresh(refreshRequest: RefreshRequest): LoginResponse =
-        client.post(REFRESH_URL) { setBody(refreshRequest) }.getData()
 
     override suspend fun register(registerRequest: RegisterRequest): RegisterResponse =
         client.post(REGISTER_URL) { setBody(registerRequest) }.getData()
@@ -96,7 +91,7 @@ class ApiServiceImpl(
         client.get(DIRECTIONS_URL).getData()
 
     override suspend fun directionGet(idRequest: IdRequest): DirectionResponse =
-        client.get(DIRECTION_GET_URL) { setBody(idRequest) }.getData()
+        client.post(DIRECTION_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun directionInsert(directionRequest: DirectionRequest): HttpStatusCode =
         client.post(DIRECTION_INSERT_URL) { setBody(directionRequest) }.status
@@ -108,10 +103,10 @@ class ApiServiceImpl(
         client.post(DIRECTION_DELETE_URL) { setBody(idRequest) }.status
 
     override suspend fun shifts(shiftsRequest: ShiftsRequest): ShiftsResponse =
-        client.get(SHIFTS_URL).getData()
+        client.post(SHIFTS_URL) { setBody(shiftsRequest) }.getData()
 
     override suspend fun shiftGet(idRequest: IdRequest): ShiftResponse =
-        client.get(SHIFT_GET_URL) { setBody(idRequest) }.getData()
+        client.post(SHIFT_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun shiftInsert(shiftRequest: ShiftRequest): HttpStatusCode =
         client.post(SHIFT_INSERT_URL) { setBody(shiftRequest) }.status
@@ -122,11 +117,17 @@ class ApiServiceImpl(
     override suspend fun shiftDelete(idRequest: IdRequest): HttpStatusCode =
         client.post(SHIFT_DELETE_URL) { setBody(idRequest) }.status
 
+    override suspend fun getYearMonths(): YearMonthsResponse =
+        client.get(YEAR_MONTHS_URL).getData()
+
     override suspend fun structures(): StructuresResponse =
         client.get(STRUCTURES_URL).getData()
 
+    override suspend fun structureId(): StructureIdResponse =
+        client.get(STRUCTURE_ID_URL).getData()
+
     override suspend fun structureGet(idRequest: IdRequest): StructureResponse =
-        client.get(STRUCTURE_GET_URL) { setBody(idRequest) }.getData()
+        client.post(STRUCTURE_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun structureInsert(structureRequest: StructureRequest): HttpStatusCode =
         client.post(STRUCTURE_INSERT_URL) { setBody(structureRequest) }.status
@@ -137,37 +138,22 @@ class ApiServiceImpl(
     override suspend fun structureDelete(idRequest: IdRequest): HttpStatusCode =
         client.post(STRUCTURE_DELETE_URL) { setBody(idRequest) }.status
 
-    override suspend fun timeBlocks(): TimeBlocksResponse =
-        client.get(TIME_BLOCKS_URL).getData()
-
-    override suspend fun timeBlockGet(idRequest: IdRequest): TimeBlockResponse =
-        client.get(TIME_BLOCK_GET_URL) { setBody(idRequest) }.getData()
-
-    override suspend fun timeBlockInsert(timeBlockRequest: TimeBlockRequest): HttpStatusCode =
-        client.post(TIME_BLOCK_INSERT_URL) { setBody(timeBlockRequest) }.status
-
-    override suspend fun timeBlockUpdate(timeBlockRequest: TimeBlockRequest): HttpStatusCode =
-        client.post(TIME_BLOCK_UPDATE_URL) { setBody(timeBlockRequest) }.status
-
-    override suspend fun timeBlockDelete(idRequest: IdRequest): HttpStatusCode =
-        client.post(TIME_BLOCK_DELETE_URL) { setBody(idRequest) }.status
-
     override suspend fun timeSheets(): TimeSheetsResponse =
         client.get(TIMESHEETS_URL).getData()
 
     override suspend fun timeSheetGet(idRequest: IdRequest): TimeSheetResponse =
-        client.get(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.getData()
+        client.post(TIMESHEET_GET_BY_ID_URL) { setBody(idRequest) }.getData()
 
     override suspend fun timeSheetsGetByYearMonth(
         timeSheetsYearMonthRequest: TimeSheetsYearMonthRequest
     ): TimeSheetsResponse =
-        client.get(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }
+        client.post(TIMESHEET_GET_BY_YEAR_MONTH_URL) { setBody(timeSheetsYearMonthRequest) }
             .getData()
 
     override suspend fun timeSheetsGetByWorkerIdYearMonth(
         timeSheetsWorkerIdYearMonthRequest: TimeSheetsWorkerIdYearMonthRequest
     ): TimeSheetsResponse =
-        client.get(TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL) {
+        client.post(TIMESHEET_GET_BY_WORKER_ID_IN_YEAR_MONTH_URL) {
             setBody(timeSheetsWorkerIdYearMonthRequest)
         }.getData()
 
@@ -184,7 +170,7 @@ class ApiServiceImpl(
         client.get(WORKERS_URL).getData()
 
     override suspend fun workerGet(idRequest: IdRequest): WorkerResponse =
-        client.get(WORKER_GET_URL) { setBody(idRequest) }.getData()
+        client.post(WORKER_GET_URL) { setBody(idRequest) }.getData()
 
     override suspend fun workerInsert(workerRequest: WorkerRequest): HttpStatusCode =
         client.post(WORKER_INSERT_URL) { setBody(workerRequest) }.status

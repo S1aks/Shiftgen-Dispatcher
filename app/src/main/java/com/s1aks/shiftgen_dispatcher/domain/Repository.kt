@@ -6,15 +6,16 @@ import com.s1aks.shiftgen_dispatcher.data.entities.RegisterData
 import com.s1aks.shiftgen_dispatcher.data.entities.Shift
 import com.s1aks.shiftgen_dispatcher.data.entities.Structure
 import com.s1aks.shiftgen_dispatcher.data.entities.StructuresMap
-import com.s1aks.shiftgen_dispatcher.data.entities.TimeBlock
 import com.s1aks.shiftgen_dispatcher.data.entities.TimeSheet
 import com.s1aks.shiftgen_dispatcher.data.entities.TokensData
 import com.s1aks.shiftgen_dispatcher.data.entities.Worker
+import io.ktor.http.HttpStatusCode
 import java.time.YearMonth
 
 interface Repository {
+    suspend fun access(): HttpStatusCode
     suspend fun login(loginData: LoginData): TokensData
-    suspend fun register(registerData: RegisterData): TokensData
+    suspend fun register(registerData: RegisterData, structureId: Int): TokensData
 
     suspend fun getDirections(): List<Direction>
     suspend fun getDirection(id: Int): Direction
@@ -27,18 +28,14 @@ interface Repository {
     suspend fun insertShift(shift: Shift): Boolean
     suspend fun updateShift(shift: Shift): Boolean
     suspend fun deleteShift(id: Int): Boolean
+    suspend fun getYearMonths(): List<String>
 
     suspend fun getStructures(): StructuresMap
+    suspend fun getStructureId(): Int
     suspend fun getStructure(id: Int): Structure
     suspend fun insertStructure(structure: Structure): Boolean
     suspend fun updateStructure(structure: Structure): Boolean
     suspend fun deleteStructure(id: Int): Boolean
-
-    suspend fun getTimeBlocks(): List<TimeBlock>
-    suspend fun getTimeBlock(id: Int): TimeBlock
-    suspend fun insertTimeBlock(timeBlock: TimeBlock): Boolean
-    suspend fun updateTimeBlock(timeBlock: TimeBlock): Boolean
-    suspend fun deleteTimeBlock(id: Int): Boolean
 
     suspend fun getTimeSheet(): List<TimeSheet>
     suspend fun getTimeSheet(id: Int): TimeSheet

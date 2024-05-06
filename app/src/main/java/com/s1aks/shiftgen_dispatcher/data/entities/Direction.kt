@@ -5,6 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Direction(
     val id: Int = 0,
-    val name: String,
-    val structureId: Int
+    val name: String
 )

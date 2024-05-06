@@ -5,5 +5,6 @@ data class RegisterData(
     val email: String,
     val password: String,
     val group: String,
-    val structure: String
+    val structure: String,
+    val dispatcherPin: String
 )

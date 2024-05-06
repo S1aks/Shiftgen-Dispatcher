@@ -12,15 +12,17 @@ class SendLoginDataUseCase(
     private val localSecureStore: LocalSecureStore
 ) {
     suspend fun execute(loginData: LoginData): ResponseState<Boolean> {
-        val tokensData = withContext(Dispatchers.IO) {
-            repository.login(loginData)
-        }
+        val tokensData = withContext(Dispatchers.IO) { repository.login(loginData) }
         return if (tokensData.accessToken.isNotBlank() && tokensData.refreshToken.isNotBlank()) {
-            localSecureStore.accessToken = tokensData.accessToken
-            localSecureStore.refreshToken = tokensData.refreshToken
+            localSecureStore.apply {
+                login = loginData.login
+                accessToken = tokensData.accessToken
+                refreshToken = tokensData.refreshToken
+                structureId = withContext(Dispatchers.IO) { repository.getStructureId() }
+            }
             ResponseState.Success(true)
         } else {
-            ResponseState.Error(RuntimeException("Tokens mapping error"))
+            throw RuntimeException("Ошибка авторизации.")
         }
     }
 }

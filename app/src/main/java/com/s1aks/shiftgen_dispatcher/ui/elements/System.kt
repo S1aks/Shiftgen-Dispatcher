@@ -1,4 +1,4 @@
-package com.s1aks.shiftgen_dispatcher.ui.screens
+package com.s1aks.shiftgen_dispatcher.ui.elements
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,11 +8,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun LoadingScreen() {
+fun LoadingIndicator() {
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
     }
 }
+
+data class ContextMenuItem(
+    val label: String,
+    val action: (id: Int) -> Unit
+)
